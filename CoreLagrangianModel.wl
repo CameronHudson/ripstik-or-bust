@@ -65,10 +65,8 @@ Rback[t]
 (**Rotation Matrix for back and front caster wheels**)
 (*We need to define the co-ordinate system for the casters, based on the caster angle \[Phi]*)
 SetAttributes[\[Phi],Constant]
-MCaster:={{cos[\[Phi]],0,0},{0,sin[\[Phi]],0}, {0,0,tan[\[Phi]]}};
+MCaster:=AnglesToMatrix[0,\[Phi],0]
 MCaster
-MCaster2:=AnglesToMatrix[0,\[Phi],0]
-MCaster2
 (*CasterMatrix = AnglesToMatrix[Subscript[\[Alpha], cf],Subscript[\[Psi], cf],Subscript[\[Theta], cf]].MCaster*)
 
 (*Now we will define the rotation matrices for the front and back casters*)
@@ -77,8 +75,8 @@ Subscript[\[Psi], cf][t_] = 0;
 Subscript[\[Theta], cb][t_] = 0;
 Subscript[\[Psi], cb][t_] = 0;
 
-FrontCasterMatrix[t_] := AnglesToMatrix[Subscript[\[Alpha], cf][t],Subscript[\[Psi], cf][t],Subscript[\[Theta], cf][t]].MCaster2
-BackCasterMatrix[t_] := AnglesToMatrix[Subscript[\[Alpha], cb][t],Subscript[\[Psi], cb][t],Subscript[\[Theta], cb][t]].MCaster2
+FrontCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], cf][t],Subscript[\[Psi], cf][t],Subscript[\[Theta], cf][t]]
+BackCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], cb][t],Subscript[\[Psi], cb][t],Subscript[\[Theta], cb][t]]
 FrontCasterMatrix[t]
 BackCasterMatrix[t]
 
@@ -112,7 +110,7 @@ YF[t_]:=Flatten[ITVFPT[t].ITVFP[t]]
 
 TERM3[t_]:=YF[1][t]*IM
 TERM4[t_]:=ITVFP[t].ITVFPT[t]
-
+0
 Subscript[\[Sigma], BP]      = {{(1/12)*Subscript[m, BP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
 Subscript[\[Sigma], FP]      = {{(1/12)*Subscript[m, FP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
 Subscript[\[Sigma], ROD]     = {{(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2,0,0},{0,0,0},{0,0,(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2}}
@@ -278,6 +276,12 @@ Subscript[PE, FP][t]=Subscript[m, FP]*g*Z[t]*(Z[t]+(FPO)[t][[3,1]])
 Subscript[PE, BP][t]=Subscript[m, BP]*g*Z[t]*(Z[t]+(BPO)[t][[3,1]])
 Subscript[PE, CWB][t]=Subscript[m, CWF]*g*(Z[t]+(BPO)[t][[3,1]]+(BCBP)[t][[3,1]]+(BWBC)[t][[3,1]])
 Subscript[PE, CWF][t]=Subscript[m, CWB]*g*(Z[t]+(FPO)[t][[3,1]]+(FCFP)[t][[3,1]]+(FWFC)[t][[3,1]])
+
+
+
+
+
+
 
 
 
