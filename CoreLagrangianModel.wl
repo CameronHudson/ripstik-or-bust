@@ -158,12 +158,7 @@ Subscript[L, FCFWZ]= 12;
 (FWFC)[t_]=FrontCasterMatrix[t].Transpose[{{Subscript[L, FWFCX], 0, -Subscript[L, FWFCZ]}}]
 
 
-(*Contact points of Ripstik with ground*)
-Subscript[CP, B][t_]={{Subscript[X, B][t]},{Subscript[Y, B][t]},{0}}
-Subscript[CP, F][t_]={{Subscript[X, F][t]},{Subscript[Y, F][t]},{0}}
 
-(*Equate positions on either side of the origin of the Ripstik*)
-Subscript[CP, F][t]+FWFC[t]+FCFP[t]+FPO[t] == Subscript[CP, B][t]+BWBC[t]+BCBP[t]+BPO[t]
 
 
 (*I guess i'll try and take derivatives of the position now*)
@@ -283,6 +278,22 @@ Subscript[PE, CWF][t]=Subscript[m, CWB]*g*(Z[t]+(FPO)[t][[3,1]]+(FCFP)[t][[3,1]]
 
 
 
+
+
+
+
+
+
+(*Contact Point of Front and back wheels relative to inertial frame*)
+FrontWheelPosition[t_] = GlobalTranslation[t]+FWFC[t]+FCFP[t]+FPO[t] 
+BackWheelPosition[t_] = GlobalTranslation[t]+BWBC[t]+BCBP[t]+BPO[t]
+
+(*Derivatives of contact points*)
+Y'[t] = 0
+Z'[t] = 0
+
+FrontWheelVelocity = D[FrontWheelPosition[t], t]
+BackWheelVelocity = D[BackWheelPosition[t], t]
 
 
 
