@@ -1,9 +1,10 @@
 (* ::Package:: *)
 
-(*AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\Wolfram Mathematica"]*)_
+AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
+Needs["VariationalMethods`"]
 
 
 $Assumptions = t \[Element] Reals && t > 0 && 
@@ -70,13 +71,13 @@ MCaster
 (*CasterMatrix = AnglesToMatrix[Subscript[\[Alpha], cf],Subscript[\[Psi], cf],Subscript[\[Theta], cf]].MCaster*)
 
 (*Now we will define the rotation matrices for the front and back casters*)
-Subscript[\[Theta], cf][t_] = 0;
-Subscript[\[Psi], cf][t_] = 0;
-Subscript[\[Theta], cb][t_] = 0;
-Subscript[\[Psi], cb][t_] = 0;
+Subscript[\[Theta], f][t_] = 0;
+Subscript[\[Psi], f][t_] = 0;
+Subscript[\[Theta], b][t_] = 0;
+Subscript[\[Psi], b][t_] = 0;
 
-FrontCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], cf][t],Subscript[\[Psi], cf][t],Subscript[\[Theta], cf][t]]
-BackCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], cb][t],Subscript[\[Psi], cb][t],Subscript[\[Theta], cb][t]]
+FrontCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], f][t],Subscript[\[Psi], f][t],Subscript[\[Theta], f][t]]
+BackCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], b][t],Subscript[\[Psi], b][t],Subscript[\[Theta], b][t]]
 FrontCasterMatrix[t]
 BackCasterMatrix[t]
 
@@ -272,14 +273,13 @@ Subscript[PE, BP][t]=Subscript[m, BP]*g*Z[t]*(Z[t]+(BPO)[t][[3,1]])
 Subscript[PE, CWB][t]=Subscript[m, CWF]*g*(Z[t]+(BPO)[t][[3,1]]+(BCBP)[t][[3,1]]+(BWBC)[t][[3,1]])
 Subscript[PE, CWF][t]=Subscript[m, CWB]*g*(Z[t]+(FPO)[t][[3,1]]+(FCFP)[t][[3,1]]+(FWFC)[t][[3,1]])
 
+ISLIT[t_]=Subscript[KE, TROD][t]+Subscript[KE, RROD][t]-Subscript[PE, ROD][t]
 
+(*L[t_]=Subscript[KE, TROD][t]+Subscript[KE, TBP][t]+Subscript[KE, TFP][t]+Subscript[KE, TFC][t]+Subscript[KE, TBC][t]+Subscript[KE, RROD][t]+Subscript[KE, FP][t]+Subscript[KE, BP][t]+Subscript[KE, CWF][t]+Subscript[KE, CWB][t]-Subscript[PE, ROD][t]-Subscript[PE, FB][t]-Subscript[PE, BP][t]-Subscript[PE, CWB][t]-Subscript[PE, CWF][t]
 
+Evaluate[EulerEquations[L[t], {X[t],Y[t],Z[t],Subscript[\[Alpha], f][t],Subscript[\[Alpha], r][t],\[Psi][t], \[Theta][t],\[Alpha][t],\[Psi][t]}, t]]
 
-
-
-
-
-
+Evaluate[EulerEquations[1/2mr^2\[Theta]'[t]^2+mgrCos[\[Theta][t]],\[Theta][t],t]]*)
 
 
 
