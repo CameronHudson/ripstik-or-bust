@@ -118,6 +118,10 @@ Subscript[\[Sigma], BC][t_] := Simplify[{{(1/2)*Subscript[m, BC]*(Subscript[R, w
 Subscript[\[Sigma], FC][t_] := Simplify[{{(1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2}} + Subscript[m, FC]*(TERM3[t]-TERM4[t])]
 
 Subscript[\[Sigma], BP][t]
+Subscript[\[Sigma], FP][t]
+Subscript[\[Sigma], ROD][t]
+Subscript[\[Sigma], BC][t]
+Subscript[\[Sigma], FC][t]
 
 
 (**)
@@ -232,6 +236,9 @@ Subscript[E, BP][t]
 Subscript[E, FC][t]
 Subscript[E, BC][t]
 L[t_] = Simplify[Subscript[E, ROD][t] + Subscript[E, FP][t] + Subscript[E, BP][t] + Subscript[E, FC][t] + Subscript[E, BC][t]]
+
+
+
 
 
 
