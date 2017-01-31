@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-(*AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\Wolfram Mathematica"]*)_
+AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
@@ -110,15 +110,16 @@ YF[t_]:=Flatten[ITVFPT[t].ITVFP[t]]
 
 TERM3[t_]:=YF[1][t]*IM
 TERM4[t_]:=ITVFP[t].ITVFPT[t]
-0
-Subscript[\[Sigma], BP]      = {{(1/12)*Subscript[m, BP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
-Subscript[\[Sigma], FP]      = {{(1/12)*Subscript[m, FP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
-Subscript[\[Sigma], ROD]     = {{(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2,0,0},{0,0,0},{0,0,(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2}}
-Subscript[\[Sigma], CWB][t_] = Simplify[{{(1/2)*Subscript[m, CWB]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, CWB]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, CWB]*(Subscript[R, w])^2}} + Subscript[m, CWB]*(TERM1[t]-TERM2[t])]
-Subscript[\[Sigma], CWF][t_] = Simplify[{{(1/2)*Subscript[m, CWF]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, CWF]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, CWF]*(Subscript[R, w])^2}} + Subscript[m, CWF]*(TERM3[t]-TERM4[t])]
+
+Subscript[\[Sigma], BP][t_] := {{(1/12)*Subscript[m, BP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
+Subscript[\[Sigma], FP][t_] := {{(1/12)*Subscript[m, FP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
+Subscript[\[Sigma], ROD][t_]:= {{(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2,0,0},{0,0,0},{0,0,(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2}}
+Subscript[\[Sigma], BC][t_] := Simplify[{{(1/2)*Subscript[m, BC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, BC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, BC]*(Subscript[R, w])^2}} + Subscript[m, BC]*(TERM1[t]-TERM2[t])]
+Subscript[\[Sigma], FC][t_] := Simplify[{{(1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2}} + Subscript[m, FC]*(TERM3[t]-TERM4[t])]
+
+Subscript[\[Sigma], BP][t]
 
 
-(* ::Code:: *)
 (**)
 
 
@@ -166,14 +167,15 @@ Subscript[CP, F][t_]={{Subscript[X, F][t]},{Subscript[Y, F][t]},{0}}
 Subscript[CP, F][t]+FWFC[t]+FCFP[t]+FPO[t] == Subscript[CP, B][t]+BWBC[t]+BCBP[t]+BPO[t]
 
 
-(*I guess i'll try and take derivatives of the position now*)
-Subscript[V, O][t_]  = D[GlobalTranslation[t], t]
-Subscript[V, BP][t_] = D[(BPO)[t], t]+Subscript[V, O][t]
-Subscript[V, TP][t_] = D[(BCBP)[t],t]+Subscript[V, BP][t]
-Subscript[V, BC][t_] = D[(BWBC)[t],t]+Subscript[V, TP][t]
-Subscript[V, FP][t_] = D[(FPO)[t],t]+Subscript[V, O][t]
-Subscript[V, TP1][t_]= D[(FCFP)[t],t]+Subscript[V, FP][t]
-Subscript[V, FC][t_] = D[(FWFC)[t],t]+Subscript[V, TP1][t]
+(*Full position vectors relative to inertial frame for each body*)
+
+
+Subscript[P, ROD][t_] = GlobalTranslation[t]
+Subscript[P, FP][t_]  = GlobalTranslation[t] + (FPO)[t]
+Subscript[P, BP][t_]  = GlobalTranslation[t] + (BPO)[t]
+Subscript[P, FC][t_]  = GlobalTranslation[t] + (FPO)[t] + (FCFP)[t] + (FWFC)[t]
+Subscript[P, BC][t_]  = GlobalTranslation[t] + (BPO)[t] + (BCBP)[t] + (BWBC)[t]
+
 (*Non-Holonomic Constraints*)
 Subscript[V, FCNH][t_] = D[(FWFC)[t], t]
 Subscript[V, BCNH][t_] = D[(BWBC)[t], t]
@@ -183,106 +185,53 @@ Subscript[V, BCNH][t_] = D[(BWBC)[t], t]
 
 (*Defining rotation matrices in inertial reference frame*)
 Subscript[R, ROD][t_]:=GlobalRotation[t]
-Subscript[R, FP][t_]=GlobalRotation[t].Rfront[t]
-Subscript[R, BP][t_]=GlobalRotation[t].Rback[t]
-Subscript[R, CWF][t_]:=GlobalRotation[t].Rfront[t].FrontCasterMatrix[t]
-Subscript[R, CWB][t_]:=GlobalRotation[t].Rback[t].BackCasterMatrix[t]
+Subscript[R, FP][t_]:=GlobalRotation[t].Rfront[t]
+Subscript[R, BP][t_]:=GlobalRotation[t].Rback[t]
+Subscript[R, FC][t_]:=GlobalRotation[t].Rfront[t].FrontCasterMatrix[t]
+Subscript[R, BC][t_]:=GlobalRotation[t].Rback[t].BackCasterMatrix[t]
 Subscript[R, ROD][t]
-Subscript[R, CWF][t]
-Subscript[R, CWB][t]
+Subscript[R, FC][t]
+Subscript[R, BC][t]
 (*Non-Holonomic Constraints*)
-Subscript[R, CWFNH][t_] = FrontCasterMatrix[t]
-Subscript[R, CWBNH][t_] = BackCasterMatrix[t]
+Subscript[R, FCNH][t_] = FrontCasterMatrix[t]
+Subscript[R, BCNH][t_] = BackCasterMatrix[t]
 
 
 
 
-(*Define the angular velocities*)
-Subscript[\[CapitalOmega], ROD][t_]=Simplify[Transpose[(Subscript[R, ROD][t])].D[Subscript[R, ROD][t], t]]
+(*Define the angular velocities
+Subscript[\[Omega], ROD][t_]=AngularVelocity[Subscript[R, ROD],t]
+Subscript[\[Omega], FP][t_]=AngularVelocity[Subscript[R, FP],t]
+Subscript[\[Omega], BP][t_]=AngularVelocity[Subscript[R, BP],t]
+Subscript[\[Omega], FC][t_]=AngularVelocity[Subscript[R, FC],t]
+Subscript[\[Omega], BC][t_]=AngularVelocity[Subscript[R, BC],t]*)
 
 
-Subscript[\[CapitalOmega], FP][t_]=Simplify[Transpose[(Subscript[R, FP][t])].D[Subscript[R, FP][t], t]]
-
-
-Subscript[\[CapitalOmega], BP][t_]=Simplify[Transpose[(Subscript[R, BP][t])].D[Subscript[R, BP][t], t]]
-
-
-Subscript[\[CapitalOmega], CWF][t_]=Simplify[Transpose[(Subscript[R, CWF][t])].D[Subscript[R, CWF][t], t]]
-
-
-Subscript[\[CapitalOmega], CWB][t_]=Simplify[Transpose[(Subscript[R, CWB][t])].D[Subscript[R, CWB][t], t]]
+(*Non-Holonomic Constraints
+Subscript[\[CapitalOmega], FCNH][t_]=Simplify[Transpose[(Subscript[R, FCNH][t])].D[Subscript[R, FCNH][t], t]]
+Subscript[\[CapitalOmega], BCNH][t_]=Simplify[Transpose[(Subscript[R, BCNH][t])].D[Subscript[R, BCNH][t], t]]*)
 
 
 
-Subscript[\[Omega], ROD][t_]=Simplify[Transpose[{{Subscript[\[CapitalOmega], ROD][t][[3,2]],Subscript[\[CapitalOmega], ROD][t][[1,3]],Subscript[\[CapitalOmega], ROD][t][[2,1]]}}]]
-
-
-Subscript[\[Omega], FP][t_]=Simplify[Transpose[{{Subscript[\[CapitalOmega], FP][t][[3,2]],Subscript[\[CapitalOmega], FP][t][[1,3]],Subscript[\[CapitalOmega], FP][t][[2,1]]}}]]
-
-
-Subscript[\[Omega], BP][t_]=Simplify[Transpose[{{Subscript[\[CapitalOmega], BP][t][[3,2]],Subscript[\[CapitalOmega], BP][t][[1,3]],Subscript[\[CapitalOmega], BP][t][[2,1]]}}]]
-
-
-Subscript[\[Omega], CWF][t_]=Simplify[Transpose[{{Subscript[\[CapitalOmega], CWF][t][[3,2]],Subscript[\[CapitalOmega], CWF][t][[1,3]],Subscript[\[CapitalOmega], CWF][t][[2,1]]}}]]
-
-
-Subscript[\[Omega], CWB][t_]=Simplify[Transpose[{{Subscript[\[CapitalOmega], CWB][t][[3,2]],Subscript[\[CapitalOmega], CWB][t][[1,3]],Subscript[\[CapitalOmega], CWB][t][[2,1]]}}]]
-
-
-Dimensions[Subscript[\[Omega], CWF][t]]
-
-(*Non-Holonomic Constraints*)
-Subscript[\[CapitalOmega], CWFNH][t_]=Simplify[Transpose[(Subscript[R, CWFNH][t])].D[Subscript[R, CWFNH][t], t]]
-Subscript[\[CapitalOmega], CWBNH][t_]=Simplify[Transpose[(Subscript[R, CWBNH][t])].D[Subscript[R, CWBNH][t], t]]
-
-
-
- 
-
-
-(*Rotational Matrices*)
-z=Subscript[\[Sigma], CWF][t].Subscript[\[Omega], CWF][t]
-Subscript[KE, RROD][t_] = Simplify[Transpose[(Subscript[\[Sigma], ROD].Subscript[\[Omega], ROD][t])].Subscript[\[Omega], ROD][t]]
-Subscript[KE, FP][t_]   = Simplify[Transpose[(Subscript[\[Sigma], FP].Subscript[\[Omega], FP][t])].Subscript[\[Omega], FP][t]]
-Subscript[KE, BP][t_]   = Simplify[Transpose[(Subscript[\[Sigma], FP].Subscript[\[Omega], BP][t])].Subscript[\[Omega], BP][t]]
-Subscript[KE, CWF][t_]  = Simplify[Transpose[(Subscript[\[Sigma], CWF][t].Subscript[\[Omega], CWF][t])].Subscript[\[Omega], CWF][t]]
-Subscript[KE, CWB][t_]  = Simplify[Transpose[(Subscript[\[Sigma], CWB][t].Subscript[\[Omega], CWB][t])].Subscript[\[Omega], CWB][t]]
-
-
-
-(*Translational Kinetic Energies*)
-
-Subscript[KE, TROD][t_] = Simplify[(1/2)*Subscript[m, ROD]*Norm[Subscript[V, O][t]]^2]
-Subscript[KE, TBP][t_]  = Simplify[(1/2)*Subscript[m, BP]*Norm[Subscript[V, BP][t]]^2]
-Subscript[KE, TFP][t_]  = Simplify[(1/2)*Subscript[m, FP]*Norm[Subscript[V, FP][t]]^2]
-Subscript[KE, TFC][t_]  = Simplify[(1/2)*Subscript[m, CWF]*Norm[Subscript[V, FC][t]]^2]
-Subscript[KE, TBC][t_]  = Simplify[(1/2)*Subscript[m, CWB]*Norm[Subscript[V, BC][t]]^2]
-
-
-
-
-
-
-
-
-
-
-
-
-
-(*Potential Energies*)
-Subscript[PE, ROD][t] = Subscript[m, ROD]*g*Z[t]
-Subscript[PE, FP][t]=Subscript[m, FP]*g*Z[t]*(Z[t]+(FPO)[t][[3,1]])
-Subscript[PE, BP][t]=Subscript[m, BP]*g*Z[t]*(Z[t]+(BPO)[t][[3,1]])
-Subscript[PE, CWB][t]=Subscript[m, CWF]*g*(Z[t]+(BPO)[t][[3,1]]+(BCBP)[t][[3,1]]+(BWBC)[t][[3,1]])
-Subscript[PE, CWF][t]=Subscript[m, CWB]*g*(Z[t]+(FPO)[t][[3,1]]+(FCFP)[t][[3,1]]+(FWFC)[t][[3,1]])
-
-
-
-
-
-
-
+Subscript[E, ROD][t_]=TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
+Subscript[E, FP][t_] =TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
+Subscript[E, BP][t_] =TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
+Subscript[E, FC][t_] =TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[Sigma], FC], Subscript[m, FC], t, g]
+Subscript[E, BC][t_] =TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
+(*
+		V[t] = D[Subscript[P, ROD][t],t]
+		\[Omega][t] = AngularVelocity[Subscript[R, ROD], t]
+		RKE = Simplify[Transpose[Apply[Dot,{Subscript[\[Sigma], ROD],\[Omega][t]}]].\[Omega][t]]
+		TKE = Simplify[(1/2)*m*Norm[V[t]]^2]
+		GPE = Subscript[m, ROD]*g*Subscript[P, ROD][t][[3,1]]
+		Energy = RKE + TKE + GPE
+*)	
+Subscript[E, ROD][t]
+Subscript[E, FP][t]
+Subscript[E, BP][t]
+Subscript[E, FC][t]
+Subscript[E, BC][t]
+L[t_] = Simplify[Subscript[E, ROD][t] + Subscript[E, FP][t] + Subscript[E, BP][t] + Subscript[E, FC][t] + Subscript[E, BC][t]]
 
 
 
