@@ -25,4 +25,12 @@ ListPointPlot3D[v, AxesLabel -> {"x","y","z"}]
 
 
 (** Back Plate Rotation Test **)
+\[Theta][t]=0;
+\[Psi][t]=0;
+Subscript[\[Alpha], cb][t] = 0
+Subscript[L, OBP]=0.5
+Subscript[L, BPBC]=0.1
+(BWO) [t_] = BWBC[t] + BCBP[t] + BPO[t]
+
+
 
