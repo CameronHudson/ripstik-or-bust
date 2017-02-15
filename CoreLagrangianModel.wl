@@ -2,10 +2,6 @@
 
 AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix.wl
-<<SMCS.m
-<<Tensors.m
-<<DerivativeOptions.m
-<<Affine.m
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
 Needs["VariationalMethods`"]
@@ -22,8 +18,12 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   \[Theta]'[t] \[Element] Reals && 
 			   Subscript[\[Alpha], fp][t] \[Element] Reals &&
 			   Subscript[\[Alpha], bp][t] \[Element] Reals &&
-			   Subscript[\[Alpha], fc]'[t] \[Element] Reals &&
-			   Subscript[\[Alpha], bc]'[t] \[Element] Reals &&
+			   Subscript[\[Alpha], fp]'[t] \[Element] Reals &&
+			   Subscript[\[Alpha], bp]'[t] \[Element] Reals &&
+			   Subscript[\[Theta], fc][t] \[Element] Reals &&
+			   Subscript[\[Theta], bc][t] \[Element] Reals &&
+			   Subscript[\[Theta], fc]'[t] \[Element] Reals &&
+			   Subscript[\[Theta], bc]'[t] \[Element] Reals &&
 			   Subscript[L, OBP] \[Element] Reals && 
 			   Subscript[L, BPBC] \[Element] Reals && 
 			   Subscript[L, FWFCX] \[Element] Reals && 
@@ -38,7 +38,17 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   Z[t] \[Element] Reals &&
 			   X'[t] \[Element] Reals && 
 			   Y'[t] \[Element] Reals && 
-			   Z'[t] \[Element] Reals
+			   Z'[t] \[Element] Reals &&
+			   Subscript[m, BP] \[Element] Reals &&
+			   Subscript[m, FP] \[Element] Reals &&
+			   Subscript[m, ROD] \[Element] Reals &&
+			   Subscript[m, FC] \[Element] Reals &&
+			   Subscript[m, BC] \[Element] Reals &&
+			   Subscript[h, p] \[Element] Reals &&
+			   Subscript[w, p] \[Element] Reals &&
+			   Subscript[d, p] \[Element] Reals &&
+			   Subscript[l, r] \[Element] Reals &&
+			   Subscript[R, w] \[Element] Reals
 (*AnglesToMatrix[\[Alpha],\[Psi],\[Theta]]*)
 (*\[Alpha][t_] := \[Alpha][t]
 \[Psi][t_] := \[Psi][t]
@@ -191,29 +201,40 @@ Evaluate[EulerEquations[L[t], {X[t],Y[t],Z[t],Subscript[\[Alpha], f][t],Subscrip
 
 Evaluate[EulerEquations[1/2mr^2\[Theta]'[t]^2+mgrCos[\[Theta][t]],\[Theta][t],t]]*)
 
-Subscript[E, ROD][t_]=TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
-Subscript[E, FP][t_] =TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
-Subscript[E, BP][t_] =TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
-Subscript[E, FC][t_] =TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[Sigma], FC], Subscript[m, FC], t, g]
-Subscript[E, BC][t_] =TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
+Subscript[E, ROD][t_] := TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
+Subscript[E, FP][t_]  := TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
+Subscript[E, BP][t_]  := TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
+Subscript[E, FC][t_]  := TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[Sigma], FC], Subscript[m, FC], t, g]
+Subscript[E, BC][t_]  := TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
 
-L[t_] = Simplify[Subscript[E, ROD][t] + Subscript[E, FP][t] + Subscript[E, BP][t] + Subscript[E, FC][t] + Subscript[E, BC][t]]
+L[t_] := Simplify[Subscript[E, ROD][t] + Subscript[E, FP][t] + Subscript[E, BP][t] + Subscript[E, FC][t] + Subscript[E, BC][t]]
 
 
 
 (*Derivatives of contact points*)
-FrontWheelVelocity[t_] = D[Subscript[P, FC][t], t] 
-BackWheelVelocity[t_]  = D[Subscript[P, BC][t], t]
+FrontWheelVelocity[t_] := D[Subscript[P, FC][t], t] 
+BackWheelVelocity[t_]  := D[Subscript[P, BC][t], t]
 
-conf[t_] = {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
-vel[t_] = D[conf[t], t]
+conf[t_] := {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
+vel[t_] := D[conf[t], t]
+accel[t_] := D[vel[t], t]
 
-EQ1[t_] = FrontWheelVelocity[t][[2,1]]
-EQ2[t_] = FrontWheelVelocity[t][[3,1]]
-EQ3[t_] = BackWheelVelocity[t][[2,1]]
-EQ4[t_] = BackWheelVelocity[t][[3,1]]
+Y1[t_] := FrontWheelVelocity[t][[2,1]]
+Z1[t_] := FrontWheelVelocity[t][[3,1]]
+Y2[t_] := BackWheelVelocity[t][[2,1]]
+Z2[t_] := BackWheelVelocity[t][[3,1]]
 
-Normal[CoefficientArrays[{EQ1[t] == 0, EQ2[t] == 0, EQ3[t] == 0, EQ4[t] == 0}, vel[t]]]
+NHConstraints[t_] := {Y1[t] == 0, Z1[t] == 0, Y2[t] == 0, Z2[t] == 0}
+DNHConstraints[t_] := D[NHConstraints[t],t]
+
+
+Normal[CoefficientArrays[NHConstraints[t], vel[t]]][[2]]
+Normal[CoefficientArrays[DNHConstraints[t], accel[t]]][[2]]
+Dimensions[Normal[CoefficientArrays[DNHConstraints[t], vel[t]]]]
+L[t]
+conf[t]
+t
+EulerLagrange[t] = EulerEquations[L[t][[1]][[1]],conf[t],t]
 (*CoefficientArrays[EQ2[t], DOFs[t]]
 CoefficientArrays[EQ3[t], DOFs[t]]
 CoefficientArrays[EQ4[t], DOFs[t]]
@@ -224,6 +245,7 @@ CoefficientList[FrontWheelVelocity[2],{X'*)
 
 
 
+EulerLagrange[t] = EulerEquations[L[t][[1]][[1]],conf[t][[1]],t]
 
 
 
