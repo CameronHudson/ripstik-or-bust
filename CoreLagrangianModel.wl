@@ -263,8 +263,22 @@ DistributeDefinitions[L,t,conf]
 ParallelEvaluate[conf[[$KernelID]]]
 ParallelEvaluate[EulerEquations[L[[1]][[1]],conf[[1]],t]]*)
 
-EulerLagrange = EulerEquations[Lagrangian[[1]][[1]],conf,t]
 
+
+
+(*Compute Euler Lagrange & save to directory*)
+(*EulerLagrange = EulerEquations[Lagrangian[[1]][[1]],conf,t]
+SetDirectory["C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+EulerLagrange >> "EulerLagrangeFile.m"
+ResetDirectory[]*)
+
+
+(*Load Euler Lagrange from directory*)
+SetDirectory["C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+EulerLagrange = << "EulerLagrangeFile.m"
+ResetDirectory[]
 
 
 CoefficientMatrix = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
