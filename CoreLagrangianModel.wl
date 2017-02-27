@@ -49,14 +49,38 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   Subscript[d, p] \[Element] Reals &&
 			   Subscript[l, r] \[Element] Reals &&
 			   Subscript[R, w] \[Element] Reals
+(*
+SetAttributes[LOBP,Constant]
+SetAttributes[Subscript[L, BPBC],Constant]
+SetAttributes[Subscript[L, FWFCX],Constant]
+SetAttributes[Subscript[L, FWFCZ],Constant]
+SetAttributes[Subscript[L, OFP],Constant]
+SetAttributes[Subscript[L, FPFC],Constant]
+SetAttributes[Subscript[L, FCFW],Constant]
+SetAttributes[Subscript[L, BWBCX],Constant]
+SetAttributes[Subscript[L, BWBCZ],Constant]
+SetAttributes[Subscript[m, BP],Constant]
+SetAttributes[Subscript[m, FP],Constant]
+SetAttributes[Subscript[m, FC],Constant]
+SetAttributes[Subscript[m, BC],Constant]
+SetAttributes[Subscript[h, p],Constant]
+SetAttributes[Subscript[w, p],Constant]
+SetAttributes[Subscript[d, p],Constant]
+SetAttributes[Subscript[l, r],Constant]
+SetAttributes[Subscript[R, w],Constant]*)
 (*AnglesToMatrix[\[Alpha],\[Psi],\[Theta]]*)
 (*\[Alpha][t_] := \[Alpha][t]
 \[Psi][t_] := \[Psi][t]
 \[Theta][t_] := \[Theta][t]*)
-GlobalRotation[t_]:=AnglesToMatrix[\[Alpha][t],\[Psi][t],\[Theta][t]]
-GlobalRotation[t]
-GlobalTranslation[t_]:=Transpose[{{X[t],Y[t],Z[t]}}]
-GlobalTranslation[t]
+
+conf := {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
+vel := D[conf, t]
+accel := D[vel, t]
+
+GlobalRotation:=AnglesToMatrix[\[Alpha][t],\[Psi][t],\[Theta][t]]
+GlobalRotation
+GlobalTranslation:=Transpose[{{X[t],Y[t],Z[t]}}]
+GlobalTranslation
 
 
 (**Rotation Matrix for front and back plates**)
@@ -67,10 +91,10 @@ Subscript[\[Psi], bp][t_] = 0;
 Subscript[\[Theta], bp][t_] = 0;
 
 
-Rfront[t_]:= AnglesToMatrix[Subscript[\[Alpha], fp][t],Subscript[\[Psi], fp][t],Subscript[\[Theta], fp][t]]
-Rback[t_]:= AnglesToMatrix[Subscript[\[Alpha], bp][t],Subscript[\[Psi], bp][t],Subscript[\[Theta], bp][t]]
-Rfront[t]
-Rback[t]
+Rfront:= AnglesToMatrix[Subscript[\[Alpha], fp][t],Subscript[\[Psi], fp][t],Subscript[\[Theta], fp][t]]
+Rback:= AnglesToMatrix[Subscript[\[Alpha], bp][t],Subscript[\[Psi], bp][t],Subscript[\[Theta], bp][t]]
+Rfront
+Rback
 
 
 (**Rotation Matrix for back and front caster wheels**)
@@ -84,8 +108,8 @@ Subscript[\[Psi], fc][t_] = 0;
 Subscript[\[Alpha], bc][t_] = 0;
 Subscript[\[Psi], bc][t_] = 0;
 
-FrontCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], fc][t],Subscript[\[Psi], fc][t],Subscript[\[Theta], fc][t]]
-BackCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], bc][t],Subscript[\[Psi], bc][t],Subscript[\[Theta], bc][t]]
+FrontCasterMatrix := MCaster.AnglesToMatrix[Subscript[\[Alpha], fc][t],Subscript[\[Psi], fc][t],Subscript[\[Theta], fc][t]]
+BackCasterMatrix := MCaster.AnglesToMatrix[Subscript[\[Alpha], bc][t],Subscript[\[Psi], bc][t],Subscript[\[Theta], bc][t]]
 
 
 
@@ -102,26 +126,26 @@ BackCasterMatrix[t_] := MCaster.AnglesToMatrix[Subscript[\[Alpha], bc][t],Subscr
    Subscript[R, w]=
    *)
 
-ITVBPT[t_]:= ({{Subscript[L, BWBCX],0,-Subscript[L, BWBCZ]}}).BackCasterMatrix[t]
-ITVBP[t_]:=Transpose[ITVBPT[t]]
-IM={{1,0,0},{0,1,0},{0,0,1}}
-YB[t_]:=Flatten[ITVBPT[t].ITVBP[t]]
+ITVBPT := ({{Subscript[L, BWBCX],0,-Subscript[L, BWBCZ]}}).BackCasterMatrix
+ITVBP  := Transpose[ITVBPT]
+IM      = {{1,0,0},{0,1,0},{0,0,1}}
+YB     := Flatten[ITVBPT.ITVBP]
 
-TERM1[t_]:=YB[1][t]*IM
-TERM2[t_]:=ITVBP[t].ITVBPT[t]
+TERM1  := YB[[1]]*IM
+TERM2  := ITVBP.ITVBPT
 
-ITVFPT[t_]:=({{Subscript[L, FWFCX],0,-Subscript[L, FWFCZ]}}).FrontCasterMatrix[t]
-ITVFP[t_]:=Transpose[ITVFPT[t]]
-YF[t_]:=Flatten[ITVFPT[t].ITVFP[t]]
+ITVFPT :=({{Subscript[L, FWFCX],0,-Subscript[L, FWFCZ]}}).FrontCasterMatrix
+ITVFP  :=Transpose[ITVFPT]
+YF     :=Flatten[ITVFPT.ITVFP]
 
-TERM3[t_]:=YF[1][t]*IM
-TERM4[t_]:=ITVFP[t].ITVFPT[t]
+TERM3  := YF[[1]]*IM
+TERM4  := ITVFP.ITVFPT
 
-Subscript[\[Sigma], BP][t_] := {{(1/12)*Subscript[m, BP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
-Subscript[\[Sigma], FP][t_] := {{(1/12)*Subscript[m, FP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
-Subscript[\[Sigma], ROD][t_]:= {{(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2,0,0},{0,0,0},{0,0,(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2}}
-Subscript[\[Sigma], BC][t_] := Simplify[{{(1/2)*Subscript[m, BC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, BC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, BC]*(Subscript[R, w])^2}} + Subscript[m, BC]*(TERM1[t]-TERM2[t])]
-Subscript[\[Sigma], FC][t_] := Simplify[{{(1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2}} + Subscript[m, FC]*(TERM3[t]-TERM4[t])]
+Subscript[\[Sigma], BP]  := {{(1/12)*Subscript[m, BP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, BP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
+Subscript[\[Sigma], FP]  := {{(1/12)*Subscript[m, FP]*(Subscript[h, p]^2+Subscript[d, p]^2), 0, 0},{0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[d, p]^2), 0},{0, 0, (1/12)*Subscript[m, FP]*(Subscript[w, p]^2+Subscript[h, p]^2)}}
+Subscript[\[Sigma], ROD] := {{(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2,0,0},{0,0,0},{0,0,(1/12)*Subscript[m, ROD]*(Subscript[l, r])^2}}
+Subscript[\[Sigma], BC]  := Simplify[{{(1/2)*Subscript[m, BC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, BC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, BC]*(Subscript[R, w])^2}} + Subscript[m, BC]*(TERM1-TERM2)]
+Subscript[\[Sigma], FC]  := Simplify[{{(1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0, 0},{0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2, 0}, {0, 0, (1/2)*Subscript[m, FC]*(Subscript[R, w])^2}} + Subscript[m, FC]*(TERM3-TERM4)]
 
 
 (**)
@@ -134,33 +158,25 @@ Subscript[\[Sigma], FC][t_] := Simplify[{{(1/2)*Subscript[m, FC]*(Subscript[R, w
 (* Define lengths on the casterboard*)
 (*
 Subscript[L, OBP]= 25;
-Subscript[L, BPBER]= 10;
-Subscript[L, BPBEL]= 10;
 Subscript[L, BPBC]= 5;
 Subscript[L, BCBWX]= 7;
 Subscript[L, BCBWZ]= 12;
 Subscript[L, OFP]= 25;
-Subscript[L, FPFER]= 10;
-Subscript[L, FPFEL]= 10;
 Subscript[L, FPFC]= 5;
 Subscript[L, FCFWX]= 7;
 Subscript[L, FCFWZ]= 12;
 *)
 (* Define position vectors for key distances on the back half of the casterboard*)
 
-(BPO)[t_]=GlobalRotation[t].Transpose[{{-Subscript[L, OBP], 0, 0}}]
-(*(BERBP)[t_]=Transpose[{{0, -Subscript[L, BPBER], 0}}]
-(BELBP)[t_]=Transpose[{{0, Subscript[L, BPBEL], 0}}]*)
-(BCBP)[t_]=Rback[t].Transpose[{{0, 0, -Subscript[L, BPBC]}}]
-(BWBC)[t_]=BackCasterMatrix[t].Transpose[{{Subscript[L, BWBCX], 0, -Subscript[L, BWBCZ]}}]
+(BPO)  = GlobalRotation.Transpose[{{-Subscript[L, OBP], 0, 0}}]
+(BCBP) = Rback.Transpose[{{0, 0, -Subscript[L, BPBC]}}]
+(BWBC) = BackCasterMatrix.Transpose[{{Subscript[L, BWBCX], 0, -Subscript[L, BWBCZ]}}]
 
 (*Define position vectors for key distances on the front half of the casterboard*)
 
-(FPO)[t_]=GlobalRotation[t].Transpose[{{Subscript[L, OFP], 0, 0}}]
-(*(FERFP)[t_]=Transpose[{{0, -Subscript[L, FPFER], 0}}]
-(FELFP)[t_]=Transpose[{{0, Subscript[L, FPFEL], 0}}]*)
-(FCFP)[t_]=Rfront[t].Transpose[{{0, 0, -Subscript[L, FPFC]}}]
-(FWFC)[t_]=FrontCasterMatrix[t].Transpose[{{Subscript[L, FWFCX], 0, -Subscript[L, FWFCZ]}}]
+(FPO)  = GlobalRotation.Transpose[{{Subscript[L, OFP], 0, 0}}]
+(FCFP) = Rfront.Transpose[{{0, 0, -Subscript[L, FPFC]}}]
+(FWFC) = FrontCasterMatrix.Transpose[{{Subscript[L, FWFCX], 0, -Subscript[L, FWFCZ]}}]
 
 
 
@@ -169,25 +185,25 @@ Subscript[L, FCFWZ]= 12;
 (*Full position vectors relative to inertial frame for each body*)
 
 
-Subscript[P, ROD][t_] = GlobalTranslation[t]
-Subscript[P, FP][t_]  = GlobalTranslation[t] + (FPO)[t]
-Subscript[P, BP][t_]  = GlobalTranslation[t] + (BPO)[t]
-Subscript[P, FC][t_]  = GlobalTranslation[t] + (FPO)[t] + (FCFP)[t] + (FWFC)[t]
-Subscript[P, BC][t_]  = GlobalTranslation[t] + (BPO)[t] + (BCBP)[t] + (BWBC)[t]
+Subscript[P, ROD] = GlobalTranslation
+Subscript[P, FP]  = GlobalTranslation + (FPO)
+Subscript[P, BP]  = GlobalTranslation + (BPO)
+Subscript[P, FC]  = GlobalTranslation + (FPO) + (FCFP) + (FWFC)
+Subscript[P, BC]  = GlobalTranslation + (BPO) + (BCBP) + (BWBC)
 
 (*Non-Holonomic Constraints*)
-Subscript[V, FCNH][t_] = D[(FWFC)[t], t]
-Subscript[V, BCNH][t_] = D[(BWBC)[t], t]
+Subscript[V, FCNH] = D[(FWFC), t]
+Subscript[V, BCNH] = D[(BWBC), t]
 
 
 
 
 (*Defining rotation matrices in inertial reference frame*)
-Subscript[R, ROD][t_]:=GlobalRotation[t]
-Subscript[R, FP][t_]:=GlobalRotation[t].Rfront[t]
-Subscript[R, BP][t_]:=GlobalRotation[t].Rback[t]
-Subscript[R, FC][t_]:=GlobalRotation[t].Rfront[t].FrontCasterMatrix[t]
-Subscript[R, BC][t_]:=GlobalRotation[t].Rback[t].BackCasterMatrix[t]
+Subscript[R, ROD] = GlobalRotation
+Subscript[R, FP]  = GlobalRotation.Rfront
+Subscript[R, BP]  = GlobalRotation.Rback
+Subscript[R, FC]  = GlobalRotation.Rfront.FrontCasterMatrix
+Subscript[R, BC]  = GlobalRotation.Rback.BackCasterMatrix
 
 
 
@@ -201,40 +217,34 @@ Evaluate[EulerEquations[L[t], {X[t],Y[t],Z[t],Subscript[\[Alpha], f][t],Subscrip
 
 Evaluate[EulerEquations[1/2mr^2\[Theta]'[t]^2+mgrCos[\[Theta][t]],\[Theta][t],t]]*)
 
-Subscript[E, ROD][t_] := TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
-Subscript[E, FP][t_]  := TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
-Subscript[E, BP][t_]  := TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
-Subscript[E, FC][t_]  := TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[Sigma], FC], Subscript[m, FC], t, g]
-Subscript[E, BC][t_]  := TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
+Subscript[E, ROD] = TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
+Subscript[E, FP]  = TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
+Subscript[E, BP]  = TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
+Subscript[E, FC]  = TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[Sigma], FC], Subscript[m, FC], t, g]
+Subscript[E, BC]  = TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
 
-L[t_] := Simplify[Subscript[E, ROD][t] + Subscript[E, FP][t] + Subscript[E, BP][t] + Subscript[E, FC][t] + Subscript[E, BC][t]]
+Lagrangian := Simplify[Subscript[E, ROD] + Subscript[E, FP] + Subscript[E, BP] + Subscript[E, FC] + Subscript[E, BC]]
 
 
 
 (*Derivatives of contact points*)
-FrontWheelVelocity[t_] := D[Subscript[P, FC][t], t] 
-BackWheelVelocity[t_]  := D[Subscript[P, BC][t], t]
+FrontWheelVelocity := D[Subscript[P, FC], t] 
+BackWheelVelocity  := D[Subscript[P, BC], t]
 
-conf[t_] := {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
-vel[t_] := D[conf[t], t]
-accel[t_] := D[vel[t], t]
+Y1 := FrontWheelVelocity[[2,1]]
+Z1 := FrontWheelVelocity[[3,1]]
+Y2 := BackWheelVelocity[[2,1]]
+Z2 := BackWheelVelocity[[3,1]]
 
-Y1[t_] := FrontWheelVelocity[t][[2,1]]
-Z1[t_] := FrontWheelVelocity[t][[3,1]]
-Y2[t_] := BackWheelVelocity[t][[2,1]]
-Z2[t_] := BackWheelVelocity[t][[3,1]]
-
-NHConstraints[t_] := {Y1[t] == 0, Z1[t] == 0, Y2[t] == 0, Z2[t] == 0}
-DNHConstraints[t_] := D[NHConstraints[t],t]
+NHConstraints = {Y1 == 0, Z1 == 0, Y2 == 0, Z2 == 0}
+DNHConstraints = D[NHConstraints,t]
 
 
-Normal[CoefficientArrays[NHConstraints[t], vel[t]]][[2]]
-Normal[CoefficientArrays[DNHConstraints[t], accel[t]]][[2]]
-Dimensions[Normal[CoefficientArrays[DNHConstraints[t], vel[t]]]]
-L[t]
-conf[t]
-t
-EulerLagrange[t] = EulerEquations[L[t][[1]][[1]],conf[t],t]
+Normal[CoefficientArrays[NHConstraints, vel]][[2]]
+Normal[CoefficientArrays[DNHConstraints, accel]][[2]]
+Dimensions[Normal[CoefficientArrays[DNHConstraints, vel]]]
+DNHConstraints
+(*EulerLagrange[t] = EulerEquations[L[t][[1]][[1]],conf,t]*)
 (*CoefficientArrays[EQ2[t], DOFs[t]]
 CoefficientArrays[EQ3[t], DOFs[t]]
 CoefficientArrays[EQ4[t], DOFs[t]]
@@ -245,9 +255,26 @@ CoefficientList[FrontWheelVelocity[2],{X'*)
 
 
 
-EulerLagrange[t] = EulerEquations[L[t][[1]][[1]],conf[t][[1]],t]
+(*$ProcessorCount
+$ProcessorType
+LaunchKernels[]
+ParallelEvaluate[$KernelID]
+DistributeDefinitions[L,t,conf]
+ParallelEvaluate[conf[[$KernelID]]]
+ParallelEvaluate[EulerEquations[L[[1]][[1]],conf[[1]],t]]*)
+
+EulerLagrange = EulerEquations[Lagrangian[[1]][[1]],conf,t]
 
 
 
+CoefficientMatrix = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
+Dimensions[CoefficientMatrix]
 
 
+adj[m_] := 
+    Map[Reverse, Minors[Transpose[m], Length[m] - 1], {0, 1}] * 
+      Table[(-1)^(i + j), {i, Length[m]}, {j, Length[m]}]
+
+
+(*adjointTest = adj[CoefficientMatrix]*)
+(*InversionTest = Inverse[CoefficientMatrix]*)

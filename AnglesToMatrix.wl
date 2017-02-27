@@ -30,18 +30,18 @@ AnglesToMatrix[\[Alpha]_, \[Psi]_, \[Theta]_] :=
 AngularVelocity[M_, t_] :=
 	Module[ {\[Omega], \[CapitalOmega]},
 		(*Determine Angular Velocities*)
-		\[CapitalOmega] = Simplify[Transpose[M[t]].D[M[t],t]];
+		\[CapitalOmega] = Simplify[Transpose[M].D[M,t]];
 		\[Omega] =Simplify[Transpose[{{\[CapitalOmega][[3,2]],\[CapitalOmega][[1,3]],\[CapitalOmega][[2,1]]}}]]
 	]
 
 TotalEnergy[R_, P_, \[Sigma]_, m_, t_, g_] :=
 	Module[ {E, V, RKE, TKE, GPE, \[Omega], temp},
-		V[t] = D[P[t],t];
-		\[Omega][t] = AngularVelocity[R, t];
-		temp = Simplify[\[Sigma][t].\[Omega][t]];
-		RKE = (1/2)*Evaluate[Transpose[temp]].\[Omega][t];
-		TKE = Simplify[(1/2)*m*Norm[V[t]]^2];
-		GPE = m*g*P[t][[3,1]];
+		V = D[P,t];
+		\[Omega] = AngularVelocity[R, t];
+		temp = Simplify[\[Sigma].\[Omega]];
+		RKE = (1/2)*Evaluate[Transpose[temp]].\[Omega];
+		TKE = Simplify[(1/2)*m*Norm[V]^2];
+		GPE = m*g*P[[3,1]];
 		E = Simplify[RKE + TKE - GPE]
 	]
 	
