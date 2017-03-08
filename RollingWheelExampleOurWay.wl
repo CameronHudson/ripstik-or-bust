@@ -43,33 +43,36 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   X'[t] \[Element] Reals && 
 			   Y'[t] \[Element] Reals && 
 			   Z'[t] \[Element] Reals
+			
+\[Rho] = 1
+m = 2
 
 
 Iw = {{Jspin, 0, 0}, {0, Jspin, 0}, {0, 0, Jroll}}
 
 
-GlobalTranslation[t_]:=Transpose[{{X[t],Y[t], 0}}]
-GlobalTranslation[t]
+GlobalTranslation:=Transpose[{{X[t],Y[t], 0}}]
+GlobalTranslation
 
 
 \[Alpha][t] = 0;
-RollingWheel[t_]:=AnglesToMatrix[\[Alpha][t],\[Phi][t], \[Theta][t]]
-RollingWheel[t]
+RollingWheel:=AnglesToMatrix[\[Alpha][t],\[Phi][t], \[Theta][t]]
+RollingWheel
 
 
 (*Defining rotation matrices in inertial reference frame*)
-RWheel[t_]:=RollingWheel[t]
-RWheel[t]
+RWheel:=RollingWheel
+RWheel
 
 
 
 
 (*Energy Equations*)
-V[t] = D[GlobalTranslation[t],t]
-\[Omega][t] = AngularVelocity[RWheel, t]
-RKE[t_] = (1/2)*Simplify[Evaluate[Transpose[Iw.\[Omega][t]].\[Omega][t]]]
-TKE[t_] = Simplify[(1/2)*m*Norm[V[t]]^2]
-KEtot[t_]=RKE[t]+TKE[t]
+V = D[GlobalTranslation,t]
+\[Omega] = AngularVelocity[RWheel, t]
+RKE = (1/2)*Simplify[Evaluate[Transpose[Iw.\[Omega]].\[Omega]]]
+TKE = Simplify[(1/2)*m*Norm[V]^2]
+KEtot = RKE+TKE
 
 
 
@@ -78,19 +81,32 @@ KEtot[t_]=RKE[t]+TKE[t]
 
 
 
-EulerEquations[ KEtot[t][[1]][[1]],{X[t], Y[t],\[Theta][t], \[Phi][t]},t]
-Conf[t_] = {X[t], Y[t], \[Theta][t], \[Phi][t]}
-vel[t_] = D[Conf[t], t]
+EulerLagrange = EulerEquations[ KEtot[[1]][[1]],{X[t], Y[t],\[Theta][t], \[Phi][t]},t]
+Conf = {X[t], Y[t], \[Theta][t], \[Phi][t]}
+vel = D[Conf, t]
+accel = D[vel, t]
+P = Normal[CoefficientArrays[{EQ1 = 0 == \[Rho]*\[Phi]'[t]*cos\[Theta][t]-X'[t], EQ2 = 0 == \[Rho]*\[Phi]'[t]*sin\[Theta][t]-Y'[t]}, vel]][[2]]
 
-P = Normal[CoefficientArrays[{EQ1[t] = 0 == \[Rho]*\[Phi]'[t]*cos\[Theta][t]-X'[t], EQ2[t] = 0 == \[Rho]*\[Phi]'[t]*sin\[Theta][t]-Y'[t]}, vel[t]]][[2]]
 
-
-G = {{m, 0, 0, 0}, {0, m, 0, 0}, {0, 0, Jspin, 0}, {0, 0, 0, Jroll}}
+G = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
 Q = Inverse[G]
-\[Lambda]matrix = {{\[Lambda]1, \[Lambda]2}}
+\[Lambda]matrix = {{\[Lambda]1}, {\[Lambda]2}}
+\[Lambda]matrix1 = {{\[Lambda]1, \[Lambda]2}}
 (*P is equivalent to our \[Omega], and Q is G inverse*)
-K = \[Lambda]matrix.P.Q
+K = \[Lambda]matrix1.P.Q
+(*K.G == \[Lambda]matrix.P
+LinearSolve[G, \[Lambda]matrix.P]*)
+P1 = Transpose[P]
 
+
+
+AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange, accel]][[2]]
+VelCoefficientMatrix = 0
+\[Lambda]matrix = {\[Lambda]1, \[Lambda]2}
+
+EquationSystem1 = LinearSolve[AccelCoefficientMatrix, P1.\[Lambda]matrix]
+
+Solve[EquationSystem1.AccelCoefficientMatrix == 0, {\[Lambda]1, \[Lambda]2}]
 
 
 
