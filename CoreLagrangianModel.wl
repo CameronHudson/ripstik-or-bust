@@ -49,31 +49,35 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   Subscript[d, p] \[Element] Reals &&
 			   Subscript[l, r] \[Element] Reals &&
 			   Subscript[R, w] \[Element] Reals
-(*
-SetAttributes[LOBP,Constant]
-SetAttributes[Subscript[L, BPBC],Constant]
-SetAttributes[Subscript[L, FWFCX],Constant]
-SetAttributes[Subscript[L, FWFCZ],Constant]
-SetAttributes[Subscript[L, OFP],Constant]
-SetAttributes[Subscript[L, FPFC],Constant]
-SetAttributes[Subscript[L, FCFW],Constant]
-SetAttributes[Subscript[L, BWBCX],Constant]
-SetAttributes[Subscript[L, BWBCZ],Constant]
-SetAttributes[Subscript[m, BP],Constant]
-SetAttributes[Subscript[m, FP],Constant]
-SetAttributes[Subscript[m, FC],Constant]
-SetAttributes[Subscript[m, BC],Constant]
-SetAttributes[Subscript[h, p],Constant]
-SetAttributes[Subscript[w, p],Constant]
-SetAttributes[Subscript[d, p],Constant]
-SetAttributes[Subscript[l, r],Constant]
-SetAttributes[Subscript[R, w],Constant]*)
+
+Subscript[L, OBP] = 13
+Subscript[L, BPBC] = 5
+Subscript[L, FWFCX] = 2
+Subscript[L, FWFCZ]= 3
+Subscript[L, OFP] = 13
+Subscript[L, FPFC] = 5
+(*Subscript[L, FCFW]*)
+Subscript[L, BWBCX] = 2
+Subscript[L, BWBCZ] = 3
+Subscript[m, BP] = 5
+Subscript[m, FP]= 5
+Subscript[m, FC] = 3
+Subscript[m, BC]= 3
+Subscript[h, p]= 2
+Subscript[w, p]= 6
+Subscript[d, p]= 10
+Subscript[l, r] = 10
+Subscript[R, w] = 3
+Subscript[m, ROD] = 4S
+\[Phi] = 45 Degree
+
 (*AnglesToMatrix[\[Alpha],\[Psi],\[Theta]]*)
 (*\[Alpha][t_] := \[Alpha][t]
 \[Psi][t_] := \[Psi][t]
 \[Theta][t_] := \[Theta][t]*)
 
 conf := {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
+daeconf :={Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
 vel := D[conf, t]
 accel := D[vel, t]
 
