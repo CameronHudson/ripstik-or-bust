@@ -220,7 +220,7 @@ Subscript[\[CapitalOmega], BCNH][t_]=Simplify[Transpose[(Subscript[R, BCNH][t])]
 Evaluate[EulerEquations[L[t], {X[t],Y[t],Z[t],Subscript[\[Alpha], f][t],Subscript[\[Alpha], r][t],\[Psi][t], \[Theta][t],\[Alpha][t],\[Psi][t]}, t]]
 
 Evaluate[EulerEquations[1/2mr^2\[Theta]'[t]^2+mgrCos[\[Theta][t]],\[Theta][t],t]]*)
-
+(*
 Subscript[E, ROD] = TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
 Subscript[E, FP]  = TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
 Subscript[E, BP]  = TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
@@ -228,7 +228,7 @@ Subscript[E, FC]  = TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[
 Subscript[E, BC]  = TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
 
 Lagrangian := Simplify[Subscript[E, ROD] + Subscript[E, FP] + Subscript[E, BP] + Subscript[E, FC] + Subscript[E, BC]]
-
+*)
 
 
 (*Derivatives of contact points*)
@@ -241,10 +241,11 @@ Y2 := BackWheelVelocity[[2,1]]
 Z2 := BackWheelVelocity[[3,1]]
 
 NHConstraints = {Y1 == 0, Z1 == 0, Y2 == 0, Z2 == 0}
-DNHConstraints = D[NHConstraints,t]
+DNHConstraints =D[NHConstraints,t]
 
 
-Normal[CoefficientArrays[NHConstraints, vel]][[2]]
+
+P = Evaluate[Normal[CoefficientArrays[NHConstraints, vel]][[2]]]
 Normal[CoefficientArrays[DNHConstraints, accel]][[2]]
 Dimensions[Normal[CoefficientArrays[DNHConstraints, vel]]]
 DNHConstraints
@@ -279,20 +280,63 @@ ResetDirectory[]*)
 
 
 (*Load Euler Lagrange from directory*)
-SetDirectory["C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]
+SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
 DirectoryStack[]
 EulerLagrange = << "EulerLagrangeFile.m"
 ResetDirectory[]
 
 
-CoefficientMatrix = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
-Dimensions[CoefficientMatrix]
+AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
+VelCoefficientMatrix = CoefficientArrays[EulerLagrange,vel][[3]]
 
 
-adj[m_] := 
-    Map[Reverse, Minors[Transpose[m], Length[m] - 1], {0, 1}] * 
-      Table[(-1)^(i + j), {i, Length[m]}, {j, Length[m]}]
+
+P1 = Transpose[P]
+\[Lambda]matrix = {\[Lambda]1, \[Lambda]2, \[Lambda]3, \[Lambda]4}
+P1.\[Lambda]matrix
 
 
-(*adjointTest = adj[CoefficientMatrix]*)
-(*InversionTest = Inverse[CoefficientMatrix]*)
+(*EquationSystem1 = LinearSolve[AccelCoefficientMatrix, P1.\[Lambda]matrix - VelCoefficientMatrix.vel.vel]*)
+
+
+
+
+
+
+
+
+(*dae = {EulerLagrange, DNHConstraints}[[1]]
+Normal[CoefficientArrays[dae, accel]][[2]]
+DSolve[dae,conf, t]*)
+
+
+(*Compute Equation1 & save to directory*)
+
+(*SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+EquationSystem1 >> "EquationSystem1.m"
+ResetDirectory[]*)
+
+
+SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+EquationSystem1 = << "EquationSystem1.m"
+ResetDirectory[]
+
+
+
+
+
+DirectoryStack[]
+
+
+(*Solve[AccelCoefficientMatrix.EquationSystem1 == VelCoefficientMatrix.vel.vel, \[Lambda]matrix]*)
+
+
+LHSide = AccelCoefficientMatrix.EquationSystem1
+
+
+RHSide = VelCoefficientMatrix.vel.vel
+
+
+EquationSystem1 = Solve[LHSide == RHSide, {\[Lambda]1,\[Lambda]2,\[Lambda]3,\[Lambda]4}]
