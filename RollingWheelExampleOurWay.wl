@@ -44,8 +44,6 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   Y'[t] \[Element] Reals && 
 			   Z'[t] \[Element] Reals
 			
-\[Rho] = 1
-m = 2
 
 
 Iw = {{Jspin, 0, 0}, {0, Jspin, 0}, {0, 0, Jroll}}
@@ -85,7 +83,7 @@ EulerLagrange = EulerEquations[ KEtot[[1]][[1]],{X[t], Y[t],\[Theta][t], \[Phi][
 Conf = {X[t], Y[t], \[Theta][t], \[Phi][t]}
 vel = D[Conf, t]
 accel = D[vel, t]
-P = Normal[CoefficientArrays[{EQ1 = 0 == \[Rho]*\[Phi]'[t]*cos\[Theta][t]-X'[t], EQ2 = 0 == \[Rho]*\[Phi]'[t]*sin\[Theta][t]-Y'[t]}, vel]][[2]]
+P = Normal[CoefficientArrays[{EQ1 = 0 == \[Rho]*\[Phi]'[t]*Cos[\[Theta][t]]-X'[t], EQ2 = 0 == \[Rho]*\[Phi]'[t]*Sin[\[Theta][t]]-Y'[t]}, vel]][[2]]
 
 
 G = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
@@ -105,8 +103,28 @@ VelCoefficientMatrix = 0
 \[Lambda]matrix = {\[Lambda]1, \[Lambda]2}
 
 EquationSystem1 = LinearSolve[AccelCoefficientMatrix, P1.\[Lambda]matrix]
-
 Solve[EquationSystem1.AccelCoefficientMatrix == 0, {\[Lambda]1, \[Lambda]2}]
+
+
+
+
+
+
+
+
+(*CAMERON IS TRYING STUFF*)
+NHConstraints = {x'[t] == \[Rho]*\[Phi]'[t]*Cos[\[Theta][t]], y'[t] == \[Rho]*\[Phi]'[t]*Sin[\[Theta][t]]}
+DNHConstraints = D[NHConstraints,t]
+NHConstraintAccelCoeffMatrix = Normal[CoefficientArrays[DNHConstraints,accel]][[2]]
+NHConstraintVelCoeffMatrix = CoefficientArrays[DNHConstraints,vel][[3]]
+
+
+LHSide = NHConstraintAccelCoeffMatrix.EquationSystem1
+RHSide = NHConstraintVelCoeffMatrix.vel.vel
+LHSideCoefficientMatrix = CoefficientArrays[LHSide,\[Lambda]matrix][[2]]
+Normal[LHSideCoefficientMatrix]
+Constraints = LinearSolve[Normal[LHSideCoefficientMatrix],-1*RHSide]
+Constraints = Solve[LHSide == -1*RHSide, \[Lambda]matrix]
 
 
 
