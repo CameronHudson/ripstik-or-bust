@@ -31,7 +31,7 @@ AngularVelocity[M_, t_] :=
 	Module[ {\[Omega], \[CapitalOmega]},
 		(*Determine Angular Velocities*)
 		\[CapitalOmega] = Simplify[Transpose[M].D[M,t]];
-		\[Omega] =Simplify[Transpose[{\[CapitalOmega][[3,2]],\[CapitalOmega][[1,3]],\[CapitalOmega][[2,1]]}]]
+		\[Omega] =Simplify[{\[CapitalOmega][[3,2]],\[CapitalOmega][[1,3]],\[CapitalOmega][[2,1]]}]
 	]
 
 TotalEnergy[R_, P_, \[Sigma]_, m_, t_, g_] :=
@@ -40,7 +40,7 @@ TotalEnergy[R_, P_, \[Sigma]_, m_, t_, g_] :=
 		\[Omega] = AngularVelocity[R, t];
 		RKE = (1/2)*(\[Sigma].\[Omega]).\[Omega];
 		TKE = Simplify[(1/2)*m*(V.V)];
-		GPE = m*g*P[[3,1]];
+		GPE = m*g*P[[3]];
 		E = Simplify[RKE + TKE - GPE]
 	]
 	
@@ -51,7 +51,7 @@ TotalEnergy1[R_, P_, \[Sigma]_, m_, t_, g_] :=
 		temp = Simplify[\[Sigma][t].\[Omega][t]];
 		RKE = (1/2)*(\[Sigma][t].\[Omega][t]).\[Omega][t];
 		TKE = Simplify[(1/2)*m*Norm[V[t]]^2];
-		GPE = m*g*P[t][[2,1]];
+		GPE = m*g*P[t][[2]];
 		E = Simplify[RKE + TKE - GPE]
 	]
 
