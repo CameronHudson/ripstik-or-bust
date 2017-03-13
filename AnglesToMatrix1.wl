@@ -46,12 +46,11 @@ TotalEnergy[R_, P_, \[Sigma]_, m_, t_, g_] :=
 	
 TotalEnergy1[R_, P_, \[Sigma]_, m_, t_, g_] :=
 	Module[ {E, V, RKE, TKE, GPE, \[Omega], temp},
-		V[t] = D[P[t],t];
-		\[Omega][t] = AngularVelocity[R, t];
-		temp = Simplify[\[Sigma][t].\[Omega][t]];
-		RKE = (1/2)*(\[Sigma][t].\[Omega][t]).\[Omega][t];
-		TKE = Simplify[(1/2)*m*Norm[V[t]]^2];
-		GPE = m*g*P[t][[2]];
+		V = D[P,t];
+		\[Omega] = AngularVelocity[R, t];
+		RKE = (1/2)*(\[Sigma].\[Omega]).\[Omega];
+		TKE = Simplify[(1/2)*m*(V.V)];
+		GPE = m*g*P[[2]];
 		E = Simplify[RKE + TKE - GPE]
 	]
 
