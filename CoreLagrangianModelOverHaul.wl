@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
+AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix1.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
@@ -78,7 +78,6 @@ g = 981/100;
 \[Theta][t_] := \[Theta][t]*)
 
 conf := {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
-daeconf :={Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
 vel := D[conf, t]
 accel := D[vel, t]
 
@@ -196,8 +195,6 @@ Subscript[P, BP]  = Flatten[GlobalTranslation + (BPO)]
 Subscript[P, FC]  = Flatten[GlobalTranslation + (FPO) + (FCFP) + (FWFC)]
 Subscript[P, BC]  = Flatten[GlobalTranslation + (BPO) + (BCBP) + (BWBC)]
 
-Subscript[P, ROD][[3]]
-
 
 (*Defining rotation matrices in inertial reference frame*)
 Subscript[R, ROD] = GlobalRotation
@@ -229,7 +226,7 @@ Lagrangian := Simplify[Subscript[E, ROD] + Subscript[E, FP] + Subscript[E, BP] +
 
 
 (*Derivatives of contact points*)
-FrontWheelVelocity = D[Subscript[P, FC], t];
+(*FrontWheelVelocity = D[Subscript[P, FC], t];
 BackWheelVelocity  = D[Subscript[P, BC], t];
 
 Y1 := FrontWheelVelocity[[2]]
@@ -237,11 +234,11 @@ Z1 := FrontWheelVelocity[[3]]
 Y2 := BackWheelVelocity[[2]]
 Z2 := BackWheelVelocity[[3]]
 
-NHConstraints = {Y1 == 0, Z1 == 0, Y2 == 0, Z2 == 0};
+NHConstraints = {Y1 == 0, Z1 == 0, Y2 == 0, Z2 == 0}
 DNHConstraints = D[NHConstraints,t];
-
-NHConstraintAccelCoeffMatrix = Normal[CoefficientArrays[DNHConstraints,accel]][[2]]
-NHConstraintVelCoeffMatrix = CoefficientArrays[DNHConstraints,vel][[3]]
+*)
+(*NHConstraintAccelCoeffMatrix = Normal[CoefficientArrays[DNHConstraints,accel]][[2]]*)
+(*NHConstraintVelCoeffMatrix = CoefficientArrays[NHConstraints,vel][[2]]*)
 
 
 (*Normal[CoefficientArrays[DNHConstraints, accel]][[2]]
@@ -295,22 +292,22 @@ Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
 AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
 VelCoefficientMatrix = CoefficientArrays[EulerLagrange,vel][[3]]
 
-ConstrainedEulerLagrange = AccelCoefficientMatrix.accel == VelCoefficientMatrix.vel.vel + Transpose[NHConstraintAccelCoeffMatrix].{\[Lambda]1[t], \[Lambda]2[t], \[Lambda]3[t], \[Lambda]4[t]}
+ConstrainedEulerLagrange = AccelCoefficientMatrix.accel == VelCoefficientMatrix.vel.vel (*+ {\[Lambda]1[t], \[Lambda]2[t], \[Lambda]3[t], \[Lambda]4[t]}.NHConstraintVelCoeffMatrix;*)
 (*ConstraintEquations = NHConstraintAccelCoeffMatrix.accel + NHConstraintVelCoeffMatrix.vel.vel \[Equal] 0*)
 
 
 InitialConditions = {
 						X[0] == 0,
 						Y[0] == 0,
-						Z[0] == 10,
-						\[Alpha][0] == 2 Degree,
-						\[Theta][0] == 3 Degree,
-						\[Psi][0] == 10 Degree,
-						Subscript[\[Alpha], fp][0] == 0,
-						Subscript[\[Alpha], bp][0] == 0,
-						Subscript[\[Theta], fc][0] == 7 Degree,
-						Subscript[\[Theta], bc][0] == 0,
-						X'[0] == 1,
+						Z[0] == 0.5,
+						\[Alpha][0] == 0 Degree,
+						\[Theta][0] == 0 Degree,
+						\[Psi][0] == 0 Degree,
+						Subscript[\[Alpha], fp][0] == 0 Degree,
+						Subscript[\[Alpha], bp][0] == 0 Degree,
+						Subscript[\[Theta], fc][0] == 15 Degree,
+						Subscript[\[Theta], bc][0] == 15 Degree,
+						X'[0] == 10,
 						Y'[0] == 0,
 						Z'[0] == 0,
 						\[Theta]'[0] == 0,
@@ -321,20 +318,20 @@ InitialConditions = {
 						Subscript[\[Theta], fc]'[0] == 0,
 						Subscript[\[Theta], bc]'[0] == 0
 					}
-SystemOfEquations = {ConstrainedEulerLagrange, InitialConditions,DNHConstraints}
+SystemOfEquations = {ConstrainedEulerLagrange, InitialConditions, NHConstraints}
 s = NDSolve[SystemOfEquations,conf,{t,0,100}]
 
 
-Plot[Evaluate[X[t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[Y[t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[Z[t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[\[Alpha][t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[\[Theta][t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[\[Psi][t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[Subscript[\[Alpha], fp][t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[Subscript[\[Alpha], bp][t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[Subscript[\[Theta], fc][t]/.s],{t,0,20},PlotRange -> All]
-Plot[Evaluate[Subscript[\[Theta], bc][t]/.s],{t,0,20},PlotRange -> All]
+Plot[Evaluate[X[t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Y[t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Z[t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[\[Alpha][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[\[Theta][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[\[Psi][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Alpha], fp][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Alpha], bp][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Theta], fc][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Theta], bc][t]/.s],{t,0,100},PlotRange -> All]
 
 
 (*
