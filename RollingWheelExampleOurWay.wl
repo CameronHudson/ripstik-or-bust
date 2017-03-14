@@ -1,12 +1,8 @@
 (* ::Package:: *)
 
 AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
-<<AnglesToMatrix.wl
-<<SMCS.m
-<<Tensors.m
-<<DerivativeOptions.m
-<<Affine.m
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
+Remove["Global`*"]
 Needs["VariationalMethods`"]
 
 
@@ -43,7 +39,10 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   X'[t] \[Element] Reals && 
 			   Y'[t] \[Element] Reals && 
 			   Z'[t] \[Element] Reals
-			
+\[Rho] = 2;
+m = 1;
+Jspin = 5;
+Jroll = 2;
 
 
 Iw = {{Jspin, 0, 0}, {0, Jspin, 0}, {0, 0, Jroll}}
@@ -100,10 +99,10 @@ P1 = Transpose[P]
 
 AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange, accel]][[2]]
 VelCoefficientMatrix = 0
-\[Lambda]matrix = {\[Lambda]1, \[Lambda]2}
+\[Lambda]matrix = {\[Lambda]1[t], \[Lambda]2[t]}
 
 EquationSystem1 = LinearSolve[AccelCoefficientMatrix, P1.\[Lambda]matrix]
-Solve[EquationSystem1.AccelCoefficientMatrix == 0, {\[Lambda]1, \[Lambda]2}]
+Solve[EquationSystem1.AccelCoefficientMatrix == 0, {\[Lambda]1[t], \[Lambda]2[t]}]
 
 
 
@@ -113,7 +112,7 @@ Solve[EquationSystem1.AccelCoefficientMatrix == 0, {\[Lambda]1, \[Lambda]2}]
 
 
 (*CAMERON IS TRYING STUFF*)
-NHConstraints = {x'[t] == \[Rho]*\[Phi]'[t]*Cos[\[Theta][t]], y'[t] == \[Rho]*\[Phi]'[t]*Sin[\[Theta][t]]}
+NHConstraints = {X'[t] == \[Rho]*\[Phi]'[t]*Cos[\[Theta][t]], Y'[t] == \[Rho]*\[Phi]'[t]*Sin[\[Theta][t]]}
 DNHConstraints = D[NHConstraints,t]
 NHConstraintAccelCoeffMatrix = Normal[CoefficientArrays[DNHConstraints,accel]][[2]]
 NHConstraintVelCoeffMatrix = CoefficientArrays[DNHConstraints,vel][[3]]
@@ -122,9 +121,24 @@ NHConstraintVelCoeffMatrix = CoefficientArrays[DNHConstraints,vel][[3]]
 LHSide = NHConstraintAccelCoeffMatrix.EquationSystem1
 RHSide = NHConstraintVelCoeffMatrix.vel.vel
 LHSideCoefficientMatrix = CoefficientArrays[LHSide,\[Lambda]matrix][[2]]
-Normal[LHSideCoefficientMatrix]
 Constraints = LinearSolve[Normal[LHSideCoefficientMatrix],-1*RHSide]
 Constraints = Solve[LHSide == -1*RHSide, \[Lambda]matrix]
+
+
+(*Add constraint forces to Lagrangian *)
+ConstrainedEulerLagrange = EulerLagrange
+ConstrainedEulerLagrange[[1]][[2]] = EulerLagrange[[1]][[2]] + \[Lambda]1[t]
+ConstrainedEulerLagrange[[2]][[2]] = EulerLagrange[[2]][[2]] + \[Lambda]2[t]
+ConstrainedEulerLagrange
+
+
+SystemOfEquations = Flatten[{ConstrainedEulerLagrange,DNHConstraints, X[0] == Y[0] == \[Phi][0] == \[Theta][0] == 0, X'[0] == Y'[0] == \[Phi]'[0] == \[Theta]'[0] == 1}]
+s = NDSolve[SystemOfEquations,Conf,{t,20}]
+Plot[Evaluate[{X[t],Y[t]}/.s],{t,0,20}]
+
+
+
+
 
 
 
