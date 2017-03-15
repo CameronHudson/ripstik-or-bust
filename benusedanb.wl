@@ -77,8 +77,8 @@ LHS1 = EulerLagrange[[1]][[1]] +f[t]
 EulerLagrange1 = {LHS1 == 0, EulerLagrange[[2]]}
 (*EulerLagrange[t][[1]] = EulerLagrange[t][[1]] + f[t]
 EulerLagrange[t][[2]] = EulerLagrange[t][[2]] + f[t]*)
-(*Lin1 = EulerLagrange1[t] /. {Sin[theta[t]]->t, Cos[theta[t]]->1}*)
-(*Lin2 = Lin1/. Cos[theta[t]]\[Rule]1*)
+Lin1 = EulerLagrange1[t] /. {Sin[theta[t]]->t, Cos[theta[t]]->1}
+Lin2 = Lin1/. Cos[theta[t]]->1
 
 
 
@@ -91,7 +91,7 @@ Output = Interp[[1]][[1]]
 Plot[Output, {t,0,30}]
 
 AnimatePendulum[First[Interp]]
-(*
+
 Model = StateSpaceModel[ eqns,
 	{{x[t], 0}, {x'[t], 0}, {theta[t], \[Pi]/2}, {theta'[t], 0}}, f[t],{}, t]
 
@@ -104,7 +104,7 @@ ControlForce = -gains.{x[t], x'[t], theta[t]-\[Pi]/2, theta'[t]}
 Interp1 = NDSolve[Join[eqns /. f[t]-> ControlForce,
 	{x[0] == x'[0] == theta'[0] == 0, theta[0] == \[Pi]/2-0.1}], {x, theta}, {t, 0, 30}]
 AnimatePendulum[First[Interp1]]
-*)
+
 
 
 AnimatePendulum[rules_]:=

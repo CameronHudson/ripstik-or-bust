@@ -129,6 +129,16 @@ EulerLagrange = EulerEquations[Lagrangian, conf, t]
 SessionTime[]
 
 
+SessionTime[]
+SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+EulerLagrange >> "EulerLagrangeFileWVals.m"
+ResetDirectory[]
+SessionTime[]
+
+
+
+
 AccelCoefficientMatrix = Normal[  CoefficientArrays[EulerLagrange, accel]][[2]]
 VelCoefficientMatrix   =          CoefficientArrays[EulerLagrange, vel]   [[3]]
 MissingTermsMatrix     = Normal[  CoefficientArrays[Normal[CoefficientArrays[EulerLagrange, vel]][[1]], accel][[1]]]
