@@ -1,13 +1,15 @@
 (* ::Package:: *)
 
-AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]_
+AppendTo[$Path, "C:\\Users\\chuds\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix1.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
 Needs["VariationalMethods`"]
+Needs["DifferentialEquations`InterpolatingFunctionAnatomy`"];
+Needs["DifferentialEquations`NDSolveUtilities`"];
 
 
-conf  := { X[t], Y[t], Z[t], \[Alpha][t], \[Theta][t], \[Psi][t], \[Alpha]FP[t], \[Alpha]BP[t] }
+conf  := { X[t], Y[t], Z[t], \[Alpha][t], \[Theta][t], \[Psi][t], \[Alpha]FP[t], \[Alpha]BP[t], \[Theta]FC[t], \[Theta]BC[t]}
 vel   := D[conf, t]
 accel := D[vel, t]
 
@@ -123,11 +125,8 @@ Lagrangian    = Erod + EfrontPlate + EbackPlate + EfrontCaster + EbackCaster;
 
 
 SessionTime[]
-EulerLagrange = EulerEquations[Lagrangian, conf, t];
+EulerLagrange = EulerEquations[Lagrangian, conf, t]
 SessionTime[]
-
-
-EulerLagrange
 
 
 AccelCoefficientMatrix = Normal[  CoefficientArrays[EulerLagrange, accel]][[2]]
@@ -138,7 +137,28 @@ MissingTermsMatrix     = Normal[  CoefficientArrays[Normal[CoefficientArrays[Eul
 (*ConstrainedEulerLagrange = AccelCoefficientMatrix.accel == -VelCoefficientMatrix.vel.vel*)
 
 
-ConstrainedEulerLagrange = Table[(AccelCoefficientMatrix.accel)[[i]] +(VelCoefficientMatrix.vel.vel)[[i]] + MissingTermsMatrix[[i]] == 0, {i,Dimensions[EulerLagrange][[1]]}]
+ConstraintForces = {\[Lambda]1[t], \[Lambda]2[t], \[Lambda]3[t], \[Lambda]4[t]};
+
+FrontWheelVelocity = D[PfrontCaster, t];
+BackWheelVelocity  = D[PbackCaster, t];
+
+Y1 := FrontWheelVelocity[[2]]
+Z1 := FrontWheelVelocity[[3]]
+Y2 := BackWheelVelocity[[2]]
+Z2 := BackWheelVelocity[[3]]
+
+NHConstraints = {Y1 == 0, Z1 == 0, Y2 == 0, Z2 == 0}
+NHConstraintVelCoeffMatrix = CoefficientArrays[NHConstraints,vel][[2]]
+
+ConstrainedEulerLagrange = Table[
+								(AccelCoefficientMatrix.accel)[[i]] +
+								(VelCoefficientMatrix.vel.vel)[[i]] + 
+								MissingTermsMatrix[[i]] + 
+								(ConstraintForces.NHConstraintVelCoeffMatrix)[[i]] == 0
+							, {i, Dimensions[EulerLagrange][[1]]}]
+
+(*Fix Z height for testing purposes*) 
+(*ConstrainedEulerLagrange[[3]] = (AccelCoefficientMatrix.accel)[[3]] +(VelCoefficientMatrix.vel.vel)[[3]] + MissingTermsMatrix[[3]] + \[Lambda][t] == 0*)
 
 
 (*ELDifference = Table[EulerLagrange[[i]] == ConstrainedEulerLagrange[[i]],{i,Dimensions[EulerLagrange][[1]]}];
@@ -149,33 +169,70 @@ InitialConditions = {
 						X[0]    == 0,
 						Y[0]    == 0,
 						Z[0]    == 0,
-						\[Alpha][0]    == 0 Degree,
+						\[Alpha][0]    == 10 Degree,
 						\[Theta][0]    == 0 Degree,
 						\[Psi][0]    == 0 Degree,
 						\[Alpha]FP[0]  == 0 Degree,
 						\[Alpha]BP[0]  == 0 Degree,
+						\[Theta]FC[0]  == 0 Degree,
+						\[Theta]BC[0]  == 0 Degree,
 						X'[0]   == 0,
 						Y'[0]   == 0,
-						Z'[0]   == 10,
+						Z'[0]   == 0,
 						\[Theta]'[0]   == 0,
 						\[Alpha]'[0]   == 0,
 						\[Psi]'[0]   == 0,
 						\[Alpha]FP'[0] == 0,
-						\[Alpha]BP'[0] == 0
+						\[Alpha]BP'[0] == 0,
+						\[Theta]FC'[0] == 0,
+						\[Theta]BC'[0] == 0
 					}
-SystemOfEquations = Flatten[{ConstrainedEulerLagrange, InitialConditions}]
+SystemOfEquations = Flatten[{ConstrainedEulerLagrange, InitialConditions, NHConstraints}]
 
-TimeLimit = 10;
-
-s = NDSolve[SystemOfEquations,conf,{t,0,TimeLimit},Method->{"EquationSimplification"->"Residual"}]
-ParametricPlot3D[Evaluate[{X[t],Y[t],Z[t]}/.s],{t,0,TimeLimit},PlotRange -> {{-30,30},{-30,30},{-30,30}}]
+TimeLimit = 1000;
+(*
+s = NDSolve[SystemOfEquations,conf,{t,0,TimeLimit},
+			Method->{
+				"IndexReduction"->{Automatic,"IndexGoal"->0}, 
+				"EquationSimplification"->"Residual"}, 
+				MaxSteps->100000
+			]
+*)
+s = NDSolve[SystemOfEquations,conf,{t,0,TimeLimit},Method->{"IDA","ImplicitSolver" -> "Newton", "IndexReduction"->Automatic,"EquationSimplification"->"Residual"}]
+(*
 Plot[Evaluate[X[t]/.s],{t,0,TimeLimit},PlotRange -> {-10,10}]
 Plot[Evaluate[Y[t]/.s],{t,0,TimeLimit},PlotRange -> {-10,10}]
 Plot[Evaluate[Z[t]/.s],{t,0,TimeLimit},PlotRange -> {-10,10}]
 Plot[Evaluate[\[Alpha][t]/.s],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Theta][t]/.s],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Psi][t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Theta]FC[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Theta]BC[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+*)
+
+
+Options[NDSolve]
 
 
 (* ::InheritFromParent:: *)
 (**)
+
+
+TimeLimit = 1.5
+ParametricPlot3D[Evaluate[{X[t],Y[t],Z[t]}/.s],{t,0,TimeLimit},PlotRange -> {{-30,30},{-30,30},{-30,30}}]
+Plot[Evaluate[X[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[Y[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[Z[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Alpha][t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Theta][t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Psi][t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Alpha]FP[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Alpha]BP[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Theta]FC[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Theta]BC[t]/.s],{t,0,TimeLimit},PlotRange -> All]
+
+
+
+
+
+
