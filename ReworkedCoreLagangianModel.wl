@@ -129,16 +129,6 @@ EulerLagrange = EulerEquations[Lagrangian, conf, t]
 SessionTime[]
 
 
-SessionTime[]
-SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
-DirectoryStack[]
-EulerLagrange >> "EulerLagrangeFileWVals.m"
-ResetDirectory[]
-SessionTime[]
-
-
-
-
 AccelCoefficientMatrix = Normal[  CoefficientArrays[EulerLagrange, accel]][[2]]
 VelCoefficientMatrix   =          CoefficientArrays[EulerLagrange, vel]   [[3]]
 MissingTermsMatrix     = Normal[  CoefficientArrays[Normal[CoefficientArrays[EulerLagrange, vel]][[1]], accel][[1]]]
@@ -169,6 +159,17 @@ ConstrainedEulerLagrange = Table[
 
 (*Fix Z height for testing purposes*) 
 (*ConstrainedEulerLagrange[[3]] = (AccelCoefficientMatrix.accel)[[3]] +(VelCoefficientMatrix.vel.vel)[[3]] + MissingTermsMatrix[[3]] + \[Lambda][t] == 0*)
+
+
+SessionTime[]
+SetDirectory["C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+NHConstraints >> "ConstraintEqs.m"
+ConstrainedEulerLagrange >> "ConstrainedEulerLagrangeFileWVals.m"
+ResetDirectory[]
+SessionTime[]
+
+
 
 
 (*ELDifference = Table[EulerLagrange[[i]] == ConstrainedEulerLagrange[[i]],{i,Dimensions[EulerLagrange][[1]]}];
@@ -219,13 +220,6 @@ Plot[Evaluate[\[Psi][t]/.s],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Theta]FC[t]/.s],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Theta]BC[t]/.s],{t,0,TimeLimit},PlotRange -> All]
 *)
-
-
-Options[NDSolve]
-
-
-(* ::InheritFromParent:: *)
-(**)
 
 
 TimeLimit = 1.5
