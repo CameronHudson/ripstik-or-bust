@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]_
+AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix1.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
@@ -23,7 +23,7 @@ GlobalTranslation = {X[t],Y[t], 0}
 
 
 \[Alpha][t] = 0;
-RWheel = AnglesToMatrix[\[Alpha][t],\[Phi][t], \[Theta][t]]
+RWheel = AnglesToMatrix[\[Alpha][t],\[Theta][t],\[Phi][t]]
 
 
 Lagrangian = TotalEnergy[RWheel,GlobalTranslation,Iw,m,t,g]
@@ -50,23 +50,47 @@ ConstrainedEulerLagrange[[2]][[2]] = EulerLagrange[[2]][[2]] + \[Lambda]2[t]
 ConstrainedEulerLagrange*)
 
 
+AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange, accel]]
+NHConstraintVelCoeffMatrix = CoefficientArrays[NHConstraints,vel]
+
+AInverse = Inverse[AccelCoefficientMatrix[[2]]]
+InverseLambdaCoefficients = Inverse[NHConstraintVelCoeffMatrix[[2]].AInverse.Transpose[NHConstraintVelCoeffMatrix[[2]]]]
+OtherTerms = -NHConstraintVelCoeffMatrix[[2]].AInverse.AccelCoefficientMatrix[[1]] + NHConstraintVelCoeffMatrix[[1]]
+ConstraintValues = Simplify[InverseLambdaCoefficients.OtherTerms]
+
+
+
+
+
+
 InitialConditions = {
 						X[0] == 1,
 						Y[0] == 0,
-						\[Phi][0] == 0,
 						\[Theta][0] == 3, 
+						\[Phi][0] == 0,
+						
 						X'[0] == 1,
-						Y'[0] == 1,
-						\[Phi]'[0] == 0,
-						\[Theta]'[0] == 0
+						Y'[0] == 0
+						\[Theta]'[0] == 5,
+						\[Phi]'[0] == 0
+						
 					}
 SystemOfEquations = Flatten[{ConstrainedEulerLagrange,NHConstraints,InitialConditions}]
 
 
-s = NDSolve[SystemOfEquations,Conf,{t,100}]
-ParametricPlot[Evaluate[{X[t],Y[t]}/.s],{t,0,100}]
+s = NDSolve[SystemOfEquations,Conf,{t,10}]
+(*ParametricPlot[Evaluate[{X[t],Y[t]}/.s],{t,0,100}]
 
-Plot[Evaluate[{\[Phi][t],\[Theta][t]}/.s],{t,0,100}]
+Plot[Evaluate[{\[Phi][t],\[Theta][t]}/.s],{t,0,100}]|
+*)
+
+
+
+
+
+
+
+
 
 
 
