@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
+AppendTo[$Path, "C:\\Users\\chuds\\Documents\\ripstik-or-bust"]_
 <<AnglesToMatrix1.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
@@ -51,11 +51,11 @@ ConstrainedEulerLagrange*)
 
 
 AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange, accel]]
-NHConstraintVelCoeffMatrix = CoefficientArrays[NHConstraints,vel]
+DNHConstraintCoefficients = CoefficientArrays[DNHConstraints,accel]
 
 AInverse = Inverse[AccelCoefficientMatrix[[2]]]
-InverseLambdaCoefficients = Inverse[NHConstraintVelCoeffMatrix[[2]].AInverse.Transpose[NHConstraintVelCoeffMatrix[[2]]]]
-OtherTerms = -NHConstraintVelCoeffMatrix[[2]].AInverse.AccelCoefficientMatrix[[1]] + NHConstraintVelCoeffMatrix[[1]]
+InverseLambdaCoefficients = Inverse[DNHConstraintCoefficients[[2]].AInverse.Transpose[DNHConstraintCoefficients[[2]]]]
+OtherTerms = -DNHConstraintCoefficients[[2]].AInverse.AccelCoefficientMatrix[[1]] + DNHConstraintCoefficients[[1]]
 ConstraintValues = Simplify[InverseLambdaCoefficients.OtherTerms]
 
 
@@ -78,7 +78,7 @@ InitialConditions = {
 SystemOfEquations = Flatten[{ConstrainedEulerLagrange,NHConstraints,InitialConditions}]
 
 
-s = NDSolve[SystemOfEquations,Conf,{t,10}]
+(*s = NDSolve[SystemOfEquations,Conf,{t,10}]*)
 (*ParametricPlot[Evaluate[{X[t],Y[t]}/.s],{t,0,100}]
 
 Plot[Evaluate[{\[Phi][t],\[Theta][t]}/.s],{t,0,100}]|
