@@ -72,6 +72,19 @@ ConstrainedEulerLagrange[[2]][[2]] = EulerLagrange[[2]][[2]] + \[Lambda]2[t]
 ConstrainedEulerLagrange*)
 
 
+AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange, accel]]
+DNHConstraintCoefficients = CoefficientArrays[DNHConstraints,accel]
+
+AInverse = Inverse[AccelCoefficientMatrix[[2]]]
+InverseLambdaCoefficients = Inverse[DNHConstraintCoefficients[[2]].AInverse.Transpose[DNHConstraintCoefficients[[2]]]]
+OtherTerms = -DNHConstraintCoefficients[[2]].AInverse.AccelCoefficientMatrix[[1]] + DNHConstraintCoefficients[[1]]
+ConstraintValues = Simplify[InverseLambdaCoefficients.OtherTerms]
+
+
+
+
+
+
 InitialConditions = {
 						X[0] == 0,
 						Y[0] == 0,
@@ -87,7 +100,6 @@ InitialConditions = {
 SystemOfEquations = Flatten[{ConstrainedEulerLagrange,NHConstraints,InitialConditions}]
 
 
-Conf
 
 
 TimeLimit = 10;
