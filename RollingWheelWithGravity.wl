@@ -72,12 +72,16 @@ ConstrainedEulerLagrange[[2]][[2]] = EulerLagrange[[2]][[2]] + \[Lambda]2[t]
 ConstrainedEulerLagrange*)
 
 
-AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange, accel]]
-DNHConstraintCoefficients = CoefficientArrays[DNHConstraints,accel]
+ForcedLHS = EulerLagrange[[4]][[1]] + f[t];
+ForcedEulerLagrange = EulerLagrange;
+ForcedEulerLagrange[[4]][[1]] = ForcedLHS;
 
-AInverse = Inverse[AccelCoefficientMatrix[[2]]]
-InverseLambdaCoefficients = Inverse[DNHConstraintCoefficients[[2]].AInverse.Transpose[DNHConstraintCoefficients[[2]]]]
-OtherTerms = -DNHConstraintCoefficients[[2]].AInverse.AccelCoefficientMatrix[[1]] + DNHConstraintCoefficients[[1]]
+ForcedAccelCoefficientMatrix = Normal[CoefficientArrays[ForcedEulerLagrange, accel]];
+DNHConstraintCoefficients = CoefficientArrays[DNHConstraints,accel];
+
+AInverse = Inverse[ForcedAccelCoefficientMatrix[[2]]];
+InverseLambdaCoefficients = Inverse[DNHConstraintCoefficients[[2]].AInverse.Transpose[DNHConstraintCoefficients[[2]]]];
+OtherTerms = -DNHConstraintCoefficients[[2]].AInverse.ForcedAccelCoefficientMatrix[[1]] + DNHConstraintCoefficients[[1]];
 ConstraintValues = Simplify[InverseLambdaCoefficients.OtherTerms]
 
 
@@ -90,7 +94,7 @@ InitialConditions = {
 						Y[0] == 0,
 						\[Phi][0] == 0,
 						\[Theta][0] == 0 Degree,
-						\[Psi][0] == 0 Degree,
+						\[Psi][0] == -92 Degree,
 						X'[0] == 0,
 						Y'[0] == 0,
 						\[Phi]'[0] == 0,
@@ -133,3 +137,113 @@ PlotLabel->"t"==NumberForm[t,{4,2}]
 
 
 AnimatePendulum[First[s]]
+
+
+ForcedLHS = EulerLagrange[[4]][[1]] + f[t];
+ForcedEulerLagrange = EulerLagrange;
+ForcedEulerLagrange[[4]][[1]] = ForcedLHS;
+
+SAEulerLagrange = ForcedEulerLagrange /.  {Sin[\[Phi][t]] -> \[Phi][t], Cos[\[Phi][t]] -> 1, 
+									  Sin[\[Theta][t]] -> \[Theta][t], Cos[\[Theta][t]] -> 1,
+									  Sin[\[Psi][t]] -> -1, Cos[\[Psi][t]] -> \[Psi][t]+\[Pi]/2};
+									  
+SAConstraints = NHConstraints /.  {Sin[\[Phi][t]] -> \[Phi][t], Cos[\[Phi][t]] -> 1, 
+									  Sin[\[Theta][t]] -> \[Theta][t], Cos[\[Theta][t]] -> 1,
+									  Sin[\[Psi][t]] -> -1, Cos[\[Psi][t]] -> \[Psi][t]+\[Pi]/2};
+									  
+LinEulerLagrange = Simplify[SAEulerLagrange /.
+					{
+						\[Phi][t] -> 0,
+						\[Theta][t] -> 0,
+						\[Psi][t] -> -\[Pi]/2,
+						X[t] -> 0,
+						Y[t] -> 0,
+						\[Phi]'[t] -> 0,
+						\[Theta]'[t] -> 0,
+						\[Psi]'[t] -> 0,
+						X'[t] -> 0,
+						Y'[t] -> 0
+					}]
+LinConstraints = Simplify[SAConstraints /.
+					{
+						\[Phi][t] -> 0,
+						\[Theta][t] -> 0,
+						\[Psi][t] -> -\[Pi]/2,
+						X[t] -> 0,
+						Y[t] -> 0
+					}]
+DLinConstraints = D[LinConstraints,t];
+LinAccelCoefficients = CoefficientArrays[LinEulerLagrange, accel]
+LinConstraintCoefficients = CoefficientArrays[DLinConstraints, accel]
+
+
+
+
+LinAInverse = Inverse[LinAccelCoefficients[[2]]];
+LinInverseLambdaCoefficients = Inverse[LinConstraintCoefficients[[2]].LinAInverse.Transpose[LinConstraintCoefficients[[2]]]];
+LinOtherTerms = -LinConstraintCoefficients[[2]].LinAInverse.LinAccelCoefficients[[1]] + LinConstraintCoefficients[[1]];
+LinConstraintValues = FullSimplify[LinInverseLambdaCoefficients.LinOtherTerms]
+
+
+(*SANITY CHECK =====================================================================\[Equal]*)
+
+ExplicitConstrainedEL = Simplify[ConstrainedEulerLagrange /.
+					{
+						\[Lambda]1[t] -> ConstraintValues[[1]], 
+						\[Lambda]2[t] -> ConstraintValues[[2]]
+					}];
+
+SCSAExplicitConstrainedEL = ExplicitConstrainedEL /.  {Sin[\[Phi][t]] -> \[Phi][t], Cos[\[Phi][t]] -> 1, 
+									  Sin[\[Theta][t]] -> \[Theta][t], Cos[\[Theta][t]] -> 1,
+									  Sin[\[Psi][t]] -> -1, Cos[\[Psi][t]] -> \[Psi][t]+\[Pi]/2};
+									  
+SCLinExplicitConstrainedEL = Simplify[SCSAExplicitConstrainedEL /.
+					{
+						\[Phi][t] -> 0,
+						\[Theta][t] -> 0,
+						\[Psi][t] -> -\[Pi]/2,
+						X[t] -> 0,
+						Y[t] -> 0,
+						\[Phi]'[t] -> 0,
+						\[Theta]'[t] -> 0,
+						\[Psi]'[t] -> 0,
+						X'[t] -> 0,
+						Y'[t] -> 0
+					}]
+
+ForcedConstrainedLHS = ConstrainedEulerLagrange[[4]][[1]] (*+ f[t]*);
+ForcedConstrainedEulerLagrange = ConstrainedEulerLagrange;
+ForcedConstrainedEulerLagrange[[4]][[1]] = ForcedConstrainedLHS;
+
+SAConstrainedEulerLagrange = ForcedConstrainedEulerLagrange /.  {Sin[\[Phi][t]] -> \[Phi][t], Cos[\[Phi][t]] -> 1, 
+									  Sin[\[Theta][t]] -> \[Theta][t], Cos[\[Theta][t]] -> 1,
+									  Sin[\[Psi][t]] -> -1, Cos[\[Psi][t]] -> \[Psi][t]+\[Pi]/2};
+									  									  
+LinConstrainedEulerLagrange = Simplify[SAConstrainedEulerLagrange /.
+					{
+						\[Phi][t] -> 0,
+						\[Theta][t] -> 0,
+						\[Psi][t] -> -\[Pi]/2,
+						X[t] -> 0,
+						Y[t] -> 0,
+						\[Phi]'[t] -> 0,
+						\[Theta]'[t] -> 0,
+						\[Psi]'[t] -> 0,
+						X'[t] -> 0,
+						Y'[t] -> 0
+					}];
+
+LinExplicitConstrainedEL = Simplify[LinConstrainedEulerLagrange /.
+					{
+						\[Lambda]1[t] -> LinConstraintValues[[1]], 
+						\[Lambda]2[t] -> LinConstraintValues[[2]]
+					}]
+
+(*LinEulerLagrange*)
+(*FullSimplify[{SCLinConstraintValues[[1]] \[Equal] LinConstraintValues[[1]], SCLinConstraintValues[[2]] \[Equal] LinConstraintValues[[2]]}]*)
+
+
+
+
+
+
