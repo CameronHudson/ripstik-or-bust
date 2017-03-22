@@ -1,13 +1,13 @@
 (* ::Package:: *)
 
 Remove["Global`*"]
-SetDirectory["C:\\Users\\chuds\\Documents\\ripstik-or-bust"]
+SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
 DirectoryStack[]
 EulerLagrange = << "EulerLagrangeFileWVals.m"
 NHConstraints = << "ConstraintEqs.m"
 ResetDirectory[]
 Needs["VariationalMethods`"]
-
+Needs["differentialEquations`InterpolatingFunctionAnatomy`"]
 conf := {X[t], Y[t], Z[t], \[Alpha][t], \[Psi][t], \[Theta][t], \[Alpha]FP[t], \[Alpha]BP[t], \[Theta]FC[t], \[Theta]BC[t]}
 vel = D[conf, t]
 accel = D[vel, t]
@@ -144,7 +144,7 @@ ConstraintValues = Simplify[InverseLambdaCoefficients.OtherTerms];
 Dimensions[ConstraintValues]
 
 
-SetDirectory["C:\\Users\\chuds\\Documents\\ripstik-or-bust"]
+SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
 DirectoryStack[]
 ConstrainedEulerLagrange = << "ConstrainedEulerLagrangeFileWVals.m"
 ResetDirectory[]
@@ -234,15 +234,40 @@ model = Block[{$MaxExtraPrecision = 1000}, StateSpaceModel[ExplicitConstrainedEL
 Block[{$MaxExtraPrecision = 1000},ControllableDecomposition[model]]//N
 
 
-gains = LQRegulatorGains[N[model],{DiagonalMatrix[{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}], IdentityMatrix[10]}]
+gains = LQRegulatorGains[N[model],{DiagonalMatrix[{1, 10, 1, 10, 1, 10, 1, 500, 1, 100, 1, 10, 1, 300, 1, 300, 1, 300, 1, 300}], IdentityMatrix[10]}]
 Dimensions[gains]
 ControlForce = -gains.{X[t], X'[t], Y[t], Y'[t], Z[t], Z'[t], \[Alpha][t], \[Alpha]'[t], \[Theta][t], \[Theta]'[t], \[Psi][t], \[Psi]'[t], \[Alpha]FP[t], \[Alpha]FP'[t], \[Alpha]BP[t], \[Alpha]BP'[t], \[Theta]FC[t], \[Theta]FC'[t], \[Theta]BC[t], \[Theta]BC'[t]}
 Dimensions[ControlForce]
 Transpose[{ControlForce}]//MatrixForm
 
 
-eqns = Join[NHConstraints,ForcedConstrainedEulerLagrange];
+Test = Simplify[NHConstraints /. {
+						X[t]    -> 0,
+						Y[t]    -> 0,
+						Z[t]    -> 0,
+						(*\[Alpha][t]    -> 0 Degree,*)
+						\[Theta][t]    -> 0 Degree,
+						\[Psi][t]    -> 0 Degree,
+						\[Alpha]FP[t]  -> 0 Degree,
+						\[Alpha]BP[t]  -> 0 Degree,
+						\[Theta]FC[t]  -> 1 Degree,
+						\[Theta]BC[t]  -> 1 Degree,
+						X'[t]   -> 0,
+						Y'[t]   -> 0,
+						Z'[t]   -> 0,
+						\[Theta]'[t]   -> 0,
+						\[Alpha]'[t]   -> 0,
+						\[Psi]'[t]   -> 0,
+						\[Alpha]FP'[t] -> 0,
+						\[Alpha]BP'[t] -> 0,
+						\[Theta]FC'[t] -> 0,
+						\[Theta]BC'[t] -> 0
+					}]
 
+
+eqns = ForcedConstrainedEulerLagrange;
+fulleqns = Join[ForcedConstrainedEulerLagrange, NHConstraints];
+invariant = NHConstraints;
 InitialConditions = {
 						X[0]    == 0,
 						Y[0]    == 0,
@@ -252,19 +277,19 @@ InitialConditions = {
 						\[Psi][0]    == 0 Degree,
 						\[Alpha]FP[0]  == 0 Degree,
 						\[Alpha]BP[0]  == 0 Degree,
-						\[Theta]FC[0]  == 0 Degree,
-						\[Theta]BC[0]  == 0 Degree,
+						\[Theta]FC[0]  == 2 Degree,
+						\[Theta]BC[0]  == 2 Degree,
 						X'[0]   == 0,
 						Y'[0]   == 0,
 						Z'[0]   == 0,
 						\[Theta]'[0]   == 0,
-						\[Alpha]'[0]   == 0.0002,
+						\[Alpha]'[0]   == 0,
 						\[Psi]'[0]   == 0,
 						\[Alpha]FP'[0] == 0,
 						\[Alpha]BP'[0] == 0,
 						\[Theta]FC'[0] == 0,
 						\[Theta]BC'[0] == 0
-					}
+					};
 eqnsWforces = eqns /. {
 				forceVector[[1]] -> ControlForce[[1]],
 				forceVector[[2]] -> ControlForce[[2]],
@@ -277,11 +302,21 @@ eqnsWforces = eqns /. {
 				forceVector[[9]] -> ControlForce[[9]],
 				forceVector[[10]] -> ControlForce[[10]]
 				};
-Interp = NDSolve[Join[eqnsWforces, InitialConditions], conf, {t,0,20}, Method->{"IDA","ImplicitSolver" -> "Newton", "IndexReduction"->Automatic,"EquationSimplification"->"Residual"}]
-		
+eqnsNoConstraintForces = eqnsWforces /. {
+				ConstraintForces[[1]] -> 0,
+				ConstraintForces[[2]] -> 0,
+				ConstraintForces[[3]] -> 0,
+				ConstraintForces[[4]] -> 0
+				};
+
+Interp = NDSolve[Join[eqnsNoConstraintForces, InitialConditions], conf, {t,0,3}, PrecisionGoal -> 6, AccuracyGoal -> 4, MaxSteps -> Infinity, MaxStepSize -> 0.001, (*Method ->{Projection, "EquationSimplification"->"Residual", "MaxIterations" \[Rule] 10000, Method -> "ExplicitRungeKutta", Invariants -> invariant}]*)Method -> {"IDA","ImplicitSolver" -> "Newton", "IndexReduction"->Automatic,"EquationSimplification"->"Residual"}]
 
 
-TimeLimit = 0.071
+
+
+
+
+(*TimeLimit = 20
 ParametricPlot3D[Evaluate[{X[t],Y[t],Z[t]}/.Interp],{t,0,TimeLimit},PlotRange -> {{-30,30},{-30,30},{-30,30}}]
 Plot[Evaluate[X[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[Y[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
@@ -292,7 +327,7 @@ Plot[Evaluate[\[Psi][t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Alpha]FP[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Alpha]BP[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
 Plot[Evaluate[\[Theta]FC[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
-Plot[Evaluate[\[Theta]BC[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]
+Plot[Evaluate[\[Theta]BC[t]/.Interp],{t,0,TimeLimit},PlotRange -> All]*)
 
 
 (*LinSystemofEquations = Flatten[{LinEulerLagrange, LinConstraint}];*)
