@@ -8,13 +8,13 @@ Needs["VariationalMethods`"]
 
 
 
-\[Rho] = 1;
+\[Rho] = 0.5;
 m = 3;
 mP = 1;
 Jspin = 2;
 Jroll = 2;
 g=981/100
-L = 1/4;
+L = 1;
 
 Iw = {{Jspin, 0, 0}, {0, Jspin, 0}, {0, 0, Jroll}};
 
@@ -118,7 +118,7 @@ Plot[Evaluate[{\[Phi][t],\[Psi][t]}/.s],{t,0,15}]
 AnimatePendulum[rules_]:=
 	Table[
 		Evaluate[DrawSinglePendulum[X[t]/.rules,
-		{\[Psi][t]/.rules,\[Phi][t]/.rules,1,1},t]],{t,0,15,0.03}(*,
+		{\[Psi][t]/.rules,-\[Phi][t]/.rules,1,1},t]],{t,0,15,0.03}(*,
 		DefaultDuration->15,AnimationRunning\[Rule]True*)
 	]
 
@@ -127,12 +127,13 @@ Module[{width1,density=30},
 width1=mass1/length1/density;
 Graphics[
 {
-{Red,Rotate[Disk[{cart,0},1/5,{\[Pi],2\[Pi]}],angle2,{0,0}]},
-{Blue,Rotate[Disk[{cart,0},1/5,{0,\[Pi]}],angle2,{0,0}]},
+{Red,Translate[Rotate[Disk[{0,0},1/2,{\[Pi],2\[Pi]}],angle2,{0,0}],{cart,0}]},
+{Blue,Translate[Rotate[Disk[{0,0},1/2,{0,\[Pi]}],angle2,{0,0}],{cart,0}]},
 {Orange,Translate[Rotate[Rectangle[{0,width1},{length1,-width1}],\[Pi]+angle1,{0,0}],{cart,0}]}
 },
 PlotRange->2,ImageSize->280,Axes->True,AxesStyle->Dashed,
-PlotLabel->"t"==NumberForm[t,{4,2}]
+PlotLabel->"t"==NumberForm[t,{4,2}],
+ImagePadding -> 5
 ]
 ]
 
@@ -308,7 +309,7 @@ ControllableModelQ[Model]
 
 gains = 
 	LQRegulatorGains[N[Model],
-		{DiagonalMatrix[{20, 5, 100, 10, 10, 100}], {{1}}}]//First
+		{DiagonalMatrix[{20, 5, 100, 40, 30, 100}], {{1}}}]//First
 
 
 ControlForce = -gains.{X[t], X'[t], \[Psi][t]+\[Pi]/2, \[Psi]'[t], \[Phi][t], \[Phi]'[t]}
