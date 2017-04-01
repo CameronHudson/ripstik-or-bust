@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
-AppendTo[$Path, "C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]_
-<<AnglesToMatrix.wl
+AppendTo[$Path, "C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]_
+<<AnglesToMatrix1.wl
 $PrePrint = If[MatrixQ[#], MatrixForm[#], #] &;
 Remove["Global`*"]
 Needs["VariationalMethods`"]
@@ -50,26 +50,27 @@ $Assumptions = t \[Element] Reals && t > 0 &&
 			   Subscript[l, r] \[Element] Reals &&
 			   Subscript[R, w] \[Element] Reals
 
-Subscript[L, OBP] = 13
-Subscript[L, BPBC] = 5
-Subscript[L, FWFCX] = 2
-Subscript[L, FWFCZ]= 3
-Subscript[L, OFP] = 13
-Subscript[L, FPFC] = 5
+Subscript[L, OBP] = 26/100;
+Subscript[L, BPBC] = 5/100;
+Subscript[L, FWFCX] = 4/100;
+Subscript[L, FWFCZ]= 6/100;
+Subscript[L, OFP] = 26/100;
+Subscript[L, FPFC] = 5/100;
 (*Subscript[L, FCFW]*)
-Subscript[L, BWBCX] = 2
-Subscript[L, BWBCZ] = 3
-Subscript[m, BP] = 5
-Subscript[m, FP]= 5
-Subscript[m, FC] = 3
-Subscript[m, BC]= 3
-Subscript[h, p]= 2
-Subscript[w, p]= 6
-Subscript[d, p]= 10
-Subscript[l, r] = 10
-Subscript[R, w] = 3
-Subscript[m, ROD] = 4S
-\[Phi] = 45 Degree
+Subscript[L, BWBCX] = 4/100;
+Subscript[L, BWBCZ] = 6/100;
+Subscript[m, BP] = 1;
+Subscript[m, FP]= 1;
+Subscript[m, FC] = 1/2;
+Subscript[m, BC]= 1/2;
+Subscript[h, p]= 5/100;
+Subscript[w, p]= 22/100;
+Subscript[d, p]= 36/100;
+Subscript[l, r] = 25/100;
+Subscript[R, w] = 4/100;
+Subscript[m, ROD] = 2;
+g = 981/100;
+\[Phi] = 30 Degree;
 
 (*AnglesToMatrix[\[Alpha],\[Psi],\[Theta]]*)
 (*\[Alpha][t_] := \[Alpha][t]
@@ -77,7 +78,6 @@ Subscript[m, ROD] = 4S
 \[Theta][t_] := \[Theta][t]*)
 
 conf := {X[t],Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
-daeconf :={Y[t],Z[t],\[Alpha][t],\[Theta][t],\[Psi][t],Subscript[\[Theta],fc][t],Subscript[\[Theta],bc][t],Subscript[\[Alpha],fp][t],Subscript[\[Alpha],bp][t]}
 vel := D[conf, t]
 accel := D[vel, t]
 
@@ -172,15 +172,15 @@ Subscript[L, FCFWZ]= 12;
 *)
 (* Define position vectors for key distances on the back half of the casterboard*)
 
-(BPO)  = GlobalRotation.Transpose[{{-Subscript[L, OBP], 0, 0}}]
-(BCBP) = Rback.Transpose[{{0, 0, -Subscript[L, BPBC]}}]
-(BWBC) = BackCasterMatrix.Transpose[{{Subscript[L, BWBCX], 0, -Subscript[L, BWBCZ]}}]
+(BPO)  = Flatten[GlobalRotation.Transpose[{{-Subscript[L, OBP], 0, 0}}]]
+(BCBP) = Flatten[Rback.Transpose[{{0, 0, -Subscript[L, BPBC]}}]]
+(BWBC) = Flatten[BackCasterMatrix.Transpose[{{Subscript[L, BWBCX], 0, -Subscript[L, BWBCZ]}}]]
 
 (*Define position vectors for key distances on the front half of the casterboard*)
 
-(FPO)  = GlobalRotation.Transpose[{{Subscript[L, OFP], 0, 0}}]
-(FCFP) = Rfront.Transpose[{{0, 0, -Subscript[L, FPFC]}}]
-(FWFC) = FrontCasterMatrix.Transpose[{{Subscript[L, FWFCX], 0, -Subscript[L, FWFCZ]}}]
+(FPO)  = Flatten[GlobalRotation.Transpose[{{Subscript[L, OFP], 0, 0}}]]
+(FCFP) = Flatten[Rfront.Transpose[{{0, 0, -Subscript[L, FPFC]}}]]
+(FWFC) = Flatten[FrontCasterMatrix.Transpose[{{Subscript[L, FWFCX], 0, -Subscript[L, FWFCZ]}}]]
 
 
 
@@ -189,17 +189,11 @@ Subscript[L, FCFWZ]= 12;
 (*Full position vectors relative to inertial frame for each body*)
 
 
-Subscript[P, ROD] = GlobalTranslation
-Subscript[P, FP]  = GlobalTranslation + (FPO)
-Subscript[P, BP]  = GlobalTranslation + (BPO)
-Subscript[P, FC]  = GlobalTranslation + (FPO) + (FCFP) + (FWFC)
-Subscript[P, BC]  = GlobalTranslation + (BPO) + (BCBP) + (BWBC)
-
-(*Non-Holonomic Constraints*)
-Subscript[V, FCNH] = D[(FWFC), t]
-Subscript[V, BCNH] = D[(BWBC), t]
-
-
+Subscript[P, ROD] = Flatten[GlobalTranslation]
+Subscript[P, FP]  = Flatten[GlobalTranslation + (FPO)]
+Subscript[P, BP]  = Flatten[GlobalTranslation + (BPO)]
+Subscript[P, FC]  = Flatten[GlobalTranslation + (FPO) + (FCFP) + (FWFC)]
+Subscript[P, BC]  = Flatten[GlobalTranslation + (BPO) + (BCBP) + (BWBC)]
 
 
 (*Defining rotation matrices in inertial reference frame*)
@@ -220,7 +214,7 @@ Subscript[\[CapitalOmega], BCNH][t_]=Simplify[Transpose[(Subscript[R, BCNH][t])]
 Evaluate[EulerEquations[L[t], {X[t],Y[t],Z[t],Subscript[\[Alpha], f][t],Subscript[\[Alpha], r][t],\[Psi][t], \[Theta][t],\[Alpha][t],\[Psi][t]}, t]]
 
 Evaluate[EulerEquations[1/2mr^2\[Theta]'[t]^2+mgrCos[\[Theta][t]],\[Theta][t],t]]*)
-(*
+
 Subscript[E, ROD] = TotalEnergy[Subscript[R, ROD], Subscript[P, ROD], Subscript[\[Sigma], ROD], Subscript[m, ROD], t, g]
 Subscript[E, FP]  = TotalEnergy[Subscript[R, FP], Subscript[P, FP], Subscript[\[Sigma], FP], Subscript[m, FP], t, g]
 Subscript[E, BP]  = TotalEnergy[Subscript[R, BP], Subscript[P, BP], Subscript[\[Sigma], BP], Subscript[m, BP], t, g]
@@ -228,36 +222,41 @@ Subscript[E, FC]  = TotalEnergy[Subscript[R, FC], Subscript[P, FC], Subscript[\[
 Subscript[E, BC]  = TotalEnergy[Subscript[R, BC], Subscript[P, BC], Subscript[\[Sigma], BC], Subscript[m, BC], t, g]
 
 Lagrangian := Simplify[Subscript[E, ROD] + Subscript[E, FP] + Subscript[E, BP] + Subscript[E, FC] + Subscript[E, BC]]
-*)
+
 
 
 (*Derivatives of contact points*)
-FrontWheelVelocity := D[Subscript[P, FC], t] 
-BackWheelVelocity  := D[Subscript[P, BC], t]
+(*FrontWheelVelocity = D[Subscript[P, FC], t];
+BackWheelVelocity  = D[Subscript[P, BC], t];
 
-Y1 := FrontWheelVelocity[[2,1]]
-Z1 := FrontWheelVelocity[[3,1]]
-Y2 := BackWheelVelocity[[2,1]]
-Z2 := BackWheelVelocity[[3,1]]
+Y1 := FrontWheelVelocity[[2]]
+Z1 := FrontWheelVelocity[[3]]
+Y2 := BackWheelVelocity[[2]]
+Z2 := BackWheelVelocity[[3]]
 
 NHConstraints = {Y1 == 0, Z1 == 0, Y2 == 0, Z2 == 0}
-DNHConstraints =D[NHConstraints,t]
+DNHConstraints = D[NHConstraints,t];
+*)
+(*NHConstraintAccelCoeffMatrix = Normal[CoefficientArrays[DNHConstraints,accel]][[2]]*)
+(*NHConstraintVelCoeffMatrix = CoefficientArrays[NHConstraints,vel][[2]]*)
 
 
-
-P = Evaluate[Normal[CoefficientArrays[NHConstraints, vel]][[2]]]
-Normal[CoefficientArrays[DNHConstraints, accel]][[2]]
+(*Normal[CoefficientArrays[DNHConstraints, accel]][[2]]
 Dimensions[Normal[CoefficientArrays[DNHConstraints, vel]]]
-DNHConstraints
-(*EulerLagrange[t] = EulerEquations[L[t][[1]][[1]],conf,t]*)
+DNHConstraints*)
+
+SessionTime[]
+EulerLagrange = EulerEquations[Lagrangian,conf,t]
+SessionTime[]
 (*CoefficientArrays[EQ2[t], DOFs[t]]
 CoefficientArrays[EQ3[t], DOFs[t]]
 CoefficientArrays[EQ4[t], DOFs[t]]
 CoefficientList[FrontWheelVelocity[2],{X'*)
-
-
-
-
+(*SessionTime[]
+ConstrainedEulerLagrange = EulerLagrange + ;
+ConstrainedEulerLagrange[[1]][[2]] = EulerLagrange[[1]][[2]] + \[Lambda]1[t];
+ConstrainedEulerLagrange[[2]][[2]] = EulerLagrange[[2]][[2]] + \[Lambda]1[t];
+*)
 
 
 (*$ProcessorCount
@@ -271,35 +270,83 @@ ParallelEvaluate[EulerEquations[L[[1]][[1]],conf[[1]],t]]*)
 
 
 
-(*Compute Euler Lagrange & save to directory*)
-(*EulerLagrange = EulerEquations[Lagrangian[[1]][[1]],conf,t]
-SetDirectory["C:\\Users\\Cameron\\Documents\\ripstik-or-bust"]
+(*Compute Euler Lagrange & save to directory
+SessionTime[]
+SetDirectory["C:\\Users\\chuds\\Documents\\ripstik-or-bust"]
 DirectoryStack[]
-EulerLagrange >> "EulerLagrangeFile.m"
+EulerLagrange >> "EulerLagrangeFileWVals.m"
+ResetDirectory[]
+SessionTime[]*)
+
+
+(*Load Euler Lagrange from directory
+SetDirectory["C:\\Users\\chuds\\Documents\\ripstik-or-bust"]
+DirectoryStack[]
+EulerLagrange = << "EulerLagrangeFileWVals.m"
 ResetDirectory[]*)
 
 
-(*Load Euler Lagrange from directory*)
-SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
-DirectoryStack[]
-EulerLagrange = << "EulerLagrangeFile.m"
-ResetDirectory[]
+Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
 
 
 AccelCoefficientMatrix = Normal[CoefficientArrays[EulerLagrange,accel]][[2]]
 VelCoefficientMatrix = CoefficientArrays[EulerLagrange,vel][[3]]
 
+ConstrainedEulerLagrange = AccelCoefficientMatrix.accel == VelCoefficientMatrix.vel.vel (*+ {\[Lambda]1[t], \[Lambda]2[t], \[Lambda]3[t], \[Lambda]4[t]}.NHConstraintVelCoeffMatrix;*)
+(*ConstraintEquations = NHConstraintAccelCoeffMatrix.accel + NHConstraintVelCoeffMatrix.vel.vel \[Equal] 0*)
 
 
-P1 = Transpose[P]
+InitialConditions = {
+						X[0] == 0,
+						Y[0] == 0,
+						Z[0] == 0.5,
+						\[Alpha][0] == 0 Degree,
+						\[Theta][0] == 0 Degree,
+						\[Psi][0] == 0 Degree,
+						Subscript[\[Alpha], fp][0] == 0 Degree,
+						Subscript[\[Alpha], bp][0] == 0 Degree,
+						Subscript[\[Theta], fc][0] == 15 Degree,
+						Subscript[\[Theta], bc][0] == 15 Degree,
+						X'[0] == 10,
+						Y'[0] == 0,
+						Z'[0] == 0,
+						\[Theta]'[0] == 0,
+						\[Alpha]'[0] == 0,
+						\[Psi]'[0] == 0,
+						Subscript[\[Alpha], fp]'[0] == 0,
+						Subscript[\[Alpha], bp]'[0] == 0,
+						Subscript[\[Theta], fc]'[0] == 0,
+						Subscript[\[Theta], bc]'[0] == 0
+					}
+SystemOfEquations = {ConstrainedEulerLagrange, InitialConditions, NHConstraints}
+s = NDSolve[SystemOfEquations,conf,{t,0,100}]
+
+
+Plot[Evaluate[X[t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Y[t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Z[t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[\[Alpha][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[\[Theta][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[\[Psi][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Alpha], fp][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Alpha], bp][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Theta], fc][t]/.s],{t,0,100},PlotRange -> All]
+Plot[Evaluate[Subscript[\[Theta], bc][t]/.s],{t,0,100},PlotRange -> All]
+
+
+(*
+PMatrix = Evaluate[Normal[CoefficientArrays[NHConstraints, vel]][[2]]]
+PMatrixT = Transpose[PMatrix]
 \[Lambda]matrix = {\[Lambda]1, \[Lambda]2, \[Lambda]3, \[Lambda]4}
-P1.\[Lambda]matrix
+PMatrixT.\[Lambda]matrix
+*)
 
 
-(*EquationSystem1 = LinearSolve[AccelCoefficientMatrix, P1.\[Lambda]matrix - VelCoefficientMatrix.vel.vel]*)
-
-
-
+(*
+SessionTime[]
+EquationSystem1 = LinearSolve[AccelCoefficientMatrix, PMatrixT.\[Lambda]matrix - VelCoefficientMatrix.vel.vel]
+SessionTime[]
+*)
 
 
 
@@ -310,33 +357,46 @@ Normal[CoefficientArrays[dae, accel]][[2]]
 DSolve[dae,conf, t]*)
 
 
-(*Compute Equation1 & save to directory*)
+(*Compute Equation1 & save to directory
 
-(*SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
+SetDirectory["C:\\Users\\chuds\\Documents\\ripstik-or-bust"]
 DirectoryStack[]
-EquationSystem1 >> "EquationSystem1.m"
+EquationSystem1 >> "EquationSystemVals.m"
 ResetDirectory[]*)
 
 
-SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
+(*SetDirectory["C:\\Users\\Andrew\\Documents\\ripstik-or-bust"]
 DirectoryStack[]
-EquationSystem1 = << "EquationSystem1.m"
-ResetDirectory[]
+EquationSystem1 = << "EquationSystemNew.m"
+ResetDirectory[]*)
 
 
 
-
-
-DirectoryStack[]
 
 
 (*Solve[AccelCoefficientMatrix.EquationSystem1 == VelCoefficientMatrix.vel.vel, \[Lambda]matrix]*)
 
 
-LHSide = AccelCoefficientMatrix.EquationSystem1
+(*SessionTime[]
+LHSide = NHConstraintAccelCoeffMatrix.EquationSystem1
+SessionTime[]
+LinLHSide = LHSide /. {Cos[Subscript[\[Alpha], fp][t]] -> 1, Cos[Subscript[\[Alpha], bp][t]] -> 1, Sin[Subscript[\[Alpha], fp][t]] -> Subscript[\[Alpha], fp][t], Sin[Subscript[\[Alpha], bp][t]] -> Subscript[\[Alpha], bp][t]}*)
 
 
-RHSide = VelCoefficientMatrix.vel.vel
 
 
-EquationSystem1 = Solve[LHSide == RHSide, {\[Lambda]1,\[Lambda]2,\[Lambda]3,\[Lambda]4}]
+
+
+(*Dimensions[LHSide]
+SessionTime[]
+LHSideCoefficientMatrix = CoefficientArrays[LHSide,\[Lambda]matrix]
+SessionTime[]*)
+
+
+(*RHSide = NHConstraintVelCoeffMatrix.vel.vel
+Dimensions[RHSide]
+LinRHSide = RHSide /. {Cos[Subscript[\[Alpha], fp][t]] -> 1, Cos[Subscript[\[Alpha], bp][t]] -> 1, Sin[Subscript[\[Alpha], fp][t]] -> Subscript[\[Alpha], fp][t], Sin[Subscript[\[Alpha], bp][t]] -> Subscript[\[Alpha], bp][t]}*)
+
+
+(*EquationSystem2 = Solve[LHSide == RHSide, {\[Lambda]1,\[Lambda]2,\[Lambda]3,\[Lambda]4}, Reals]
+

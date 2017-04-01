@@ -31,28 +31,26 @@ AngularVelocity[M_, t_] :=
 	Module[ {\[Omega], \[CapitalOmega]},
 		(*Determine Angular Velocities*)
 		\[CapitalOmega] = Simplify[Transpose[M].D[M,t]];
-		\[Omega] =Simplify[Transpose[{{\[CapitalOmega][[3,2]],\[CapitalOmega][[1,3]],\[CapitalOmega][[2,1]]}}]]
+		\[Omega] =Simplify[{\[CapitalOmega][[3,2]],\[CapitalOmega][[1,3]],\[CapitalOmega][[2,1]]}]
 	]
 
 TotalEnergy[R_, P_, \[Sigma]_, m_, t_, g_] :=
-	Module[ {E, V, RKE, TKE, GPE, \[Omega], temp},
+	Module[ {E, V, RKE, TKE, GPE, \[Omega]},
 		V = D[P,t];
 		\[Omega] = AngularVelocity[R, t];
-		temp = Simplify[\[Sigma].\[Omega]];
-		RKE = (1/2)*Evaluate[Transpose[temp]].\[Omega];
-		TKE = Simplify[(1/2)*m*Norm[V]^2];
-		GPE = m*g*P[[3,1]];
+		RKE = (1/2)*(\[Sigma].\[Omega]).\[Omega];
+		TKE = Simplify[(1/2)*m*(V.V)];
+		GPE = m*g*P[[3]];
 		E = Simplify[RKE + TKE - GPE]
 	]
 	
 TotalEnergy1[R_, P_, \[Sigma]_, m_, t_, g_] :=
 	Module[ {E, V, RKE, TKE, GPE, \[Omega], temp},
-		V[t] = D[P[t],t];
-		\[Omega][t] = AngularVelocity[R, t];
-		temp = Simplify[\[Sigma][t].\[Omega][t]];
-		RKE = (1/2)*Evaluate[Transpose[temp]].\[Omega][t];
-		TKE = Simplify[(1/2)*m*Norm[V[t]]^2];
-		GPE = m*g*P[t][[2,1]];
+		V = D[P,t];
+		\[Omega] = AngularVelocity[R, t];
+		RKE = (1/2)*(\[Sigma].\[Omega]).\[Omega];
+		TKE = Simplify[(1/2)*m*(V.V)];
+		GPE = m*g*P[[2]];
 		E = Simplify[RKE + TKE - GPE]
 	]
 
