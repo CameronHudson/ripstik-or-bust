@@ -138,7 +138,26 @@ Numeric Integration allows for the approximate computation of an integral using 
 When applying numeric integration to a differential system, stiffness is often a by-product.
 The concept of stiffness is not well understood, but can generally be attributed to quick changing dynamics in a system \cite{StiffSystem}.
 \par
-When a system has quickly changing dynamics, numeric integration will require increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. This adds computational complexity that ofteen exceeds modern technological capabilities.
+When a system has quickly changing dynamics, numeric integration will require increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
+This adds computational complexity that ofteen exceeds modern technological capabilities. 
+To try and reduce this computational complexity, four different numerical methods exist to evaluate stiff DAE systems.
+
+The QR Decomposition method decomposes the Jacobian of the derivative, breaking down the core system into two smaller systems at each iteration point \cite{Methods}.
+This is represented by the following equation:
+
+\begin{equation}
+\label{eq:QR}
+A = QR
+\end{equation}
+
+In equation \ref{eq:QR}, A is any real square matrix, Q is an orthogonal matrix, and R is an upper triangular matrix \cite{Methods}.
+
+The Collocation method linearizes the implicit DAE to m points in time, generating a system of linear equations which can be solved iteratively using Newton's Method \cite{Methods}.
+The Implicit Differential-Algebraic Method uses Backward Differential Formulas (BDF) to implicity solve the DAE for derivatives to use an ODE solver \cite{Methods}. 
+The BDF approximates the derivative of the function using information from previous time steps \cite{Methods}.
+The BLT Method puts the system into block lower triangular form and solves subsets of the system iteratively \cite{Methods}.
+
+
 
 \newpage
 \bibliography{Bibliography}{}
