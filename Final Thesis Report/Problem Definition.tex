@@ -1,0 +1,67 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{array}
+\usepackage{dsfont}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bbold}
+\usepackage{fullpage}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{mathrsfs}
+\usepackage[margin=0.9 in]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{xcolor,colortbl}
+\usepackage[format=plain,
+labelfont={bf,it},
+textfont={it}]{caption}
+\usepackage{float}
+
+
+\newcommand*{\SignatureAndDate}[1]{%
+	\par\noindent\makebox[2.5in]{\hrulefill} \hfill\makebox[2.0in]{\hrulefill}%
+	\par\noindent\makebox[2.5in][l]{#1}      \hfill\makebox[2.0in][l]{Date}%
+}%
+\newcolumntype{L}{>{\centering\arraybackslash}m{2cm}}
+\newcolumntype{P}{>{\centering\arraybackslash}m{3cm}}
+\newcolumntype{Q}{>{\centering\arraybackslash}m{4cm}}
+\setlength{\parindent}{0em}
+
+\allowdisplaybreaks
+
+\newcommand{\R}{\mathds{R}}
+\newcommand{\Z}{\mathds{Z}}
+\newcommand{\Rplus}{\mathds{R}_{> 0}}
+\newcommand{\Zplus}{\mathds{Z}_{\geq 0}}
+\newcommand{\F}{\mathds{F}}
+\newcommand{\N}{\mathds{N}}
+\newcommand{\T}{\mathds{T}}
+\newcommand{\s}{\mathds{S}}
+\newcommand{\C}{\mathds{C}}
+\newcommand{\CDFT}{\mathscr{F}_{CD}} %Fourier transform
+\newcommand{\ip}[2]{\langle #1, #2\rangle}
+
+
+\setlength{\parskip}{0.5em}
+
+
+\makeatletter
+\newsavebox\myboxA
+\newsavebox\myboxB
+\newlength\mylenA
+
+\begin{document}
+	
+\section{Problem Definition}
+
+Aside from select innovative exceptions, current methods of electric personal transport are limited in both mechanics and utility by an adherence to more traditional form factors including the skateboard and bicycle. As an example of an alternate transportation system, a full control law for a RipStik will be developed and tested. The development of this control law will first require a complete, working mathematical model of the RipStik and a custom tool to visualize the model and control law outputs on a 3D model of the RipStik. Simplifications and assumptions will need to be made in order to develop a working model of the system. These simplifications and assumptions will be carefully scrutinized to ensure that they do not compromise the ability of the model to be applied to other complex mechanical systems. A control system will then be developed to propel the RipStik with consideration to triple bottom line implications, including minimizing power requirements and ensuring operator safety. Tradeoffs will be made in the development of the control system to find the optimal system which satisfies the performance constraints of the problem and optimizes triple bottom line impact. 
+
+\newpage
+\bibliography{Bibliography}{}
+\bibliographystyle{unsrt}
+
+\end{document} 
