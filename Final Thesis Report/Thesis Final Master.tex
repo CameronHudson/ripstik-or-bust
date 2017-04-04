@@ -21,6 +21,16 @@ labelfont={bf,it},
 textfont={it}]{caption}
 \usepackage{float}
 
+%%%%%%%%%%%NEW PACKAGES I'VE ADDED FOR THE PURPOSE OF THESIS
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section] % definition numbers are dependent on theorem numbers
+
+\usepackage{newclude}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+%%%%%%%%%%%END OF NEW PACKAGES I'VE ADDED FOR THE PURPOSE OF THESIS
+
 \newcommand*{\SignatureAndDate}[1]{%
 	\par\noindent\makebox[2.5in]{\hrulefill} \hfill\makebox[2.0in]{\hrulefill}%
 	\par\noindent\makebox[2.5in][l]{#1}      \hfill\makebox[2.0in][l]{Date}%
@@ -60,28 +70,21 @@ textfont={it}]{caption}
 \begin{document}
 	\begin{titlepage}
 		\maketitle
-		\thispagestyle{empty}
-		\vspace{2in}
-		\SignatureAndDate{Andrew Cantanna}
-		\vspace{.3in}
-		\SignatureAndDate{Ben Rudson}
-		\vspace{.3in}
-		\SignatureAndDate{Cameron Hudson}
-		\vspace{.3in}
-		\SignatureAndDate{Project Supervisor}
-		
+		\thispagestyle{empty}		
 	\end{titlepage}
 	
 	\renewcommand{\baselinestretch}{0.75}\normalsize
 	\tableofcontents
 	\renewcommand{\baselinestretch}{1.0}\normalsize
+
 	
 	\newpage
 
 
-
-\section{Technical Background}
-
-
+\include*{Introduction}
+\include*{Development}
+\include*{EngineeringConsiderations}
+\include*{FutureWork}
+\include*{Conclusions}
 
 \end{document}          
