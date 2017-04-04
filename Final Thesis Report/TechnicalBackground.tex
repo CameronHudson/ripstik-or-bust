@@ -138,9 +138,25 @@ Numeric Integration allows for the approximate computation of an integral using 
 When applying numeric integration to a differential system, stiffness is often a by-product.
 The concept of stiffness is not well understood, but can generally be attributed to quick changing dynamics in a system \cite{StiffSystem}.
 \par
+To help develop some intuition on how stiff systems work, an example can be seen in figure \ref{fig:stiffsystem}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.7\textwidth}
+	\includegraphics[width=\linewidth]{stiffsystem}
+	\caption{Using numeric integration methods to approximate the exact solution to a differential equation}\label{fig:stiffsystem}
+	\endminipage
+\end{figure}
+figure \ref{fig:stiffsystem} shows the exact output from a simple differential equation in light blue. 
+When numeric integration is attempted using Euler's method and a step size of 1/4, the approximation oscillates and completely overshoots the exact method as seen in red. 
+When a step size of 1/8 is selected, there are still oscillations, but they are in a reasonable range around the exact solution as seen in green. 
+When adams-Moulton method is used with a step size of 1/8, the oscillations are essesntially negligible and the approximation is almost equal to the exact solution.
+
+
+\par
 When a system has quickly changing dynamics, numeric integration will require increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
 This adds computational complexity that ofteen exceeds modern technological capabilities. 
-To try and reduce this computational complexity, four different numerical methods exist to evaluate stiff DAE systems.
+To try and reduce this computational complexity, four different numerical methods were selected to evaluate stiff DAE systems.
 
 The QR Decomposition method decomposes the Jacobian of the derivative, breaking down the core system into two smaller systems at each iteration point \cite{Methods}.
 This is represented by the following equation:
