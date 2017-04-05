@@ -64,9 +64,9 @@ With the two-dimensional plot completed, a three-dimensional plot was created to
 \subsubsection{Model Implementation}
 
 With the test case completed and verified, the coordinate system for the RipStik model was verified for each degree of freedom in the system. 
-This was completed by taking applying the output from Mathematica into a visualization software (threejs).
+This was completed by taking applying the output from Mathematica into the ThreeJS based visualization tool.
 
-
+\textbf{INCLUDE SCREENSHOT FROM ANIMATION?}
 \subsubsection{Validation}
 
 Each degree of freedom in the system behaved as expected. 
@@ -128,7 +128,7 @@ With the kinetic and potential energies explicity defined, the Lagrangian can be
 L= \frac{1}{2}{\text{m}}{\lvert \lvert {\dot{\text{r}}^2} \rvert \rvert} + \frac{1}{2}({\text{I}}{\omega(t)})^T\omega(t) - {\text{m}}{\text{g}}{\text{h}}
 \end{equation}
 
-The explicit Lagrangian can then be applied to the Euler lagrange equations do develop the ten unconstrained equtions of motion for each degree of freedom using Equation \ref{eq:UEOM}.
+The explicit Lagrangian can then be applied to the Euler-Lagrange equations do develop the ten unconstrained equtions of motion for each degree of freedom using Equation \ref{eq:UEOM}.
 
 \subsubsection{Test Case}
 
@@ -260,6 +260,7 @@ The gain in length of output was weighted far greater than the length of computa
 Using the Collocation integration method, 5.8 seconds of output for the falling RipStik was plotted for each degree of freedom in the system.
 
 \subsection{Linear Quadratic Regulator Control}
+On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
 \subsubsection{Test Case}
 \subsubsection{Model Implementation Challenges}
 \subsubsection{Proposed Testing Framework}
