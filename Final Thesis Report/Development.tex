@@ -13,9 +13,9 @@ The RipStik will be treated as 5 separate bodies; the torsion rod (1), front pla
 	\endminipage
 \end{figure}  
 
-Difficulties associated with accurately modelling the complex geometry of the RipStik led to simplifying assumptions being made for the shapes of the 5 separate bodies.
+Difficulties associated with accurately modeling the complex geometry of the RipStik led to simplifying assumptions being made for the shapes of the 5 separate bodies.
 The front and back plates were treated as rectangular prisms while defining inertia tensors for the bodies, and the inertia tensors for the wheels were combined with the casters. 
-Additionaly, the casters were treated as skates to emulate the constrained motion of the casters while simplifying the overall system dynamics.
+Additionally, the casters were treated as skates to emulate the constrained motion of the casters while simplifying the overall system dynamics.
 \par
 The spring in the torsion rod was omitted since it is not a critical component of the RipStik and will add unnecessary complexity to the system in the form of kinetic energy.
 Friction between the bodies of the RipStik was omitted, since it would be difficult to accurately model and does not have a significant impact on the general dynamics of the system.
@@ -40,7 +40,7 @@ The RipStik has ten degrees of freedom represented by [X, Y, Z, $\alpha$, $\psi$
 
 \subsubsection{Test Case}
 
-In order to validate the selected coordinate system, a test case was conducted for RipStik. This was done by analyzing the behaviour of the caster as it went through a full revolution (2$\pi$ radians).
+In order to validate the selected coordinate system, a test case was conducted for RipStik. This was done by analyzing the behavior of the caster as it went through a full revolution (2$\pi$ radians).
 The output for the X,Y, and Z positions were plotted as a function of the casters rotation as seen in Figure \ref{fig:CasterWheel2DTest}.
 
 \begin{figure}[!htb]
@@ -64,9 +64,9 @@ With the two-dimensional plot completed, a three-dimensional plot was created to
 \subsubsection{Model Implementation}
 
 With the test case completed and verified, the coordinate system for the RipStik model was verified for each degree of freedom in the system. 
-This was completed by taking applying the output from Mathematica into a visualization software (threejs).
+This was completed by taking applying the output from Mathematica into the ThreeJS based visualization tool.
 
-
+\textbf{INCLUDE SCREENSHOT FROM ANIMATION?}
 \subsubsection{Validation}
 
 Each degree of freedom in the system behaved as expected. 
@@ -122,13 +122,13 @@ The potential energy in the system is composed of only Gravitational Potential E
 
 In Equation \ref{eq:GPE}, m represents the mass of the body and h represents the height of the body relative to the ground plane.
 
-With the kinetic and potential energies explicity defined, the Lagrangian can be written as follows:
+With the kinetic and potential energies explicitly defined, the Lagrangian can be written as follows:
 
 \begin{equation}
 L= \frac{1}{2}{\text{m}}{\lvert \lvert {\dot{\text{r}}^2} \rvert \rvert} + \frac{1}{2}({\text{I}}{\omega(t)})^T\omega(t) - {\text{m}}{\text{g}}{\text{h}}
 \end{equation}
 
-The explicit Lagrangian can then be applied to the Euler lagrange equations do develop the ten unconstrained equtions of motion for each degree of freedom using Equation \ref{eq:UEOM}.
+The explicit Lagrangian can then be applied to the Euler-Lagrange equations do develop the ten unconstrained equations of motion for each degree of freedom using Equation \ref{eq:UEOM}.
 
 \subsubsection{Test Case}
 
@@ -157,7 +157,7 @@ With these equations of motion, it was confirmed that the pendulum reacted as ex
 \subsubsection{Model Implementation}
 
 With the test case complete, the equations of motion were tested on the RipStik model. A Z coordinate in the center of the torsion rod of the RipStik was fixed.
-An initial roll angle of 45 degrees was applied to the front plate ($\alpha_{fp}$), and an inital roll angle of -45 degrees was applied to the back plate ($\alpha_{bp}$). 
+An initial roll angle of 45 degrees was applied to the front plate ($\alpha_{fp}$), and an initial roll angle of -45 degrees was applied to the back plate ($\alpha_{bp}$). 
 
 \subsubsection{Validation}
 
@@ -230,7 +230,7 @@ QR decomposition, Collocation, IDA, and BLT methods were evaluated based on thre
 \begin{itemize}
 \item The computation time was evaluated based on how long it would take for output to be generated (in seconds)
 \item The duration of output was evaluated based on the length of the output computed (in seconds)
-\item The configurability of each method was evaluated qualitatively based on the number of tuneable parameters that could be used to generate a greater length of output
+\item The reconfigurability of each method was evaluated qualitatively based on the number of tunable parameters that could be used to generate a greater length of output
 \end{itemize}
 A comparison of the results can be seen in Table \ref{table:evaluation}.
 
@@ -246,7 +246,7 @@ A comparison of the results can be seen in Table \ref{table:evaluation}.
 		\hline
 		Output Duration (s) & 0.6 & 5.8 & 0.6 & 0.6\\
 		\hline
-		Configurability & Poor & Excellent & Good & Poor\\ [0.1ex]
+		Reconfigurability & Poor & Excellent & Good & Poor\\ [0.1ex]
 		\hline
 	\end{tabular}
 	\label{table:evaluation}
@@ -259,10 +259,10 @@ The gain in length of output was weighted far greater than the length of computa
 
 Using the Collocation integration method, 5.8 seconds of output for the falling RipStik was plotted for each degree of freedom in the system. The output can be seen in Figure 
 
-
-
-
 \subsection{Linear Quadratic Regulator Control}
+On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
+
+The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. To validate the result discussed in section \ref{sec:linnonholo}.
 \subsubsection{Test Case}
 \subsubsection{Model Implementation Challenges}
 \subsubsection{Proposed Testing Framework}

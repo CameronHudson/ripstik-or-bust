@@ -226,7 +226,7 @@ A^{T}X_{r} + X_{r}A - (X_{r}B)(B^{T}X_{r}) + Q = 0.
 \subsection{Literature Review}
 \subsubsection{A Nonlinear Mathematical Model for a Bicycle}
 To gain a clearer perspective of the overall procedure and concepts involved in modeling a complex mechanical system of this nature, a number of similar mathematical models for other modes of personal transportation were analyzed.
-In particular, \textit{A Nonlinear Mathematical Model for a Bicycle} \cite{bicycle} provides a clear example of establishing the necessary coordinate systems and transformation matrices associated with the interconnections and internal angles within the bicycle.
+In particular, \textit{A Nonlinear Mathematical Model for a Bicycle} \cite{BikeModel} provides a clear example of establishing the necessary coordinate systems and transformation matrices associated with the interconnections and internal angles within the bicycle.
 This model includes the rolling dynamics of the wheels and discusses the minutiae of elements like the wheel crown radius, demonstrating the complexity they add to the model before removing these elements to provide a more manageable model.
 The final model is also constructed under the assumption that the rider remains stable and upright, allowing the roll angle of the bicycle to be linearized, further facilitating interpretation of the final modeling results. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -235,19 +235,20 @@ The final model is also constructed under the assumption that the rider remains 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Modeling and Control of Casterboard Robot}
-In the paper \textit{Modeling and Control of Casterboard Robot} \cite{robot}, Kinugasa et al. discuss similar concepts and their application in the context of a casterboard, however, the overarching goals and product were distinct from the defined problem.
+In the paper \textit{Modeling and Control of Casterboard Robot} \cite{CasterboardRobot}, Kinugasa et al. discuss similar concepts and their application in the context of a casterboard, however, the overarching goals and product were distinct from the defined problem.
 The group from Osaka University developed a highly simplified model, omitting the problem of stability and simplifying the dynamics of the caster rotation using a holonomic constraint. 
 They then used this to develop a locomotion control method for the casterboard before implementing, testing and tuning it on a physical robot constructed to match the geometry of the casterboard.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%SHOULD WE INCLUDE AN IMAGE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Nonholonomic Constraints \& Linearization}
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%
-%%%%FUCK IT I'LL DO THIS LATER IDK
-%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Linearization and Stability of Nonholonomic Mechanical Systems} \label{sec:linnonholo}
+In attempting to solve for the Lagrange multipiers in the linearized equations of motion, two potential methods are considered:
+\begin{itemize}
+\item Linearise the system with the unknown constraints to produce a linear DAE then solve for the Lagrange Multipliers
+\item Solve for the Lagrange multipiers then linearise the result
+\end{itemize}
+In his masters thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. In particular, these operations commute at critical points of the potential function\cite{LinNonHolo}.
 \subsection{Software Tools}
 \subsubsection{Mathematica}
 Due to the complex nature of the model and the large number of degrees of freedom needed to accurately model the behavior of the RipStik, a powerful symbolic computation tool is required to derive and manipulate the expressions. 
