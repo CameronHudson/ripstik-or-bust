@@ -4,8 +4,8 @@
 \subsection{Changing Cities}
 
 By 2050, it is projected that 86 \% of the developed world will reside in urban areas \cite{Economist}. 
-As a result of the adoption of the motorized vehicle, cities have become increasingly multi-centred, with retail parks and industrial estates far removed from the city centre \cite{SustainableTransport}. 
-As a result of the changing layout of modern cities, traditional public transport has been rendered largely ineffective at efficiently transporting the population within the city \cite{SustainableTransport}. 
+As a result of the adoption of the motorized vehicle, cities have become increasingly multi-centred, with retail parks and industrial estates far removed from city centres \cite{SustainableTransport}. 
+As a result of the changing layout of modern cities, traditional public transport has been rendered largely ineffective at efficiently transporting the population within cities \cite{SustainableTransport}. 
 A British study showed that 83\% of commuting trips and 90\% of business trips in that country involved only a single passenger in a car \cite{NTS}, highlighting that the supply of mass, group transit does not meet the travel demands of modern society.
 \\
 \\
@@ -52,7 +52,8 @@ This configuration also allows for tighter turning and more responsive speed con
 \par
 The RipStik presents an interesting research opportunity because the associated motions and physics are unintuitive.
 As a result, comprehensive testing and design metrics are required as there are no implicit assumptions to be made about the device's operation. 
-This allows the technology developed in modelling and controlling the RipStik to be applied to a large variety of systems; furthermore, many of the core concepts like wheel motion and stability are highly applicable in the domain of electric transportation. 
+This allows the technology developed in modelling and controlling the RipStik to be applied to a large variety of systems. 
+Furthermore, many of the core concepts like wheel motion and stability are highly applicable in the domain of electric transportation. 
 
 The design of a control system for a personal transportation device needs to be done with careful consideration for a number of external factors. 
 Aside from the challenges associated with the development of the mathematical model and control system, issues pertaining to the patents for transport systems \cite{casterboardPatent} and restricted operation of certain devices \cite{TOLaws} may represent a barrier in bringing theses products to market. 
@@ -64,9 +65,9 @@ This area of study has the potential to redefine urban commuting across the worl
 
 \subsection{Problem Definition}
 
-Aside from select innovative exceptions, current methods of electric personal transport are limited in both mechanics and utility by an adherence to more traditional form factors including the skateboard and bicycle. 
+Aside from select innovative exceptions, current methods of electric personal transport are limited in both mechanics and utility by an adherence to more traditional form factors such as the skateboard and bicycle. 
 As an example of an alternate transportation system, a full control law for a RipStik will be developed and tested. 
-The development of this control law will first require a complete, working mathematical model of the RipStik and a custom tool to visualize the model and control law outputs on a 3D model of the RipStik. 
+The development of this control law will first require a complete, working mathematical model of the RipStik and a custom tool to visualize the model and control law outputs on a 3D model of the device. 
 Simplifications and assumptions will need to be made in order to develop a working model of the system. 
 These simplifications and assumptions will be carefully scrutinized to ensure that they do not compromise the ability of the model to be applied to other complex mechanical systems. 
 A control system will then be developed to propel the RipStik with consideration to triple bottom line implications, including minimizing power requirements and ensuring operator safety. 
@@ -98,10 +99,11 @@ The rotation matrix R can be used to describe a rotation from a body-fixed frame
 \subsubsection{Lagrangian Mechanics}
 
 Lagrangian mechanics can be used in place of Newtonian mechanics when trying to accurately model highly complex systems.
-In these elaborate systems, constraint forces can be implemented to eliminate degrees of freedom and reduce the complexity of the system \cite{LagrangeEquations}. Additionally, Lagrangian equations are invariant to changes of coordinate systems \cite{LagrangePowerpoint}.
+In these elaborate systems, constraint forces can be implemented to eliminate degrees of freedom and reduce the complexity of the system \cite{LagrangeEquations}. 
+Additionally, Lagrangian equations are invariant to changes of coordinate systems \cite{LagrangePowerpoint}.
 \par
-The Lagrangian function is represented by L, and is defined as the difference between kinetic and potential energies in a system modeled using positions and velocities \cite{NonholonomicPowerpoint}.
-In the equation, T represents the kinetic energy and V represents the potential energy.
+The Lagrangian function is represented by $L$, and is defined as the difference between kinetic and potential energies in a system modeled using positions and velocities \cite{NonholonomicPowerpoint}.
+In the equation, $T$ represents the kinetic energy and $V$ represents the potential energy.
 The mathematica formulation for the Lagrangian follows:
 
 \begin{equation}
