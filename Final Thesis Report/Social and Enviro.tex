@@ -1,0 +1,81 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{array}
+\usepackage{dsfont}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bbold}
+\usepackage{fullpage}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{mathrsfs}
+\usepackage[margin=0.9 in]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{xcolor,colortbl}
+\usepackage[format=plain,
+labelfont={bf,it},
+textfont={it}]{caption}
+\usepackage{float}
+
+
+\newcommand*{\SignatureAndDate}[1]{%
+	\par\noindent\makebox[2.5in]{\hrulefill} \hfill\makebox[2.0in]{\hrulefill}%
+	\par\noindent\makebox[2.5in][l]{#1}      \hfill\makebox[2.0in][l]{Date}%
+}%
+\newcolumntype{L}{>{\centering\arraybackslash}m{2cm}}
+\newcolumntype{P}{>{\centering\arraybackslash}m{3cm}}
+\newcolumntype{Q}{>{\centering\arraybackslash}m{4cm}}
+\setlength{\parindent}{0em}
+
+\allowdisplaybreaks
+
+\newcommand{\R}{\mathds{R}}
+\newcommand{\Z}{\mathds{Z}}
+\newcommand{\Rplus}{\mathds{R}_{> 0}}
+\newcommand{\Zplus}{\mathds{Z}_{\geq 0}}
+\newcommand{\F}{\mathds{F}}
+\newcommand{\N}{\mathds{N}}
+\newcommand{\T}{\mathds{T}}
+\newcommand{\s}{\mathds{S}}
+\newcommand{\C}{\mathds{C}}
+\newcommand{\CDFT}{\mathscr{F}_{CD}} %Fourier transform
+\newcommand{\ip}[2]{\langle #1, #2\rangle}
+
+
+\setlength{\parskip}{0.5em}
+
+
+\makeatletter
+\newsavebox\myboxA
+\newsavebox\myboxB
+\newlength\mylenA
+
+\begin{document}
+	
+\section{Social Considerations}
+\subsection{Rider Safety}
+The most recent study of skateboard related trauma occurred in 2010 and focused on the last five years of data from the National Trauma Databank in the United States, further supporting the data with comparisons to other recent studies and analysis of datasets from outside sources \cite{Injury}. The study analyzed 2270 hospital patients admitted due to skateboarding related injuries. Of these, 8\% were under 10 years of age, 58\% were between 10 and 16 years of age, and the remaining 34\% were older than 16 \cite{Injury}. One statistic the researchers highlighted was the rate of incidence of traumatic brain injury among those admitted; in aforementioned age groups, these were 24.1\%, 32.6\%, and 45.5\% respectively\cite{Injury}. While the study concluded that ``helmet utilization and designated skateboard areas significantly reduce the incidence of serious head injuries'' \cite{Injury}, this also highlights the need to develop an electric personal transport vehicle that will minimize the chance of rider injury and, if possible, reduce the severity of unavoidable falls. As the study suggests, proper protective equipment will also be crucial for any user of the proposed product. 
+
+For the final personal electric transport system, this means preventing the automated control from applying extreme acceleration that could cause the rider to be ejected from the vehicle. Similarly, it should keep the vehicle stable in all scenarios, preventing the rider from falling off during turns or at low speeds.
+
+\subsection{Cybersecurity}
+With any digital system in the 21st century, cybersecurity is a key concern as it has grown far beyond simply protecting information or resources against intruders \cite{cybersecurity}. As electric skateboards have risen in popularity, they have attracted the attention of major hacking conferences. The most notable example was a recent presentation at DEF CON, ``the world's longest running and largest underground hacking conference'' \cite{DEFCONsite}, where a group demonstrated techniques for jamming and overriding the wireless control signals used by three popular electric skateboard brands, allowing them to adjust speed, apply the brakes, and permanently disable the vehicles \cite{DEFCON,wiredArticle}. This has direct implications for rider safety since a sudden stop at high speeds could cause significant injury. 
+
+These developments must be considered for a commercial personal electric transport product since some method of wireless speed control will likely be required to allow adequate control for the rider. The DEF CON presenters noted that proprietary RF (radio frequency) protocols were particularly easy to capture and replicate using SDR (software defined radio) \cite{Radio}\cite{DEFCON} but that more modern Bluetooth features could provide sufficient security to prevent hacking using current techniques \cite{DEFCON}. Possible technologies like these will be considered to provide a solution that minimizes potential cybersecurity threats.
+
+\section{Environmental Considerations}
+\subsection{Battery Technologies}
+Modern electronic devices generally rely on rechargeable lithium-ion or lithium-polymer batteries due to their energy storage density and long product lives \cite{BatteryRecharge}. A life cycle analysis of these types of batteries revealed a high cost to the environment and to human health; high lead content (averaging 6.29 mg/L \cite{BatteryRecharge}) and cobalt content (averaging 163544 mg/kg \cite{BatteryRecharge}) both cause them to be classified as hazardous according to U.S. federal regulations \cite{BatteryRecharge}. There are risks of  resource depletion, detrimental effects to human health, and ecotoxicity associated with these battery technologies \cite{BatteryRecharge} which will have to be carefully considered when developing a solution. The potential and feasibility of next generation energy storage technologies like graphene batteries \cite{Graphene} will also be analyzed.
+
+Batteries in personal electric transportation devices became a topic of conversation when the US government recalled over 500,000 two wheeled, self balancing scooters in 2016 due to a risk of batteries sparking, catching fire and exploding, causing at least 18 injuries \cite{CBCArticle}. This brings a clear social impact as well since there is a safety risk associated with low cost batteries manufactured in China\cite{CBCArticle}.
+
+
+\newpage
+\bibliography{Bibliography}{}
+\bibliographystyle{unsrt}
+
+\end{document} 
