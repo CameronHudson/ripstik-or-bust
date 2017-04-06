@@ -159,47 +159,6 @@ Equation \ref{eq:CV} represents the constrained velocity terms.
 \par
 When solving for the constraint forces, the system takes on the form of a Differential Algebraic Equation (DAE).
 
-\subsubsection{Numeric Integration}
-
-Numeric Integration allows for the approximate computation of an integral using numerical methods \cite{WolframNumeric}.
-When applying numeric integration to a differential system, stiffness is often a by-product.
-The concept of stiffness is not well understood, but can generally be attributed to quick changing dynamics in a system \cite{StiffSystem}.
-\par
-To help develop some intuition on how stiff systems work, an example can be seen in Figure \ref{fig:stiffsystem}.
-
-\begin{figure}[!htb]
-	\centering
-	\minipage{0.7\textwidth}
-	\includegraphics[width=\linewidth]{stiffsystem.JPG}
-	\caption{Using numeric integration methods to approximate the exact solution to a differential equation}\label{fig:stiffsystem}
-	\endminipage
-\end{figure}
-Figure \ref{fig:stiffsystem} shows the exact output from a simple differential equation in light blue. 
-When numeric integration is attempted using Euler's method and a step size of 1/4, the approximation oscillates and completely overshoots the exact method as seen in red. 
-When a step size of 1/8 is selected, there are still oscillations, but they are in a reasonable range around the exact solution as seen in green. 
-When adams-Moulton method is used with a step size of 1/8, the oscillations are essesntially negligible and the approximation is almost equal to the exact solution.
-
-
-\par
-When a system has quickly changing dynamics, numeric integration will require increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
-This adds computational complexity that ofteen exceeds modern technological capabilities. 
-To try and reduce this computational complexity, four different numerical methods were selected to evaluate stiff DAE systems.
-
-The QR Decomposition method decomposes the Jacobian of the derivative, breaking down the core system into two smaller systems at each iteration point \cite{Methods}.
-This is represented by the following equation:
-
-\begin{equation}
-\label{eq:QR}
-A = QR
-\end{equation}
-
-In Equation \ref{eq:QR}, A is any real square matrix, Q is an orthogonal matrix, and R is an upper triangular matrix \cite{Methods}.
-
-The Collocation method linearizes the implicit DAE to m points in time, generating a system of linear equations which can be solved iteratively using Newton's Method \cite{Methods}.
-The Implicit Differential-Algebraic Method uses Backward Differential Formulas (BDF) to implicity solve the DAE for derivatives to use an ODE solver \cite{Methods}. 
-The BDF approximates the derivative of the function using information from previous time steps \cite{Methods}.
-The BLT Method puts the system into block lower triangular form and solves subsets of the system iteratively \cite{Methods}.
-
 \subsubsection{Linear Quadratic Regulator Control}
 The linear quadratic regulator (LQR) algorithm is a method in control theory used to technique used to determine the optimal control gains for a state feedback controller for a linear system with a quadratic cost function. \textbf{CITE LAB MANUAL OR SOMETHING}
 
@@ -242,13 +201,7 @@ They then used this to develop a locomotion control method for the casterboard b
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%SHOULD WE INCLUDE AN IMAGE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Linearization and Stability of Nonholonomic Mechanical Systems} \label{sec:linnonholo}
-In attempting to solve for the Lagrange multipiers in the linearized equations of motion, two potential methods are considered:
-\begin{itemize}
-\item Linearise the system with the unknown constraints to produce a linear DAE then solve for the Lagrange Multipliers
-\item Solve for the Lagrange multipiers then linearise the result
-\end{itemize}
-In his masters thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. In particular, these operations commute at critical points of the potential function\cite{LinNonHolo}.
+
 \subsection{Software Tools}
 \subsubsection{Mathematica}
 Due to the complex nature of the model and the large number of degrees of freedom needed to accurately model the behavior of the RipStik, a powerful symbolic computation tool is required to derive and manipulate the expressions. 
