@@ -134,7 +134,16 @@ The explicit Lagrangian can then be applied to the Euler-Lagrange equations do d
 
 The equations of motion were validated using an unconstrained system. A pendulum  attached to a moving cart with an initial position pointing upwards was modeled using Lagrangian mechanics. 
 The mass of the cart is defined as $m_{1}$ and the mass of the pendulum is defined as $m_{2}$. 
-The gravitational plane is defined by the Y axis pointing downwards.
+The set up of the coordinate system can be seen in figure \ref{fig:pendulumcart}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{pendulumcart}
+	\caption{Model set-up for the pendulum cart example}\label{fig:pendulumcart}
+	\endminipage
+\end{figure} 
+
 The Lagrangian for the system is seen in Equation \ref{eq:CartLagrange}.
 
 \begin{equation}
@@ -163,7 +172,47 @@ An initial roll angle of 45 degrees was applied to the front plate ($\alpha_{fp}
 
 When the model implementation was tested with the conditions specified previously, the RipStik behaved as expected. 
 The front and back plated experienced an oscillating motion between 45 and -45 degrees, with the casters rotating between 45 and -45 degrees. 
-This confirmed that the equations of motion for the RipStick were accurate.
+Plots for roll of the front plate ($\alpha_{fp}$), roll of the back plate ($\alpha_{bp}$), yaw of the front caster ($\theta_{fc}$), and yaw of the back caster ($\theta_{bc}$) were plotted to ensure that the motion of the Ripstik aligned with the expected behaviour.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{alphafp}
+	\endminipage\hspace{1em}%
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{alphabp}
+	\endminipage
+	\caption{Roll of front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$)}
+	\label{fig:plates}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{thetafc}
+	\endminipage\hspace{1em}%
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{thetabc}
+	\endminipage
+	\caption{Yaw of front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$)}
+	\label{fig:casters}
+\end{figure}
+
+Since the plates and casters both experienced oscillations approximately between 45 and -45 degrees, it can be confirmed that the equations of motion for the RipStick were accurate.
+
+An accurate visualization of the Ripstik was produced to model the motion and the two extreme positions of the RipStik can be seen in figure \ref{fig:RipStikModel1}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{oneswing}
+	\endminipage\hspace{1em}%
+	\minipage{0.42\textwidth}
+	\includegraphics[width=\linewidth]{twoswing}
+	\endminipage
+	\caption{Two extreme positions of the RipStik motion}
+	\label{fig:RipStikModel1}
+\end{figure}
 
 \subsection{Nonholonomic Constraints}
 
@@ -207,9 +256,35 @@ A drawback associated with this method is that it can be a difficult process req
 
 Prior to implementing the three methods in the RipStik system, a simple model of a rolling wheel was used to validate the different approaches. For nonholonomic constraints, a code was developed and tested on the simple example of a wheel that rolls without slipping.
 No slip constraints are considered to be nonholonomic, and the output can be easily compared to published results.
-\par
-[FIGURE OUT HOW WE WANT TO SHOW OUTPUT FROM THE ROLLING WHEEL EXAMPLE HERE].
-\par
+The configuration space for the rolling wheel consists of [X(t), Y(t), $\theta(t)$, $\phi(t)$].
+The Lagragian for the system is seen in Equation \ref{eq:rollingdicks}.
+
+\begin{equation}
+\label{eq:rollingdicks}
+L=\frac{1}{2}(mX'(t)^2+mY'(t)^2+Jroll\theta'(t)^2+Jspin\phi'(t)^2)
+\end{equation}
+
+With the Lagrangian developed, it was then applied to the Euler-Lagrange equations to provide the equations of motion, seen in equations \ref{eq:Xroll}, \ref{eq:Yroll}, \ref{eq:thetaroll}, and \ref{eq:phiroll}.
+
+\begin{equation}
+\label{eq:Xroll}
+-mX''(t)=0
+\end{equation}
+
+\begin{equation}
+\label{eq:Yroll}
+-mY''(t)=0
+\end{equation}
+
+\begin{equation}
+\label{eq:thetaroll}
+-Jroll\theta''(t)=0
+\end{equation}
+
+\begin{equation}
+\label{eq:phiroll}
+-Jspin\phi''(t)=0
+\end{equation}
 
 \subsubsection{Model Implementation}
 
@@ -219,13 +294,52 @@ Ultimately, numeric integration was selected to produce output.
 
 \subsubsection{Numeric Integration}
 
+Numeric Integration allows for the approximate computation of an integral using numerical methods \cite{WolframNumeric}.
+When applying numeric integration to a differential system, stiffness is often a by-product.
+The concept of stiffness is not well understood, but can generally be attributed to quick changing dynamics in a system \cite{StiffSystem}.
+\par
+To help develop some intuition on how stiff systems work, an example can be seen in Figure \ref{fig:stiffsystem}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.7\textwidth}
+	\includegraphics[width=\linewidth]{stiffsystem.JPG}
+	\caption{Using numeric integration methods to approximate the exact solution to a differential equation}\label{fig:stiffsystem}
+	\endminipage
+\end{figure}
+Figure \ref{fig:stiffsystem} shows the exact output from a simple differential equation in light blue. 
+When numeric integration is attempted using Euler's method and a step size of 1/4, the approximation oscillates and completely overshoots the exact method as seen in red. 
+When a step size of 1/8 is selected, there are still oscillations, but they are in a reasonable range around the exact solution as seen in green. 
+When adams-Moulton method is used with a step size of 1/8, the oscillations are essesntially negligible and the approximation is almost equal to the exact solution.
+
+
+\par
+When a system has quickly changing dynamics, numeric integration will require increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
+This adds computational complexity that ofteen exceeds modern technological capabilities. 
+To try and reduce this computational complexity, four different numerical methods were selected to evaluate stiff DAE systems.
+
+The QR Decomposition method decomposes the Jacobian of the derivative, breaking down the core system into two smaller systems at each iteration point \cite{Methods}.
+This is represented by the following equation:
+
+\begin{equation}
+\label{eq:QR}
+A = QR
+\end{equation}
+
+In Equation \ref{eq:QR}, A is any real square matrix, Q is an orthogonal matrix, and R is an upper triangular matrix \cite{Methods}.
+
+The Collocation method linearizes the implicit DAE to m points in time, generating a system of linear equations which can be solved iteratively using Newton's Method \cite{Methods}.
+The Implicit Differential-Algebraic Method uses Backward Differential Formulas (BDF) to implicity solve the DAE for derivatives to use an ODE solver \cite{Methods}. 
+The BDF approximates the derivative of the function using information from previous time steps \cite{Methods}.
+The BLT Method puts the system into block lower triangular form and solves subsets of the system iteratively \cite{Methods}.
+
 While numeric integration produced results for the RipStik model, it brought its own set of challenges in the form of system stiffness.
 For the RipStik, the frictionless linkages cause quick changes in the exact solution that is being approximated. 
 When Mathematica attempts to numerically approximate this, it selects increasingly small step sizes to replicate these quick motions without oscillation. 
 However, these increasingly small step sizes slow down the computation until Mathematica eventually abandons the attempt at numerically integrating over the chosen time interval.
 
 \paragraph{Evaluation}\mbox{}\\
-As discussed in the technical background, four methods for numerically integrating stiff DAE systems were analyzed. 
+As previously discussed, four methods for numerically integrating stiff DAE systems were analyzed. 
 QR decomposition, Collocation, IDA, and BLT methods were evaluated based on three criteria:
 \begin{itemize}
 \item The computation time was evaluated based on how long it would take for output to be generated (in seconds)
@@ -257,12 +371,75 @@ The gain in length of output was weighted far greater than the length of computa
 
 \subsubsection{Validation}
 
-Using the Collocation integration method, 5.8 seconds of output for the falling RipStik was plotted for each degree of freedom in the system. The output can be seen in Figure 
+Using the Collocation integration method, 5.8 seconds of output for the falling RipStik was plotted for each degree of freedom in the system. 
+As the RipStik fell, it eventually exceeded the range of validity for the Euler angles. 
+This led to the RipStiks motion behaving eratically. 
+As a result, only the first 1.4 seconds of the falling RipStik was plotted.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{fallz}
+	\endminipage\hspace{1em}%
+	\caption{The Z-position of the Ripstik as it falls}\label{fig:fallglobal}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{fallalphafp}
+	\endminipage\hspace{1em}%
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{fallalphabp}
+	\endminipage
+	\caption{Roll of front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) as the RipStik falls}\label{fig:fallplates}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{fallthetafc}
+	\endminipage\hspace{1em}%
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{fallthetabc}
+	\endminipage
+	\caption{Roll of front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) as the RipStik falls}\label{fig:fallcaster}	
+\end{figure}
+
+The Z-position plot in Figure \ref{fig:fallglobal} shows the Ripstik falling through the ground plane and reorienting itself in the upright position. 
+This is clearly illustrated by the oscillations shown in the first plot.
+
+
+The roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) plots in Figure \ref{fig:fallplates} show the plates rotating almost 360 degrees, and then rotating fully back to 0. 
+This clearly describes the behaviour as the Ripstik essentially flips through the ground plane.
+The yaw of the front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) plots in figure \ref{fig:fallcaster} describe the motion of the casters as the RipStik falls.
+The casters pivot to follow the falling motion of the RipStik and satisfy the nonholonomic constraints.
+\par
+An accurate visualization was produced to model the motion of the RipStik. The initial upright and final fallen over position of the RipStik can be seen in figure
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{rest}
+	\endminipage\hspace{1em}%
+	\minipage{0.37\textwidth}
+	\includegraphics[width=\linewidth]{fall}
+	\endminipage
+	\caption{Initial upright and final fallen over positions of the RipStik}\label{fig:fallcaster}	
+\end{figure}
 
 \subsection{Linear Quadratic Regulator Control}
 On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
 
-The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. To validate the result discussed in section \ref{sec:linnonholo}.
+The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. 
+In attempting to solve for the Lagrange multipiers in the linearized equations of motion, two potential methods are considered:
+\begin{itemize}
+	\item Linearize the system with the unknown constraints to produce a linear DAE then solve for the Lagrange Multipliers
+	\item Solve for the Lagrange multipiers then linearize the result
+\end{itemize}
+In his masters thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. In particular, these operations commute at critical points of the potential function\cite{LinNonHolo}.
+
+The next steps require validating the result discussed from the thesis.
 \subsubsection{Test Case}
 \subsubsection{Model Implementation Challenges}
 \subsubsection{Proposed Testing Framework}
