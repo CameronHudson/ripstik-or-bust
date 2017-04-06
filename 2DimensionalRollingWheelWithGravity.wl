@@ -8,21 +8,21 @@ Needs["VariationalMethods`"]
 
 
 
-\[Rho] = 0.5;
+(*\[Rho] = 0.5;
 m = 3;
 mP = 1;
 Jspin = 2;
 Jroll = 2;
 g=981/100
-L = 1;
+L = 1;*)
 
 Iw = {{Jspin, 0, 0}, {0, Jspin, 0}, {0, 0, Jroll}};
 
 
 IPend=({
- {mP*L^2, 0, 0},
- {0, mP*L^2, 0},
- {0, 0, mP*L^2}
+ {1/3*mP*L^2, 0, 0},
+ {0, 1/3*mP*L^2, 0},
+ {0, 0, 0}
 })
 
 Conf = {X[t], \[Phi][t], \[Psi][t]}
@@ -45,10 +45,12 @@ rPend = GlobalTranslation + RPend.{L,0,0} + {0,0,\[Rho]}
 Lagrangian1 = TotalEnergy[RWheel,GlobalTranslation,Iw,m,t,g]
 Lagrangian2 = TotalEnergy[RPend,rPend,IPend,mP,t,g]
 
-Lagrangian = Lagrangian1 + Lagrangian2;
+Lagrangian = Lagrangian1 + Lagrangian2
+TeXForm[Lagrangian]
 
 
 EulerLagrange = EulerEquations[Lagrangian,Conf,t] /.  { Sin[2\[Psi][t]] -> 2Sin[\[Psi][t]]Cos[\[Psi][t]]}
+TeXForm[EulerLagrange]
 
 
 NHConstraints = {X'[t] == \[Rho]*\[Phi]'[t]}
@@ -94,7 +96,7 @@ ConstraintValues = InverseLambdaCoefficients.OtherTerms;
 
 
 
-InitialConditions = {
+(*InitialConditions = {
 						X[0] == 0,
 						\[Phi][0] == 0,
 						\[Psi][0] == -96 Degree,
@@ -104,18 +106,18 @@ InitialConditions = {
 					}
 SystemOfEquations = Flatten[{ConstrainedEulerLagrange,NHConstraints,InitialConditions}]
 
+*)
 
 
-
-TimeLimit = 15;
+(*TimeLimit = 15;
 s = NDSolve[SystemOfEquations,Conf,{t,0,15},Method->{"IDA","ImplicitSolver" -> "Newton", "IndexReduction"->Automatic,"EquationSimplification"->"Residual"}]
 Plot[Evaluate[{X[t]}/.s],{t,0,15}]
 
 Plot[Evaluate[{\[Phi][t],\[Psi][t]}/.s],{t,0,15}]
+*)
 
 
-
-AnimatePendulum[rules_]:=
+(*AnimatePendulum[rules_]:=
 	Table[
 		Evaluate[DrawSinglePendulum[X[t]/.rules,
 		{\[Psi][t]/.rules,-\[Phi][t]/.rules,1,1},t]],{t,0,15,0.03}(*,
@@ -136,10 +138,13 @@ PlotLabel->"t"==NumberForm[t,{4,2}],
 ImagePadding -> 5
 ]
 ]
+*)
 
 
+(*
 anim1 = AnimatePendulum[First[s]];
 Export["anim1.gif",anim1, "DisplayDurations" -> 0.03]
+*)
 
 
 ForcedLHS = EulerLagrange[[2]][[1]] + f[t];
@@ -278,7 +283,7 @@ LinExplicitConstrainedEL = Simplify[LinConstrainedEulerLagrange /.
 					{
 						\[Lambda]1[t] -> LinConstraintValues[[1]]
 					}]
-
+TeXForm[LinExplicitConstrainedEL]
 (*LinEulerLagrange*)
 (*FullSimplify[{SCLinConstraintValues[[1]] \[Equal] LinConstraintValues[[1]], SCLinConstraintValues[[2]] \[Equal] LinConstraintValues[[2]]}]*)
 
@@ -304,22 +309,28 @@ LinConstraintValues
 
 Model = StateSpaceModel[ ExplicitForcedConstrainedEulerLagrange,
 	{{X[t], 0}, {X'[t], 0}, {\[Psi][t], -\[Pi]/2}, {\[Psi]'[t], 0}, {\[Phi][t], 0}, {\[Phi]'[t], 0}}, f[t],{}, t]
-ControllableModelQ[Model]
+(*ControllableModelQ[Model]*)
+TeXForm[Simplify[Model[[1]]]]
 
 
+(*
 gains = 
 	LQRegulatorGains[N[Model],
 		{DiagonalMatrix[{20, 5, 100, 40, 30, 100}], {{1}}}]//First
+*)
 
 
+(*
 ControlForce = -gains.{X[t], X'[t], \[Psi][t]+\[Pi]/2, \[Psi]'[t], \[Phi][t], \[Phi]'[t]}
+*)
 
 
+(*
 ForcedSystemOfEquations = Flatten[{ForcedConstrainedEulerLagrange,NHConstraints,InitialConditions}]
 bumps[t_] = 22Exp[-10(t-8)^2] - 22 Exp[-10(t-12)^2];
 Interp1 = NDSolve[ForcedSystemOfEquations /. f[t]-> (ControlForce + bumps[t]),Conf,{t,0,15},Method->{"IDA","ImplicitSolver" -> "Newton", "IndexReduction"->Automatic,"EquationSimplification"->"Residual"}]
 anim2 = AnimatePendulum[First[Interp1]];
 Export["test.gif",anim2, "DisplayDurations" -> 0.03]
-
+*)
 
 
