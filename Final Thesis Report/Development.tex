@@ -536,7 +536,8 @@ They both produced the constrained linear system
 	L m_{P} \left(4 L
    \psi ''(t)+3 X''(t)\right)=0,
 \end{equation}
-demonstrating that the result applies as expected for this small system. The linearized control system about the unstable equilibrium $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$ is given by the equation:
+demonstrating that the result applies as expected for this small system. 
+The linearized control system about the unstable equilibrium $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$ is given by the equation:
 \begin{equation}
 \left(
 \begin{array}{c}
@@ -586,13 +587,34 @@ demonstrating that the result applies as expected for this small system. The lin
 \end{array}
 \right]u(t).
 \end{equation}
-With the system linearized, a stabilizing controller was developed to keep the pendulum at the upright unstable equilibrium position $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$. To do this, values were chosen for each of the parameters in the system and a state weighting matrix $Q$ was selected based on the project considerations. In particular, the aim was to prioritize stability of the pendulum angle $\psi$ and angular velocity of the roll angle $\phi$ since this keeps the 'rider' upright and avoids using large angular accelerations to maintain this stability. Meanwhile, it allows the position of the wheel to return more slowly to the equilibrium since the horizontal position of the wheel is not a priority in the stabilization problem for PET.
+With the system linearized, a stabilizing controller was developed to keep the pendulum at the upright unstable equilibrium position $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$. 
+To do this, values were chosen for each of the parameters in the system and a state weighting matrix $Q$ was selected based on the project considerations. 
+In particular, the aim was to prioritize stability of the pendulum angle $\psi$ and angular velocity of the roll angle $\phi$ since this keeps the 'rider' upright and avoids using large angular accelerations to maintain this stability. 
+Meanwhile, it allows the position of the wheel to return more slowly to the equilibrium since the horizontal position of the wheel is not a priority in the stabilization problem for PET.
 
-The perturbation function $22 e^{-10 (t-8)^2}-22 e^{-10 (t-12)^2}$ was applied to the roll angle, simulating uneven ground conditions when riding the PET device. This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. The second perturbation was specifically timed such that the system had not fully recovered from the first, demonstrating stability of the controlled system.
+The perturbation function $22 e^{-10 (t-8)^2}-22 e^{-10 (t-12)^2}$ was applied to the roll angle, simulating uneven ground conditions when riding the PET device. 
+This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. The second perturbation was specifically timed such that the system had not fully recovered from the first, demonstrating stability of the controlled system.
 \par
 \textbf{FIGURES FIGURES FIGURES}
 \par
 \subsubsection{Model Implementation Challenges}
-\subsubsection{Proposed Testing Framework}
+Three main challenges must be investigated in extrapolating these LQR results to the larger RipStik system. These are:
+\begin{itemize}
+	\item Ongoing complexities regarding numeric integration
+	\item Uncertainty about the effects of including control forces in the commutation of linearization and solving for Lagrange multipliers
+	\item The possible effects of linearization on system behavior
+\end{itemize}
+A brief discussion of each follows.
+\paragraph{Numeric Integration}\mbox{}\\
+Adding control forces may further aggravate the previously discussed issues with system stiffness in the RipStik. 
+This would occur if the control forces cause the system to react quickly, creating rapid changes in dynamics that the numeric integrator will not be able to readily replicate.
+\paragraph{Control Forces in Commutation}\mbox{}\\
+While the commutation of solving for Lagrange multipliers was demonstrated by \cite{LinNonHolo} at points where the potential force is zero, the result may not extend to include the equations of motion with the control forces since they are non-zero. 
+While the result was demonstrated with control forces on the rolling wheel with pendulum, it may be due to the simplicity of the system. 
+To ensure that this holds on all systems, including the RipStik, a formal proof would be needed.
+\paragraph{Linearization \& System Behavior}\mbox{}\\
+It has previously been demonstrated that for some mechanical systems, linearization will produce an uncontrollable system despite that the nonlinear system may be controllable and that, intuitively, there should exist a control law \cite{CCSMCS}. 
+For example, this can arise from decoupling when the initial velocities are zero. 
+In the context of the RipStik, the system is sufficiently large that identifying these types of issues would be difficult since it may not be possible to draw conclusions about the local controllability of the nonlinear system.
 
 
