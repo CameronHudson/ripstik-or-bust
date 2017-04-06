@@ -286,6 +286,28 @@ With the Lagrangian developed, it was then applied to the Euler-Lagrange equatio
 -Jspin\phi''(t)=0
 \end{equation}
 
+Plots were then created to confirm that the rolling wheel's equations of motion with nonholonomic constraints behaved as expected.
+The X and Y positions of the rolling wheel were modeled on a parametric plot, while $\theta$ and $\phi$ were modeled on a standard plot.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.2\textwidth}
+	\includegraphics[width=\linewidth]{RollingWheelXY.jpg}
+	\endminipage\hspace{1em}%
+	\caption{The X and Y position plotted parametrically as a function of time for 5 seconds}\label{fig:RollingWheelXY}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{RollingWheelThetaPhi.png}
+	\endminipage\hspace{1em}%
+	\caption{$\theta$ and $\phi$ were plotted as a function of time for 5 seconds}\label{fig:RollingWheelThetaPhi}
+\end{figure}
+
+Based on the output in Figures \ref{fig:RollingWheelXY} and \ref{fig:RollingWheelThetaPhi}, the rolling wheel behaves as expected. 
+
+
 \subsubsection{Model Implementation}
 
 While all three approaches worked perfectly on the rolling wheel, they did not scale as desired to the much larger RipStik system.
