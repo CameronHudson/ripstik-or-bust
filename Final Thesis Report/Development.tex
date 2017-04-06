@@ -38,7 +38,7 @@ The yaw angle ($\theta$) was represented by a moment taken around the Z-axis (ri
 
 The RipStik has ten degrees of freedom represented by [X, Y, Z, $\alpha$, $\psi$, $\theta$, $\alpha_{fp}$, $\alpha_{bp}$, $\theta_{fc}$, $\theta_{bc}$].
 
-\subsubsection{Test Case}
+\subsubsection{Test Case - Caster Rotation}
 
 In order to validate the selected coordinate system, a test case was conducted for RipStik. This was done by analyzing the behavior of the caster as it went through a full revolution (2$\pi$ radians).
 The output for the X,Y, and Z positions were plotted as a function of the casters rotation as seen in Figure \ref{fig:CasterWheel2DTest}.
@@ -130,7 +130,7 @@ L= \frac{1}{2}{\text{m}}{\lvert \lvert {\dot{\text{r}}^2} \rvert \rvert} + \frac
 
 The explicit Lagrangian can then be applied to the Euler-Lagrange equations do develop the ten unconstrained equations of motion for each degree of freedom using Equation \ref{eq:UEOM}.
 
-\subsubsection{Test Case}
+\subsubsection{Test Case - Uncontrolled Inverted Pendulum}\label{sec:testcaseip}
 
 The equations of motion were validated using an unconstrained system. A pendulum  attached to a moving cart with an initial position pointing upwards was modeled using Lagrangian mechanics. 
 The mass of the cart is defined as $m_{1}$ and the mass of the pendulum is defined as $m_{2}$. 
@@ -203,7 +203,7 @@ Using this method, Equations \ref{eq:CFE} and \ref{eq:CV} can remain in their in
 Numeric integration functions can then be applied to approximate the result of the system of differential equations and ultimately produce output from the model.
 A drawback associated with this method is that it can be a difficult process requiring careful tuning of numerical integrators and ultimately does not give explicit equations for the constraints.
 
-\subsubsection{Test Case}
+\subsubsection{Test Case - Rolling Wheel}\label{sec:testcaserw}
 
 Prior to implementing the three methods in the RipStik system, a simple model of a rolling wheel was used to validate the different approaches. For nonholonomic constraints, a code was developed and tested on the simple example of a wheel that rolls without slipping.
 No slip constraints are considered to be nonholonomic, and the output can be easily compared to published results.
@@ -262,8 +262,68 @@ Using the Collocation integration method, 5.8 seconds of output for the falling 
 \subsection{Linear Quadratic Regulator Control}
 On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
 
-The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. To validate the result discussed in section \ref{sec:linnonholo}.
-\subsubsection{Test Case}
+The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. This was done using the result discussed in section \ref{sec:linnonholo}. To verify that this process worked with the control forces for a simple example, a test case was developed by combining two previous examples.
+\subsubsection{Test Case - Rolling Wheel with Inverted Pendulum}
+The test case developed for LQR control consisted of a rolling wheel (as shown in section \ref{sec:testcaserw}) with an inverted pendulum attached (similar to what was shown in \ref{sec:testcaseip}). Since both components of the mechanical system have been previously developed and validated, minimal additional work is needed to develop the combined system. The system and associated dimensions are shown in \textbf{FIGURE FIGURE}.
+
+\textbf{INSERT FIGURE WITH ANGLES AND JUNK HERE}
+
+Since it was developed in 2 dimensions, the system has 3 degrees of freedom; the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. Additionally, the following constants are defined: $m$, the mass of the wheel, $m_p$, the mass of the pendulum, $g$, the acceleration due to gravity, $\rho$, the radius of the wheel, and $L$, the length of the pendulum. Note that the pendulum is again modeled as a thin uniform rod.
+The moment of inertia of the wheel is defined to be
+\begin{equation}
+I_w =
+	\begin{pmatrix}
+		J_{spin} & 0 & 0 \\
+		0 & J_{spin} & 0 \\
+		0 & 0 & J_{roll}
+	\end{pmatrix},
+\end{equation}
+for consistency with section \ref{sec:testcaserw}. The rod then has a moment of inertia of \textbf{DO WE NEED A SOURCE ON THIS??}
+\begin{equation}
+I_p =
+	\begin{pmatrix}
+		\frac{1}{3}L^{2}m_p & 0 & 0 \\
+		0 & \frac{1}{3}L^{2}m_p & 0 \\
+		0 & 0 & 0
+	\end{pmatrix}.
+\end{equation}
+The unconstrained Lagrangian of the system is computed to be 
+\begin{equation}
+\underbrace{m_P \left( g L \sin (\psi (t))- 
+	g \rho + 
+	\frac{2}{3}L^2 \psi '(t)^2 - 
+	L \psi '(t) \sin (\psi (t)) x'(t)+
+	\frac{1}{2} x'(t)^2\right)}_{\text{pendulum}} +
+	\underbrace{\frac{1}{2} \left(J_{spin} \phi '(t)^2 + 
+	m x'(t)^2\right)}_{\text{wheel}} = 0.
+\end{equation}
+Applying the Euler-Lagrange equation, the unconstrained equations of motion for the system are computed to be 
+\begin{equation}
+L m_{P} \psi ''(t) \sin (\psi (t))+L m_{P} \psi
+   '(t)^2 \cos (\psi (t))-(m+m_{P}) X''(t)=0
+\end{equation}
+\begin{equation}
+   -J_{spin} \phi''(t)=0
+\end{equation}
+\begin{equation}
+   \frac{1}{3} L m_{P} \left(3 g \cos (\psi (t))-4 L \psi ''(t)+3 \sin (\psi (t)) X''(t)\right)=0
+\end{equation}
+Additionally, system has one nonholonomic constraint, expressed as
+\begin{equation}
+x'(t) = \rho\theta'(t).
+\end{equation}
+A control input $f(t)$ was then added to the second equation of motion, thereby applying a torque to the roll angle of the wheel.
+
+In order to experimentally validate the presented result on commutation of linearization and solving for nonholonomic constraints, both procedures were applied to the system. They produced the equivalent linear system
+\begin{equation}
+\left\{\frac{\left(4 \text{Jspin}+\rho ^2 (4 m+\text{mP})\right)
+   \left(L \text{mP} \psi ''(t)+(m+\text{mP}) X''(t)\right)-\rho 
+   f(t) (4 m+\text{mP})}{4 \text{Jspin}+\rho ^2 (4
+   m+\text{mP})}=0,\frac{\text{Jspin} \left(\phi ''(t) \left(4
+   \text{Jspin}+\rho ^2 (4 m+\text{mP})\right)-4 f(t)\right)}{4
+   \text{Jspin}+\rho ^2 (4 m+\text{mP})}=0,L \text{mP} \left(4 L
+   \psi ''(t)+3 X''(t)\right)=0\right\}
+\end{equation}
 \subsubsection{Model Implementation Challenges}
 \subsubsection{Proposed Testing Framework}
 
