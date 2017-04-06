@@ -68,9 +68,22 @@ Rise time refers to the amount of time it takes for the system output to reach t
 In the context of the vehicle, a slow rise time may mean that the system is not able to stabilize a soon-to-fall rider before it is too late. 
 Clearly, the rise time of the control algorithm is a priority in order for the personal electric transport device to be a viable, safe vehicle.
 The settling time is also of significance to the performance of the vehicle. 
-The settling time must be adequately small to ensure that the vehicle can stabalize in a practical setting. 
+The settling time must be adequately small to ensure that the vehicle can stabilize in a practical setting. 
 A lengthy settling time may result in the vehicle oscillating around a stable configuration, making it difficult to operate. 
-System overshoot 
+System overshoot refers to the ability of the vehicle to return to a stable configuration in a direct manner. 
+If the system overshoots the desired, stable configuration, it could result in the ejection of the operator from the vehicle. 
+Clearly, system overshoot should be minimized if the control system will be used in a viable personal electric transport vehicle. 
+Finally, steady-state error refers to the ability of the control system to accurately return to its stable configuration following a disturbance. 
+A large steady-state error would mean that, in returning to the stable configuration following a disturbance, the system would not fully return to the original stable configuration. 
+Instead, it would experience a permanent deviation from said configuration. 
+The primary objective of the controller is to improve the safety and operation of the personal electric transport vehicle. 
+If the vehicle is not able to accurately return to its stable configuration, it could compromise the ability of the control system to accomplish its objective.
+\\
+\\
+Clearly, all four tuning parameters are of significant consequence in the design of a control algorithm to govern the operation of a personal electric transport vehicle. 
+However, it is not possible to maximize each parameter individually in the design of a control alogrithm. 
+Therefore, it is imperative that the final control algorithm be optimized to maximize performance parameters of the vehicle, while ensuring that it is robust enough to handle a variety of conditions in a variety of environments. 
+Primary areas of focus in the design and tuning of the control system will vary depending on the nature of the complex mechanical system in which they are designed to govern.
 
 \subsection{Mechanical Control System}
 The control algorithm will be implemented by a mechanical control system located on the vehicle. 
