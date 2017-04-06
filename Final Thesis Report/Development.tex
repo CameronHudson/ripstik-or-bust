@@ -429,7 +429,8 @@ An accurate visualization was produced to model the motion of the RipStik. The i
 \end{figure}
 
 \subsection{Linear Quadratic Regulator Control}
-On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
+On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. 
+This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
 
 The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. 
 In attempting to solve for the Lagrange multipiers in the linearized equations of motion, two potential methods are considered:
@@ -437,15 +438,20 @@ In attempting to solve for the Lagrange multipiers in the linearized equations o
 	\item Linearize the system with the unknown constraints to produce a linear DAE then solve for the Lagrange Multipliers
 	\item Solve for the Lagrange multipiers then linearize the result
 \end{itemize}
-In his masters thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. In particular, these operations commute at critical points of the potential function\cite{LinNonHolo}.
-The test case developed for LQR control consisted of a rolling wheel (as shown in section \ref{sec:testcaserw}) with an inverted pendulum attached (similar to what was shown in \ref{sec:testcaseip}). Since both components of the mechanical system have been previously developed and validated, minimal additional work is needed to develop the combined system. The system and associated dimensions are shown in \textbf{FIGURE FIGURE}.
+In his masters thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. 
+In particular, these operations commute at critical points of the potential function\cite{LinNonHolo}.
+The test case developed for LQR control consisted of a rolling wheel (as shown in section \ref{sec:testcaserw}) with an inverted pendulum attached (similar to what was shown in \ref{sec:testcaseip}). 
+Since both components of the mechanical system have been previously developed and validated, minimal additional work is needed to develop the combined system. 
+The system and associated dimensions are shown in \textbf{FIGURE FIGURE}.
 The next steps require validating the result discussed from the thesis.
 
 \subsubsection{Test Case - Rolling Wheel with Inverted Pendulum}
 
 \textbf{INSERT FIGURE WITH ANGLES AND JUNK HERE}
 
-Since it was developed in 2 dimensions, the system has 3 degrees of freedom; the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. Additionally, the following constants are defined: $m$, the mass of the wheel, $m_p$, the mass of the pendulum, $g$, the acceleration due to gravity, $\rho$, the radius of the wheel, and $L$, the length of the pendulum. Note that the pendulum is again modeled as a thin uniform rod.
+Since it was developed in 2 dimensions, the system has 3 degrees of freedom; the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. 
+Additionally, the following constants are defined: $m$, the mass of the wheel, $m_p$, the mass of the pendulum, $g$, the acceleration due to gravity, $\rho$, the radius of the wheel, and $L$, the length of the pendulum. 
+Note that the pendulum is again modeled as a thin uniform rod.
 The moment of inertia of the wheel is defined to be
 \begin{equation}
 I_w =
@@ -491,16 +497,25 @@ x'(t) = \rho\theta'(t).
 \end{equation}
 A control input $f(t)$ was then added to the second equation of motion, thereby applying a torque to the roll angle of the wheel.
 
-In order to experimentally validate the presented result on commutation of linearization and solving for nonholonomic constraints, both procedures were applied to the system. They produced the equivalent linear system
+In order to experimentally validate the presented result on commutation of linearization and solving for nonholonomic constraints, both procedures were applied to the system. 
+They both produced the constrained linear system
 \begin{equation}
-\left\{\frac{\left(4 \text{Jspin}+\rho ^2 (4 m+\text{mP})\right)
-   \left(L \text{mP} \psi ''(t)+(m+\text{mP}) X''(t)\right)-\rho 
-   f(t) (4 m+\text{mP})}{4 \text{Jspin}+\rho ^2 (4
-   m+\text{mP})}=0,\frac{\text{Jspin} \left(\phi ''(t) \left(4
-   \text{Jspin}+\rho ^2 (4 m+\text{mP})\right)-4 f(t)\right)}{4
-   \text{Jspin}+\rho ^2 (4 m+\text{mP})}=0,L \text{mP} \left(4 L
-   \psi ''(t)+3 X''(t)\right)=0\right\}
+	\frac{\left(4 J_{spin}+\rho ^2 (4 m+m_{P})\right)
+   \left(L m_{P} \psi ''(t)+(m+m_{P}) X''(t)\right)-\rho 
+   f(t) (4 m+m_{P})}{4 J_{spin}+\rho ^2 (4
+   m+m_{P})}=0
 \end{equation}
+\begin{equation}
+	\frac{J_{spin} \left(\phi ''(t) \left(4
+   J_{spin}+\rho ^2 (4 m+m_{P})\right)-4 f(t)\right)}{4
+   J_{spin}+\rho ^2 (4 m+m_{P})}=0
+\end{equation}
+\begin{equation}
+	L m_{P} \left(4 L
+   \psi ''(t)+3 X''(t)\right)=0,
+\end{equation}
+demonstrating that the result applies as expected for this small system. 
+With the system linearized, 
 \subsubsection{Model Implementation Challenges}
 \subsubsection{Proposed Testing Framework}
 
