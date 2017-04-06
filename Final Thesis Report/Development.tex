@@ -256,7 +256,17 @@ A drawback associated with this method is that it can be a difficult process req
 
 Prior to implementing the three methods in the RipStik system, a simple model of a rolling wheel was used to validate the different approaches. For nonholonomic constraints, a code was developed and tested on the simple example of a wheel that rolls without slipping.
 No slip constraints are considered to be nonholonomic, and the output can be easily compared to published results.
-The configuration space for the rolling wheel consists of [X(t), Y(t), $\theta(t)$, $\phi(t)$].
+The configuration space for the rolling wheel consists of [X(t), Y(t), $\theta(t)$, $\phi(t)$]. 
+The system and dimensions can be seen in Figure \ref{fig:rollwheel}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.6\textwidth}
+	\includegraphics[width=\linewidth]{rollingwheel.JPG}
+	\caption{The roll angle ($\phi$) and wheel angle ($\theta$) for the rolling wheel}\label{fig:rollwheel}
+	\endminipage
+\end{figure}
+
 The Lagragian for the system is seen in Equation \ref{eq:rollingdicks}.
 
 \begin{equation}
@@ -467,9 +477,15 @@ Since both components of the mechanical system have been previously developed an
 
 \subsubsection{Test Case - Rolling Wheel with Inverted Pendulum}
 
-The system and associated dimensions are shown in \textbf{FIGURE FIGURE}.
+The system and associated dimensions are shown in Figure \ref{fig:invert}.
 
-\textbf{INSERT FIGURE WITH ANGLES AND JUNK HERE}
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{rollingwheelinvertedpendulum.JPG}
+	\caption{The roll angle ($\phi$) and pendulum angle ($\psi$) for the rolling wheel with an inverted pendulum}\label{fig:invert}
+	\endminipage
+\end{figure}
 
 The two dimensional system has 3 degrees of freedom; the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. 
 Additionally, the following constants are defined: $m$, the mass of the wheel, $m_p$, the mass of the pendulum, $g$, the acceleration due to gravity, $\rho$, the radius of the wheel, and $L$, the length of the pendulum. 
@@ -590,7 +606,31 @@ With the system linearized, a stabilizing controller was developed to keep the p
 
 The perturbation function $22 e^{-10 (t-8)^2}-22 e^{-10 (t-12)^2}$ was applied to the roll angle, simulating uneven ground conditions when riding the PET device. This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. The second perturbation was specifically timed such that the system had not fully recovered from the first, demonstrating stability of the controlled system.
 \par
-\textbf{FIGURES FIGURES FIGURES}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{perturbation.png}
+	\endminipage\hspace{1em}%
+	\caption{The perturbation function that was applied to the rolling wheel with inverted pendulum plotted as a function of time}\label{fig:perturb}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.4\textwidth}
+	\includegraphics[width=\linewidth]{wheelperturbdistance.jpg}
+	\endminipage\hspace{1em}%
+	\caption{The X-position of the wheel plotted as a function of time}\label{fig:wheelperturbdistance}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.44\textwidth}
+	\includegraphics[width=\linewidth]{wheelperturbphipsi.png}
+	\endminipage\hspace{1em}%
+	\caption{The roll angle ($\phi$) and the pendulum angle ($\psi$) plotted as a function of time}\label{fig:wheelperturbphipsi}
+\end{figure}
+
 \par
 \subsubsection{Model Implementation Challenges}
 \subsubsection{Proposed Testing Framework}
