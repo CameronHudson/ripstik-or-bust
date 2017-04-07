@@ -155,7 +155,7 @@ Equation \ref{eq:CV} represents the velocity constraints.
 When solving for the constraint forces, the system is a Differential Algebraic Equation (DAE).
 
 \subsubsection{Linear Quadratic Regulator Control}
-The linear quadratic regulator (LQR) algorithm is a method in control theory used to technique used to determine the optimal control gains for a state feedback controller for a linear system with a quadratic cost function. \textbf{CITE LAB MANUAL OR SOMETHING}
+The linear quadratic regulator (LQR) algorithm is a method in control theory used to technique used to determine the optimal control gains for a state feedback controller for a linear system with a quadratic cost function \cite{LabManual}.
 
 For the purpose of this project, linear control systems $\Sigma$ of the form
 \begin{equation}
@@ -166,13 +166,13 @@ The associated quadratic cost function for time interval $[t_{0},t_{1}]$ is then
 \begin{equation}
 \eta(u) = \int_{t_{0}}^{t_{1}}x^{T}(t)Qx(t)+u^{T}(t)u(t)dt
 \end{equation}
-where $Q \in \R^{m \times m}$ is the state weighting matrix associated with the degrees of freedom and their derivatives $(q, \dot{q})$ in the system. Note that no weightings are associated with the control inputs at this stage, though they may be necessary when considering the broader design impacts (see section \textbf{FILL IN SECTION REF}). Tuning the cost function weighting matrix $Q$ allows emphasis to be placed on stabilization of certain degrees of freedom to better meet design goals for the particular application.
+where $Q \in \R^{m \times m}$ is the state weighting matrix associated with the degrees of freedom and their derivatives $(q, \dot{q})$ in the system. Note that no weightings are associated with the control inputs at this stage, though they may be necessary when considering the broader design impacts (see section \ref{sec:Tradeoff}). Tuning the cost function weighting matrix $Q$ allows emphasis to be placed on stabilization of certain degrees of freedom to better meet design goals for the particular application.
 
 The optimal control gains $K$ are then computed from
 \begin{equation}
 K = B^{T}X_{r}
 \end{equation}
-where  $X_{r}$ is the solution to the continuous algebraic Riccati equation \textbf{CITE MATHEMATICA DOCS FOR RICCATISOLVE}
+where  $X_{r}$ is the solution to the continuous algebraic Riccati equation \cite{RicattiSolve}.
 \begin{equation}
 A^{T}X_{r} + X_{r}A - (X_{r}B)(B^{T}X_{r}) + Q = 0.
 \end{equation}
