@@ -27,12 +27,40 @@ A coordinate system was defined, assumptions were made, and Euler angles were ap
 \par
 A body-fixed coordinate system for the RipStik was developed such that the origin was placed at the center of the torsion bar. The X-Y plane will be parallel with the RipStik Deck at rest with no torsion applied.
 The +X direction points through the torsion bar towards the front plate, and the Y axis is defined perpendicular to the X axis. The Z axis is normal to the X-Y plane, with +Z pointing upwards. The +Y direction is defined based on the right hand rule.
-
 With the coordinate system defined, Euler angles were implemented into the system to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$).
+The coordinate system with X,Y,Z, $\alpha$, $\psi$, and $\theta$ was created and can be seen in Figure \ref{fig:RipStikCoord}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{DOFpart1.jpg}
+	\caption{Degrees of freedom X,Y,Z, $\alpha$, $\psi$, and $\theta$ for the RipStik}\label{fig:RipStikCoord}
+	\endminipage
+\end{figure}
+
 \par
-The roll angles ($\alpha$) describe the rotation of the deck platform about the X-axis. There will be two roll angles on the RipStik, the first on the front platform ($\alpha_{fp}$) and the second on the rear platform ($\alpha_{bp}$).
+The roll angles ($\alpha$) describe the rotation of the deck platform about the X-axis. There will be two roll angles on the RipStik, the first on the front platform ($\alpha_{fp}$) and the second on the rear platform ($\alpha_{bp}$). The coordinate system for the roll angles can be seen in Figure \ref{fig:RipStikroll}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{DOFpart2.jpg}
+	\caption{Degrees of freedom for the roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) on the RipStik}\label{fig:RipStikroll}
+	\endminipage
+\end{figure}
+
+
 \par
-The pitch angle ($\psi$) is the angle that the wheels make, offset by the caster angle ($\phi$). This represents a rotation about the Y axis. The wheels are completely unbounded in their ability to rotate, and can pivot through [0, 2$\pi$].
+The pitch angle ($\psi$) is the angle that the wheels make, offset by the caster angle ($\phi$). This represents a rotation about the Y axis. The wheels are completely unbounded in their ability to rotate, and can pivot through [0, 2$\pi$]. The coordinate system for the caster angles can be seen in Figure \ref{fig:RipStikyaw}.
+
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{DOFpart3.jpg}
+	\caption{Degrees of freedom for the yaw of the front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) on the RipStik }\label{fig:RipStikyaw}
+	\endminipage
+\end{figure}
+
 \par
 The yaw angle ($\theta$) was represented by a moment taken around the Z-axis (right hand rule applied). There will be two yaw angles on the RipStik, the first on the front caster ($\theta_{fc}$), and the second on the back caster ($\theta_{bc}$).
 
