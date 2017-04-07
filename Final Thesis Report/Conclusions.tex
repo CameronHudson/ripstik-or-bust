@@ -1,1 +1,25 @@
 \section{Conclusions}
+A comprehensive mathematical model for a RipStik is developed using Lagrangian mechanics.
+This RipStik model serves as a representative example of a personal electric transport device for investigating the modeling approach and potential considerations for a stabilizing controller. 
+The RipStik makes a particularly compelling example due to the unintuitive nature of the motions, large number of degrees of freedom, and limited previous work specific to the design.
+Throughout the development process, a number of test cases are also presented to validate techniques before they are applied to the larger system. 
+\subsection{Summary}
+Modeling of the RipStik was accomplished using 5 bodies and 10 degrees of freedom.
+The development begins with the establishment of the position vectors and rotation matrices for each body.
+These are then used to construct the Lagrangian and, in turn, the unconstrained equations of motion for the system.
+Difficulty then arises in attempting to implement nonholonomic constraints to model the behavior of the wheels.
+This is due to the technical limitations associated with solving for the Lagrange multipliers in the large system of nonlinear equations. 
+Numeric integration techniques are applied to overcome these limitations and produce output for the constrained model; this requires careful research and tuning due to the stiff behavior of the DAE system.
+Finally, a simple model of a rolling wheel with an inverted pendulum is used to investigate the implications of nonholonomic constraints in linearization and LQR control.
+\subsection{Evaluation of the Design Process}
+The use of purposefully selected test cases and unit tests combined with modular, iterative code design contributed significantly to the success of the project. 
+Having well defined tests outside of the RipStik provided confidence that the code would produce the desired results on the RipStik, even in cases where it was difficult to test the RipStik results directly. 
+Additionally, while there was time invested implementing these test cases, it also saved time that would have been wasted evaluating incorrect code on the RipStik model (where the large scale of the system makes runtimes an order of magnitude longer). 
+Constructing test cases also sometimes revealed ways to streamline the RipStik model by combining or simplifying functions that did not need to be handled separately.
+
+Reflecting on the project, some improvements could be made to the process. 
+Better metrics should have been defined for when a tool or approach must be abandoned in favor of alternates, despite that there may be associated drawbacks. 
+For example, significant time and resources were allocated to attempting to solve for the nonholonomic constraints symbolically. 
+his ultimately proved fruitless and the repeated attempts to evaluate the code for longer or with more computational resources were of little value to the overall project. 
+Instead, a concrete timeline should have been defined (e.g. one week per approach) to continue iterating at a reasonable rate since the test cases allowed the mathematical viability of the approach to be assessed; instead, these roadblocks were often computational and somewhat secondary to the broader process.
+\subsection{Lagrangian Mechanics for Modeling Mechanical Systems}
