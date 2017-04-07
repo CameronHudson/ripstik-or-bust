@@ -1,20 +1,23 @@
 \section{Introduction}
+The market for personal electric transport is a burgeoning space with significant innovation and financial backing. 
+\textit{Boosted Boards}, makers of an electric longboard product, raised US\$467,000 in crowdfunding on Kickstarter \cite{boostedkickstart} before collecting another US\$326,000 in series A funding during the early phases of development \cite{boostedfunding}. 
+Similarly, \textit{OneWheel} raised US\$630,000 on Kickstarter \cite{onewheelkickstart} and an additional US\$3.2 million in series A funding \cite{onewheelfunding} for their self stabilizing monowheel device. 
+This combination of significant public interest via Kickstarter and an outpouring of funding from venture capitalists for what were still early stage transportation products demonstrates significant need for solutions in this space.
+Mathematical modeling techniques and considerations for these types of systems are explored in detail in this report.
 \subsection{Context \& Motivation}
-%Introduce most of the concepts around money in electric transportation/urbanization/environmental aspects from the presentation, e.g. "why is this needed"
-\subsection{Changing Cities}
-
-By 2050, it is projected that 86 \% of the developed world will reside in urban areas \cite{Economist}. 
-As a result of the adoption of the motorized vehicle, cities have become increasingly multi-centred, with retail parks and industrial estates far removed from city centres \cite{SustainableTransport}. 
-As a result of the changing layout of modern cities, traditional public transport has been rendered largely ineffective at efficiently transporting the population within cities \cite{SustainableTransport}. 
+To provide sufficient background for the broader design problem being addressed, some analysis of the present state of commuting and urban centers is provided, followed by a brief outline of the system selected for demonstrating the chosen modeling techniques.
+\subsubsection{Changing Cities}
+By 2050, it is projected that 86\% of the developed world will reside in urban areas \cite{Economist}. 
+As a result of the adoption of the motorized vehicle, cities have become increasingly multi-centred, with retail parks and industrial estates far removed from city centers \cite{SustainableTransport}. 
+This evolving, sprawling nature of modern cities renders traditional public transport largely ineffective at efficiently transporting the population within cities \cite{SustainableTransport}. 
 A British study showed that 83\% of commuting trips and 90\% of business trips in that country involved only a single passenger in a car \cite{NTS}, highlighting that the supply of mass, group transit does not meet the travel demands of modern society.
-\\
-\\
+
 The lack of effective transportation infrastructure also has a considerable impact on the environment. 
 The United States Environmental Protection Agency has determined that 14\% of global emissions are as a result of the transportation sector \cite{EPA}. 
-Meanwhile, a Belgian case study showed that 47\% of trips and 54\% of distance travelled in that country was for the purpose of urban commuting \cite{Belgium}. 
+Meanwhile, a Belgian case study showed that 47\% of trips and 54\% of distance traveled in that country was for the purpose of urban commuting \cite{Belgium}. 
 Clearly, the environmental impact of urban transportation is considerable.
 
-It has been determined that an effective transportation system for a modern city must satisfy the following constraints \cite{SustainableTransport}:
+Research has also concluded that an effective transportation system for a modern city must meet the following requirements \cite{SustainableTransport}:
 
 \begin{enumerate}
 	\item is available on demand
@@ -26,20 +29,18 @@ It has been determined that an effective transportation system for a modern city
 	\item has demonstrably high safety together with personal security
 \end{enumerate}
 
-Personal electric transport (PET) has the potential to satisfy the transportation demands of a modern city. 
-PET is user operated, meaning it is indeed available on demand and is accessible. 
+Personal electric transport has the potential to satisfy the transportation demands of a modern city. 
+This type of transportation mechanism is user operated, meaning it is indeed available on demand and is accessible. 
 Additionally, it is inherently portable and thus integrates well with other forms of transport. 
-Using an appropriate power source will ensure that the PET device can travel non-stop to and from a multitude of destinations at a low cost. 
-In order to ensure personal security and safety, it is imperative that the PET device have a stabilizing mechanism governed by control law. 
-A RipStik makes for an ideal candidate in the study of control law for complex mechanical systems for use in personal electric transport. 
-
+Using an appropriate power source will ensure that the transportation device can travel non-stop to and from a multitude of destinations at a low cost, while a well designed stabilizing mechanism can ensure personal safety. 
+To further develop these concepts, with particular focus on developing stabilizing control systems for personal transport, the RipStik is used as a representative example.
 
 \subsubsection{The RipStik}
 
 A caster board, known commercially as a RipStik, is a two-wheeled, human powered vehicle. 
-The board is similar to a skateboard; however, it features two platforms, each with a wheel connected to an inclined free spinning caster. 
-These platforms are connected by a torsion bar. 
-This gives the caster board rider the unique ability to generate propulsion without removing their feet from the board through a series of small turns. 
+The board is similar to a skateboard; however, it features two independent platforms, separated by a central torsion spring.
+An inclined free spinning caster is attached to each platform. 
+This design gives the caster board rider the unique ability to generate propulsion without removing their feet from the board through a series of small turns. 
 This configuration also allows for tighter turning and more responsive speed control when compared to a skateboard. 
 
 \begin{figure}[!htb]
@@ -52,15 +53,15 @@ This configuration also allows for tighter turning and more responsive speed con
 \par
 The RipStik presents an interesting research opportunity because the associated motions and physics are unintuitive.
 As a result, comprehensive testing and design metrics are required as there are no implicit assumptions to be made about the device's operation. 
-This allows the technology developed in modelling and controlling the RipStik to be applied to a large variety of systems. 
+This allows the technology developed in modeling and controlling the RipStik to be applied to a large variety of systems. 
 Furthermore, many of the core concepts like wheel motion and stability are highly applicable in the domain of electric transportation. 
 
 The design of a control system for a personal transportation device needs to be done with careful consideration for a number of external factors. 
 Aside from the challenges associated with the development of the mathematical model and control system, issues pertaining to the patents for transport systems \cite{casterboardPatent} and restricted operation of certain devices \cite{TOLaws} may represent a barrier in bringing theses products to market. 
 Additionally, a mechanical system will be required to execute the commands of the control system. 
 The difficulties associated with the recycling of batteries \cite{BatteryRecharge}, housing \cite{PlasticAssessment} and motors may threaten the environmental feasibility of the final design. 
-The system may also be susceptible to "hacking" by outside sources \cite{DEFCON}, which could pose a significant safety risk to the operator. 
-These issues will be analysed to mitigate the associated risks and properly weigh relevant environmental, social and economic tradeoffs.
+The system may also be susceptible to ``hacking'' by outside sources \cite{DEFCON}, which could pose a significant safety risk to the operator. 
+These issues will be analyzed to mitigate the associated risks and properly weigh relevant environmental, social and economic trade-offs.
 This area of study has the potential to redefine urban commuting across the world by introducing a safe, cost-effective and environmentally-friendly option for short distance travel. 
 
 \subsection{Problem Definition}
@@ -71,18 +72,18 @@ The development of this control law will first require a complete, working mathe
 Simplifications and assumptions will need to be made in order to develop a working model of the system. 
 These simplifications and assumptions will be carefully scrutinized to ensure that they do not compromise the ability of the model to be applied to other complex mechanical systems. 
 A control system will then be developed to propel the RipStik with consideration to triple bottom line implications, including minimizing power requirements and ensuring operator safety. 
-Tradeoffs will be made in the development of the control system to find the optimal system which satisfies the performance constraints of the problem and optimizes triple bottom line impact. 
+Trade-offs will be made in the development of the control system to find the system which best addresses the problem constraints and social, economic and environmental considerations. 
 
 \subsection{Technical Background}
-A number of mathematical tools were utilized to develop the framework necessary for the mathematical modelling and control of the RipStik.
+To develop a comprehensive mathematical model and stabilizing control law for a system as complex as the RipStik, a number of mathematical tools are necessary.
 
 \subsubsection{Euler Angles}
 
-Euler angles were introduced to describe the orientation of a body in an inertial reference frame.
-These orientations were represented by rotations of three angles; yaw ($\theta$), pitch ($\psi$), and roll ($\alpha$).
+Euler angles describe the orientation of a body in an inertial reference frame.
+These orientations are represented by rotations of three angles: yaw ($\theta$), pitch ($\psi$), and roll ($\alpha$).
 With the Euler angles defined, rotation matrices can then be created for the bodies of a system.
 
-A rotation matrix can be defined in the following way \cite{Lewis}:
+These rotation matrices are defined by \cite{Lewis}:
 
 \begin{equation}
 \label{eq:RotM}
@@ -91,7 +92,7 @@ R =
 \cos\alpha\cos\psi & \cos\alpha\sin\psi\sin\theta - \cos\theta\sin\alpha &\cos\alpha\cos\theta\sin\psi+\sin\alpha\sin\theta\\
 \cos\psi\sin\alpha & \cos\alpha\cos\theta+\sin\alpha\sin\psi\sin\theta & \cos\theta\sin\alpha\sin\psi - \cos\alpha\sin\theta\\
 -\sin\psi & \cos\psi\sin\theta & \cos\psi\cos\theta 
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 
 The rotation matrix R can be used to describe a rotation from a body-fixed frame to the inertial frame \cite{VTOL}.
@@ -101,57 +102,57 @@ The rotation matrix R can be used to describe a rotation from a body-fixed frame
 Lagrangian mechanics can be used in place of Newtonian mechanics when trying to accurately model highly complex systems.
 In these elaborate systems, constraint forces can be implemented to eliminate degrees of freedom and reduce the complexity of the system \cite{LagrangeEquations}. 
 Additionally, Lagrangian equations are invariant to changes of coordinate systems \cite{LagrangePowerpoint}.
-\par
+
 The Lagrangian function is represented by $L$, and is defined as the difference between kinetic and potential energies in a system modeled using positions and velocities \cite{NonholonomicPowerpoint}.
 In the equation, $T$ represents the kinetic energy and $V$ represents the potential energy.
-The mathematica formulation for the Lagrangian follows:
+The mathematical formulation for the Lagrangian is given by
 
 \begin{equation}
 \label{eq:Lagrange}
-L = T - V
+L = T - V.
 \end{equation}
 
-\subsubsection{Euler-Lagrange Equations}
+\subsubsection{Euler-Lagrange Equation}
 
-The Lagrangian can then be applied to the Euler-Lagrange equations to solve for the equations of motion in the system. 
-A mathematical representation of the Euler-Lagrange equations follows:
+In Lagrangian mechanics, the equations of motion are given by the solutions to a second order partial differential equation known as the Euler-Lagrange equation \cite{Lewis}. 
+For this purpose, the Euler-Lagrange equation is given by:
 
 \begin{equation}
 \label{eq:EL}
-\frac{\text{d}}{\text{dt}} \bigg(\frac{\partial \text{L}}{\partial \dot{\text{q}}_{i}}\bigg) - \frac{\partial \text{L}}{\partial \text{q}_{i}} = 0
+\frac{\text{d}}{\text{dt}} \bigg(\frac{\partial \text{L}}{\partial \dot{\text{q}}_{i}}\bigg) - \frac{\partial \text{L}}{\partial \text{q}_{i}} = 0.
 \end{equation}
 The Euler-Lagrange equations are equivalent to Newton's second law \cite{NonholonomicPowerpoint}, and are implicit second-order differential equations applied to a given coordinate system \cite{Lewis}.
 \par
-The unconstrained equations of motion encompass each degree of freedom in the system, and are of the following form:
+The unconstrained equations of motion encompass each degree of freedom in the system, and are of the form:
 
 \begin{equation}
 \label{eq:UEOM}
-G_{jk} \ddot{q}^k + \Gamma_{jkl} \dot{q}^k\dot{q}^l  = F_{j}
+G_{jk} \ddot{q}^k + \Gamma_{jkl} \dot{q}^k\dot{q}^l  = F_{j}.
 \end{equation}
 
-In Equation \ref{eq:UEOM}, $G_{jk}$ represents the acceleration coefficients of the system, $\Gamma_{jk}$ represents the velocity coefficients of the system, and $F_j$ represents the potential forces of the system.
+In Equation \ref{eq:UEOM}, $G_{jk}$ represents the acceleration coefficients of the system, $\Gamma_{jk}$ represents the velocity coefficients of the system, and $F_j$ represents the potential forces in the system.
 
 \subsubsection{Nonholonomic Constraints}
 
-Nonholonomic constraints can be implemented to restrict velocities in a system \cite{LagrangeEquations}.
-Lagrange multipliers can be added to the unconstrained equations of motion to represent unknown constraint forces \cite{ClassicalMechanics}.
+Nonholonomic constraints are implemented to restrict velocities in a system \cite{LagrangeEquations}.
+Lagrange multipliers are added to the unconstrained equations of motion to represent unknown constraint forces \cite{ClassicalMechanics}.
 \par
-The forces can then be determined from the following system of equations:
+The forces can then be determined from the system of equations:
 
 \begin{equation}
 \label{eq:CFE}
 G_{jk} \ddot{q}^k + \Gamma_{jkl} \dot{q}^k\dot{q}^l  = \lambda_{a}\omega_{j}^{a} + F_{j}
 \end{equation}
-
+and
 \begin{equation}
 \label{eq:CV}
-\omega_{j}^{a} \dot{q}^{j} = 0
+\omega_{j}^{a} \dot{q}^{j} = 0.
 \end{equation}
 
 Equation \ref{eq:CFE} is identical to the unconstrained equations of motion with the added $\lambda_{a}$ term, representing the constraint forces.
-Equation \ref{eq:CV} represents the constrained velocity terms. 
+Equation \ref{eq:CV} represents the velocity constraints. 
 \par
-When solving for the constraint forces, the system takes on the form of a Differential Algebraic Equation (DAE).
+When solving for the constraint forces, the system is a Differential Algebraic Equation (DAE).
 
 \subsubsection{Linear Quadratic Regulator Control}
 The linear quadratic regulator (LQR) algorithm is a method in control theory used to technique used to determine the optimal control gains for a state feedback controller for a linear system with a quadratic cost function. \textbf{CITE LAB MANUAL OR SOMETHING}
@@ -196,43 +197,3 @@ They then used this to develop a locomotion control method for the casterboard b
 %%%%SHOULD WE INCLUDE AN IMAGE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Software Tools}
-\subsubsection{Mathematica}
-Due to the complex nature of the model and the large number of degrees of freedom needed to accurately model the behavior of the RipStik, a powerful symbolic computation tool is required to derive and manipulate the expressions. 
-Mathematica was ultimately selected over other options such as Maple and the Matlab Symbolic toolbox due to the combination of robust symbolic and numeric computation features with easy to use visualization features for graphically displaying the various systems developed over the course of the project.
-It also provided equivalent or better performance with thorough documentation and examples compared to competitors.
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%DO I NEED A SOURCE FOR BETTER PERFORMANCE
-%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Three.JS}
-While all of the more simple visualizations were constructed directly in Mathematica, an external tool was constructed to animate the full RipStik system in a more attractive and visually intuitive manner. 
-The application is javascript based and operated via the web browser, allowing the user to upload a .csv (comma separated value) file of numeric output from the RipStik simulation and returning an animation of the results on a 3 dimensional RipStik model. 
-This allows easy validation of the results by inspection, particularly for complex motions where graphs of the angles and positions may not make the full system behavior immediately obvious.
-The process used to generate these animations in the application is shown in Figure \ref{fig:ThreeJsFlow}.
-
-%%Define the two block types and arrow type for our flow diagram
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=white]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=white]
-\tikzstyle{arrow} = [thick,->,>=stealth]
-\begin{center}
-	\begin{figure}[!htb]
-		\begin{center}
-			\begin{tikzpicture}[node distance=2cm]
-				\node (WA) [startstop] {Mathematica Model};
-				\node (Srvr) [process, below of=WA] {NodeJS Server};
-				\node (Three) [process, below of=Srvr] {Three.JS};
-				\node (Mdl) [startstop, right of=Three, xshift=4.5cm] {RipStik Model};
-				\node (Rndr) [process, below of=Three] {Renderer};
-				\node (Brwsr) [process, below of=Rndr] {Web Browser};
-
-				\draw [arrow] (WA) -- node[anchor=east] {.csv file} (Srvr);
-				\draw [arrow] (Srvr) -- node[anchor=east] {JSON data} (Three);
-				\draw [arrow] (Mdl) -- node[anchor=south] {.mdl \& .mat files} (Three);
-				\draw [arrow] (Three) -- node[anchor=east] {3D position data} (Rndr);
-				\draw [arrow] (Rndr) -- node[anchor=east] {WebGL Frames} (Brwsr);
-			\end{tikzpicture}
-		\end{center}
-	\caption{RipStik animation tool data flow summary}\label{fig:ThreeJsFlow}
-	\end{figure}
-\end{center}
-The core of the application is ThreeJS, a javascript WebGL library that allows the 3D model to be loaded from a .mdl file (the set of 3D dimensional points that forms the shape) and .mat file (the colors/materials to be overlaid on the shape) then animated using rotations and translations in a standard Cartesian coordinate system.
