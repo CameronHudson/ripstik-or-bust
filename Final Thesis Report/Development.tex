@@ -421,9 +421,9 @@ The gain in length of output was weighted far greater than the length of computa
 
 \subsubsection{Validation}
 
-Using the Collocation integration method, 5.8 seconds of output for the falling RipStik was plotted for each degree of freedom in the system. 
+Using the Collocation integration method, 5.8 seconds of output for the falling RipStik was generated for each degree of freedom in the system. 
 As the RipStik fell, it eventually exceeded the range of validity for the Euler angles. 
-This led to the RipStiks motion behaving eratically. 
+This led to the RipStiks motion behaving erratically. 
 As a result, only the first 1.4 seconds of the falling RipStik was plotted.
 
 \begin{figure}[!htb]
@@ -456,16 +456,16 @@ As a result, only the first 1.4 seconds of the falling RipStik was plotted.
 	\caption{Roll of front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) as the RipStik falls}\label{fig:fallcaster}	
 \end{figure}
 
-The Z-position plot in Figure \ref{fig:fallglobal} shows the Ripstik falling through the ground plane and reorienting itself in the upright position. 
+The $Z$-position plot in Figure \ref{fig:fallglobal} shows the Ripstik falling through the ground plane and reorienting itself in the upright position. 
 This is clearly illustrated by the oscillations shown in the first plot.
 
 
-The roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) plots in Figure \ref{fig:fallplates} show the plates rotating almost 360 degrees, and then rotating fully back to 0. 
-This clearly describes the behaviour as the Ripstik essentially flips through the ground plane.
+The roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) plots in Figure \ref{fig:fallplates} show the plates rotating nearly one full revolution, then rotating fully back to their orgin. 
+This clearly describes the behaviour as the RipStik flips through the ground plane.
 The yaw of the front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) plots in figure \ref{fig:fallcaster} describe the motion of the casters as the RipStik falls.
 The casters pivot to follow the falling motion of the RipStik and satisfy the nonholonomic constraints.
 \par
-An accurate visualization was produced to model the motion of the RipStik. The initial upright and final fallen over position of the RipStik can be seen in figure
+An accurate visualization was produced to model the motion of the RipStik. The initial upright and final fallen over position of the RipStik are shown in Figure \ref{fig:fallcaster}
 
 \begin{figure}[!htb]
 	\centering
@@ -479,7 +479,7 @@ An accurate visualization was produced to model the motion of the RipStik. The i
 \end{figure}
 
 \subsection{Linear Quadratic Regulator Control}
-On the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point at the upright position. 
+For the RipStik system, LQR control is intended to be used to stabilize the RipStik about the unstable equilibrium point in its upright position. 
 This means keeping the RipStik platforms stable and level, with the control system forces designed to return the RipStik to this configuration under the effect of external perturbations (i.e. rider instability).
 
 The first concern when implementing LQR control was the effect of the nonholonomic constraints on the linearization process. 
@@ -488,8 +488,8 @@ In attempting to solve for the Lagrange multipliers in the linearized equations 
 	\item Linearize the system with the unknown constraints to produce a linear DAE then solve for the Lagrange Multipliers
 	\item Solve for the Lagrange multipliers then linearize the result
 \end{itemize}
-In his masters thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. 
-In particular, these operations commute at critical points of the potential function\cite{LinNonHolo}.
+In his Master's thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. 
+In particular, these operations commute at critical points of the potential function \cite{LinNonHolo}.
 The test case developed for LQR control consisted of a rolling wheel (as shown in section \ref{sec:testcaserw}) with an inverted pendulum attached (similar to what was shown in \ref{sec:testcaseip}). 
 Since both components of the mechanical system have been previously developed and validated, minimal additional work is needed to develop the combined system. 
 
@@ -505,9 +505,9 @@ The system and associated dimensions are shown in Figure \ref{fig:invert}.
 	\endminipage
 \end{figure}
 
-The two dimensional system has 3 degrees of freedom; the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. 
+The two dimensional system has 3 degrees of freedom: the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. 
 Additionally, the following constants are defined: $m$, the mass of the wheel, $m_p$, the mass of the pendulum, $g$, the acceleration due to gravity, $\rho$, the radius of the wheel, and $L$, the length of the pendulum. 
-Note that the pendulum is again modeled as a thin uniform rod.
+Note that the pendulum is again modelled as a thin uniform rod.
 The moment of inertia of the wheel is defined to be
 \begin{equation}
 I_w =
@@ -526,7 +526,7 @@ I_p =
 		0 & 0 & 0
 	\end{pmatrix}.
 \end{equation}
-The unconstrained Lagrangian of the system is computed to be 
+The unconstrained Lagrangian of the system is computed to be: 
 \begin{equation}
 \underbrace{m_P \left( g L \sin (\psi (t))- 
 	g \rho + 
@@ -536,7 +536,7 @@ The unconstrained Lagrangian of the system is computed to be
 	\underbrace{\frac{1}{2} \left(J_{spin} \phi '(t)^2 + 
 	m x'(t)^2\right)}_{\text{wheel}} = 0.
 \end{equation}
-Applying the Euler-Lagrange equation, the unconstrained equations of motion for the system are computed to be 
+Applying the Euler-Lagrange equation, the unconstrained equations of motion for the system are computed to be: 
 \begin{equation}
 L m_{P} \psi ''(t) \sin (\psi (t))+L m_{P} \psi
    '(t)^2 \cos (\psi (t))-(m+m_{P}) X''(t)=0
@@ -547,14 +547,14 @@ L m_{P} \psi ''(t) \sin (\psi (t))+L m_{P} \psi
 \begin{equation}
    \frac{1}{3} L m_{P} \left(3 g \cos (\psi (t))-4 L \psi ''(t)+3 \sin (\psi (t)) X''(t)\right)=0
 \end{equation}
-Additionally, system has one nonholonomic constraint, expressed as
+Additionally, system has one nonholonomic constraint, expressed as:
 \begin{equation}
 x'(t) = \rho\theta'(t).
 \end{equation}
 A control input $u(t)$ was then added to the second equation of motion, thereby applying a torque to the roll angle of the wheel.
 
 In order to experimentally validate the presented result on commutation of linearization and solving for nonholonomic constraints, both procedures were applied to the system. 
-They both produced the constrained linear system
+They both produced the constrained linear system:
 \begin{equation}
 	\frac{\left(4 J_{spin}+\rho ^2 (4 m+m_{P})\right)
    \left(L m_{P} \psi ''(t)+(m+m_{P}) X''(t)\right)-\rho 
@@ -570,7 +570,7 @@ They both produced the constrained linear system
 	L m_{P} \left(4 L
    \psi ''(t)+3 X''(t)\right)=0,
 \end{equation}
-demonstrating that the result applies as expected for this small system. 
+This demonstrates that the result applies as expected for this small system. 
 The linearized control system about the unstable equilibrium $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$ is given by the equation:
 \begin{equation}
 \left(
@@ -623,8 +623,8 @@ The linearized control system about the unstable equilibrium $\{x=0,\psi=-\frac{
 \end{equation}
 With the system linearized, a stabilizing controller was developed to keep the pendulum at the upright unstable equilibrium position $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$. 
 To do this, values were chosen for each of the parameters in the system and a state weighting matrix $Q$ was selected based on the project considerations. 
-In particular, the aim was to prioritize stability of the pendulum angle $\psi$ and angular velocity of the roll angle $\phi$ since this keeps the 'rider' upright and avoids using large angular accelerations to maintain this stability. 
-Meanwhile, it allows the position of the wheel to return more slowly to the equilibrium since the horizontal position of the wheel is not a priority in the stabilization problem for PET.
+In particular, the aim was to prioritize stability of the pendulum angle $\psi$ and angular velocity of the roll angle $\phi$ since this keeps the operator upright and avoids using large angular accelerations to maintain this stability. 
+Meanwhile, it allows the position of the wheel to return more slowly to the equilibrium since the horizontal position of the wheel is not a priority in the stabilization problem for personal electric transport vehicles.
 
 The perturbation function $22 e^{-10 (t-8)^2}-22 e^{-10 (t-12)^2}$ was applied to the roll angle, simulating uneven ground conditions when riding the PET device. 
 This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. The second perturbation was specifically timed such that the system had not fully recovered from the first, demonstrating stability of the controlled system.
@@ -660,16 +660,16 @@ Three main challenges must be investigated in extrapolating these LQR results to
 \begin{itemize}
 	\item Ongoing complexities regarding numeric integration
 	\item Uncertainty about the effects of including control forces in the commutation of linearization and solving for Lagrange multipliers
-	\item The possible effects of linearization on system behavior
+	\item The possible effects of linearization on system behaviour
 \end{itemize}
 A brief discussion of each follows.
 \paragraph{Numeric Integration}\mbox{}\\
 Adding control forces may further aggravate the previously discussed issues with system stiffness in the RipStik. 
-This would occur if the control forces cause the system to react quickly, creating rapid changes in dynamics that the numeric integrator will not be able to readily replicate.
+This would occur if the control forces cause the system to react quickly, creating rapid changes in dynamics that the numeric integrator will not be able to accurately replicate.
 \paragraph{Control Forces in Commutation}\mbox{}\\
-While the commutation of solving for Lagrange multipliers was demonstrated by \cite{LinNonHolo} at points where the potential force is zero, the result may not extend to include the equations of motion with the control forces since they are non-zero. 
+While the commutation of solving for Lagrange multipliers was demonstrated \cite{LinNonHolo} at points where the potential force is zero, the result may not extend to include the equations of motion with the control forces since they are non-zero. 
 While the result was demonstrated with control forces on the rolling wheel with pendulum, it may be due to the simplicity of the system. 
-To ensure that this holds on all systems, including the RipStik, a formal proof would be needed.
+To ensure that this holds on all systems, including the RipStik, a formal proof would be required.
 \paragraph{Linearization \& System Behavior}\mbox{}\\
 It has previously been demonstrated that for some mechanical systems, linearization will produce an uncontrollable system despite that the nonlinear system may be controllable and that, intuitively, there should exist a control law \cite{CCSMCS}. 
 For example, this can arise from decoupling when the initial velocities are zero. 
