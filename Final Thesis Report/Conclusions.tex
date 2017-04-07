@@ -23,13 +23,13 @@ For example, significant time and resources were allocated to attempting to solv
 This ultimately proved fruitless and the repeated attempts to evaluate the code for longer or with more computational resources were of little value to the overall project. 
 Instead, a concrete timeline should have been defined (e.g. one week per approach) to continue iterating at a reasonable rate since the test cases allowed the mathematical viability of the approach to be assessed; instead, these roadblocks were often computational and somewhat secondary to the broader process.
 \subsection{Lagrangian Mechanics for Modeling Mechanical Systems}
-The RipStik is a system of bodies interconnected in complex ways. The Lagrangian approach eliminates forces of constraint, eliminating the need to explicitly consider the interconnection forces. When compared to Newtonian mechanics, the Lagrangian formulation is far more methodical and does not require the development of free body diagrams. This enabled the construction of test cases, which was a critical component of our design process. This is because the nature of Lagrangian mechanics allowed the code to be developed for a simple systems and then be applied to more complex systems.
-\newpage
+The RipStik is a system of bodies interconnected in a complex fashion. The Lagrangian approach eliminates forces of constraint, eliminating the need to explicitly consider the interconnection forces. When compared to Newtonian mechanics, the Lagrangian formulation is far more methodical and does not require the development of free body diagrams. As a result, test cases could be constructed to verify methodology which could then be applied to more complex systems. This was critical to the test-based modular design approach pursued in this project. 
+
 \section{Future Work}
-The future of this project is a compelling challenge with the potential to produce exciting results. 
+The future of this project represents a compelling challenge with the potential to produce exciting results. 
 The stabilizing control results from the rolling wheel with inverted pendulum example are to be applied to the RipStik system and carefully tuned to address the engineering considerations of the project.
 This will require addressing the concerns highlighted in section \ref{sec:challenge}, formally determining whether some of these concerns will arise since verifying them experimentally could be prone to uncertainty.
-The RipStik model will also need to be expanded to include a rudimentary model of a rider to develop a more realistic control system that better simulates the real world riding motions.
+The RipStik model will also need to be expanded to include a rudimentary model of a rider to develop a more realistic control system that better simulates real world riding motions.
 Following successful stabilization, motion primitives will need to be developed for the motion planning problem, allowing the control system to move forward and turn to follow a path.
-Some additional complexity may arise from the interaction between the stabilizing controller and the motion primitives, this will need to be carefully considered when combining the two components.
+Some additional complexity may arise from the interaction between the stabilizing controller and the motion primitives. This will need to be carefully considered when combining the two components.
 Additionally, formal testing metrics will also need to be developed to validate the completed control system and ensure it satisfies the problem definition while considering environmental, social and economic implications.
