@@ -13,35 +13,37 @@ The RipStik will be treated as 5 separate bodies; the torsion rod (1), front pla
 	\endminipage
 \end{figure}  
 
-Difficulties associated with accurately modeling the complex geometry of the RipStik led to simplifying assumptions being made for the shapes of the 5 separate bodies.
-The front and back plates were treated as rectangular prisms while defining inertia tensors for the bodies, and the inertia tensors for the wheels were combined with the casters. 
-Additionally, the casters were treated as skates to emulate the constrained motion of the casters while simplifying the overall system dynamics.
+Difficulties associated with accurately modelling the complex geometry of the RipStik led to simplifying assumptions being made for the shapes of the 5 separate bodies.
+The front and back plates were treated as rectangular prisms while defining inertia tensors for the bodies and the inertia tensors for the wheels were combined with the casters. 
+Additionally, the casters were modelled as skates to emulate the non-slip behaviour of the wheels without consideration for the rolling dynamics. 
+The rolling dynamics of the wheels were determined to be inconsequential to the modelling process for the purpose of developing a control system.
 \par
-The spring in the torsion rod was omitted since it is not a critical component of the RipStik and will add unnecessary complexity to the system in the form of kinetic energy.
-Friction between the bodies of the RipStik was omitted, since it would be difficult to accurately model and does not have a significant impact on the general dynamics of the system.
+The spring in the torsion rod was omitted as it serves only to aid in rider comfort, and as such is not a critical component of the RipStik's dynamics. 
+Including the rod will add unnecessary complexity to the system in the form of kinetic energy.
+Friction between the bodies of the RipStik was omitted as it is difficult to accurately model and has negligible impact on the general dynamics of the system.
 
 \subsection{Coordinate Systems}
 
-The initial focus for developing a mathematical model of the RipStik was placed on determining the number of degrees of freedom in the system. 
+The initial focus for developing a mathematical model of the RipStik was determining the number of degrees of freedom in the system. 
 A coordinate system was defined, assumptions were made, and Euler angles were applied to said coordinate system so that all degrees of freedom could be explicitly defined.
 \par
-A body-fixed coordinate system for the RipStik was developed such that the origin was placed at the center of the torsion bar. The X-Y plane will be parallel with the RipStik Deck at rest with no torsion applied.
-The +X direction points through the torsion bar towards the front plate, and the Y axis is defined perpendicular to the X axis. The Z axis is normal to the X-Y plane, with +Z pointing upwards. The +Y direction is defined based on the right hand rule.
+A body-fixed coordinate system for the RipStik was developed such that the origin was placed at the centre of the torsion bar. The $X-Y$ plane will be parallel with the RipStik deck at rest with no torsion applied.
+The $+X$ direction points through the torsion bar towards the front plate, and the $Y$ axis is defined perpendicular to the $X$ axis. The $Z$ axis is normal to the $X-Y$ plane, with $+Z$ pointing upwards. The $+Y$ direction is defined based on the right hand rule.
 
-With the coordinate system defined, Euler angles were implemented into the system to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$).
+With the coordinate system defined, Euler angles were implemented to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$) of the system.
 \par
-The roll angles ($\alpha$) describe the rotation of the deck platform about the X-axis. There will be two roll angles on the RipStik, the first on the front platform ($\alpha_{fp}$) and the second on the rear platform ($\alpha_{bp}$).
+The roll angles ($\alpha$) describe the rotation of the deck platforms about the $X$-axis. There are two roll angles on the RipStik, one for the front platform ($\alpha_{fp}$) and the second for the rear platform ($\alpha_{bp}$).
 \par
-The pitch angle ($\psi$) is the angle that the wheels make, offset by the caster angle ($\phi$). This represents a rotation about the Y axis. The wheels are completely unbounded in their ability to rotate, and can pivot through [0, 2$\pi$].
+The pitch angle ($\psi$) of the system is a rotation about the $Y$-axis. This represents a rotation about the Y axis. The wheels are completely unbounded in their ability to rotate, and can pivot through [0, 2$\pi$].
 \par
-The yaw angle ($\theta$) was represented by a moment taken around the Z-axis (right hand rule applied). There will be two yaw angles on the RipStik, the first on the front caster ($\theta_{fc}$), and the second on the back caster ($\theta_{bc}$).
+The yaw angle ($\theta$) is the angle of the system about the $Z$-axis (right hand rule applied). There are two yaw angles on the RipStik, one for the front caster ($\theta_{fc}$), and the second for the back caster ($\theta_{bc}$).
 
-The RipStik has ten degrees of freedom represented by [X, Y, Z, $\alpha$, $\psi$, $\theta$, $\alpha_{fp}$, $\alpha_{bp}$, $\theta_{fc}$, $\theta_{bc}$].
+The RipStik has ten degrees of freedom represented by [$X$, $Y$, $Z$, $\alpha$, $\psi$, $\theta$, $\alpha_{fp}$, $\alpha_{bp}$, $\theta_{fc}$, $\theta_{bc}$].
 
 \subsubsection{Test Case - Caster Rotation}
 
-In order to validate the selected coordinate system, a test case was conducted for RipStik. This was done by analyzing the behavior of the caster as it went through a full revolution (2$\pi$ radians).
-The output for the X,Y, and Z positions were plotted as a function of the casters rotation as seen in Figure \ref{fig:CasterWheel2DTest}.
+In order to validate the selected coordinate system, a test case was conducted for the RipStik. This was done by analyzing the behaviour of the caster as it completed a full revolution (2$\pi$ radians).
+The output for the $X$ ,$Y$, and $Z$ positions were plotted as a function of the casters rotation, as seen in Figure \ref{fig:CasterWheel2DTest}.
 
 \begin{figure}[!htb]
 	\centering
@@ -51,7 +53,7 @@ The output for the X,Y, and Z positions were plotted as a function of the caster
 	\endminipage
 \end{figure} 
 
-With the two-dimensional plot completed, a three-dimensional plot was created to ensure that the casters obeyed the caster orientation that was previously defined, and can be seen in Figure \ref{fig:CasterWheel3DTest}.
+In addition to the two-dimensional plot, a three-dimensional plot was generated to verify that the casters' behaviour aligned with expectations based on experimentation with a physical RipStik. The three-dimensional plot is shown in Figure \ref{fig:CasterWheel3DTest}.
 
 \begin{figure}[!htb]
 	\centering
@@ -64,17 +66,17 @@ With the two-dimensional plot completed, a three-dimensional plot was created to
 \subsubsection{Model Implementation}
 
 With the test case completed and verified, the coordinate system for the RipStik model was verified for each degree of freedom in the system. 
-This was completed by taking applying the output from Mathematica into the ThreeJS based visualization tool.
+This was completed by applying the output from Mathematica into the ThreeJS based visualization tool.
 
 \textbf{INCLUDE SCREENSHOT FROM ANIMATION?}
 \subsubsection{Validation}
 
 Each degree of freedom in the system behaved as expected. 
-Therefore, the selected coordinate system was correct, and the equations of motion can be developed.
+Therefore, the selected coordinate system is valid, meaning the equations of motion can be developed.
 
 \subsection{Equations of Motion}
 
-To develop the equations of motion for the RipStik, the Lagrangian needs to be clearly developed. Given Equation \ref{eq:Lagrange}, it is necessary to break down the components of kinetic and potential energies in the system.
+In order to develop the equations of motion for the RipStik, the Lagrangian needs to be explicitly developed. Given Equation \ref{eq:Lagrange}, it is necessary to break down the components of kinetic and potential energies in the system.
 
 The kinetic energy in the system is composed of translational and rotational components.
 The Translational Kinetic Energy (TKE) is modeled in the following fashion:
@@ -93,16 +95,16 @@ The Rotational kinetic energy (RKE) is modeled in the following fashion:
 \text{RKE} = \frac{1}{2}({\text{I}}{\omega(t)})^T\omega(t)
 \end{equation}
 
-In Equation \ref{eq:RKE}, I represents the inertia tensor of the body, and $\omega(t)$ represents the angular velocity of the body.
+In Equation \ref{eq:RKE}, $I$ represents the inertia tensor of the body, and $\omega(t)$ represents the angular velocity of the body.
 
-Finding the angular velocity for the body requires the following process. First, $\hat{\omega(t)}$ is solved for using Equation \ref{eq:omegahat}.
+Solving for the angular velocity of the body requires the following process. First, $\hat{\omega(t)}$ is solved for using Equation \ref{eq:omegahat}.
 
 \begin{equation}
 \label{eq:omegahat}
 \hat{\omega}(t)=R^T(t)\dot{R(t)}
 \end{equation}
 
-Equation \ref{eq:omegahat} generates a 3x3 skew-symmetric matrix. The angular velocity is then a column vector composed of 3 elements from $\hat{\omega}(t)$, seen in Equation \ref{eq:omega}.
+Equation \ref{eq:omegahat} generates a $3x3$ skew-symmetric matrix. The angular velocity is then a column vector composed of 3 elements from $\hat{\omega}(t)$, as seen in Equation \ref{eq:omega}.
 
 \begin{equation}
 \label{eq:omega}
@@ -120,7 +122,7 @@ The potential energy in the system is composed of only Gravitational Potential E
 \text{GPE} = {\text{m}}{\text{g}}{\text{h}}
 \end{equation}
 
-In Equation \ref{eq:GPE}, m represents the mass of the body and h represents the height of the body relative to the ground plane.
+In Equation \ref{eq:GPE}, $m$ represents the mass of the body and $h$ represents the height of the body relative to the ground plane.
 
 With the kinetic and potential energies explicitly defined, the Lagrangian can be written as follows:
 
@@ -132,9 +134,9 @@ The explicit Lagrangian can then be applied to the Euler-Lagrange equations do d
 
 \subsubsection{Test Case - Uncontrolled Inverted Pendulum}\label{sec:testcaseip}
 
-The equations of motion were validated using an unconstrained system. A pendulum  attached to a moving cart with an initial position pointing upwards was modeled using Lagrangian mechanics. 
+The equations of motion were validated using an unconstrained system. A pendulum  attached to a moving cart, with an initial position pointing upwards, was modelled using Lagrangian mechanics. 
 The mass of the cart is defined as $m_{1}$ and the mass of the pendulum is defined as $m_{2}$. 
-The set up of the coordinate system can be seen in figure \ref{fig:pendulumcart}.
+The coordinate system can be seen in figure \ref{fig:pendulumcart}.
 
 \begin{figure}[!htb]
 	\centering
@@ -161,12 +163,12 @@ Lm_{2}\cos\theta(t)\theta'(t)^2+Lm_{2}\sin\theta(t)\theta''(t)-(m_{1}+m_{2})X''(
 Lm_{2}(g\cos\theta(t)-2L\theta''(t)+\sin\theta(t)X''(t)) = 0
 \end{equation}
 
-With these equations of motion, it was confirmed that the pendulum reacted as expected when the cart moved positions.
+With these equations of motion, it was confirmed that the pendulum reacts as expected to the motion of the cart.
 
 \subsubsection{Model Implementation}
 
-With the test case complete, the equations of motion were tested on the RipStik model. A Z coordinate in the center of the torsion rod of the RipStik was fixed.
-An initial roll angle of 45 degrees was applied to the front plate ($\alpha_{fp}$), and an initial roll angle of -45 degrees was applied to the back plate ($\alpha_{bp}$). 
+With the test case complete, the equations of motion were tested on the RipStik model. The $Z$ coordinate in the centre of the torsion rod of the RipStik was fixed.
+An initial roll angle of $\frac{\pi}{4}$ was applied to the front plate ($\alpha_{fp}$), and an initial roll angle of $-\frac{\pi}{4}$ was applied to the back plate ($\alpha_{bp}$). 
 
 \subsubsection{Validation}
 
@@ -198,9 +200,10 @@ Plots for roll of the front plate ($\alpha_{fp}$), roll of the back plate ($\alp
 	\label{fig:casters}
 \end{figure}
 
-Since the plates and casters both experienced oscillations approximately between 45 and -45 degrees, it can be confirmed that the equations of motion for the RipStick were accurate.
+Since the plates and casters both experienced oscillations approximately between  $\frac{\pi}{4}$ and $-\frac{\pi}{4}$, it can be confirmed that the equations of motion for the RipStick are accurate.
 
-An accurate visualization of the Ripstik was produced to model the motion and the two extreme positions of the RipStik can be seen in figure \ref{fig:RipStikModel1}.
+An accurate visualization of the Ripstik was produced to model the motion. 
+The two extreme positions of the RipStik can be seen in figure \ref{fig:RipStikModel1}.
 
 \begin{figure}[!htb]
 	\centering
@@ -216,7 +219,7 @@ An accurate visualization of the Ripstik was produced to model the motion and th
 
 \subsection{Nonholonomic Constraints}
 
-With the unconstrained equations of motion validated, nonholonomic constraints were implemented into the system. 
+With the unconstrained equations of motion validated, nonholonomic constraints were then implemented into the system. 
 The constraints were defined such that the wheels could not slide laterally or lift off the ground. 
 This represented a total of four constraint forces which were implemented using Lagrange multipliers.
 Three different methods were explored when trying to solve for the nonholonomic constraints: symbolically inverting the matrices, representing the constraints as a system of linear equations $(Ax=B)$, and numeric integration.
