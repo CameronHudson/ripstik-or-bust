@@ -1,7 +1,8 @@
 \section{Design Methodology}
 Throughout the project, an emphasis was placed on an iterative, test-driven design process. This testing involved both the use of smaller, well understood test cases and incremental unit tests in the context of the full system. 
 The applicability of these smaller test cases stemmed from the use of the \textit{modular programming} paradigm, which will allow the same code to be used across a variety of different mechanical systems. 
-A brief outline of the software tools used with this methodology will be followed by discussion of the core principals and importance of these concepts before formalizing the overarching process.
+
+A brief outline of the software tools used in conjunction with this methodology will be followed by discussion of the core principals and importance of these concepts before formalizing the overarching process.
 \subsection{Software Tools}
 \subsubsection{Mathematica}
 Due to the complex nature of the model and the large number of degrees of freedom needed to accurately model the behavior of the RipStik, a powerful symbolic computation tool is required to derive and manipulate the expressions. 
@@ -12,11 +13,6 @@ While all of the more simple visualizations were constructed directly in Mathema
 The application is javascript based and operated via the web browser, allowing the user to upload a .csv (comma separated value) file of numeric output from the RipStik simulation and returning an animation of the results on a 3 dimensional RipStik model. 
 This allows easy validation of the results by inspection, particularly for complex motions where graphs of the angles and positions may not make the full system behavior immediately obvious.
 The process used to generate these animations in the application is shown in Figure \ref{fig:ThreeJsFlow}.
-
-%%Define the two block types and arrow type for our flow diagram
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=white]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=white]
-\tikzstyle{arrow} = [thick,->,>=stealth]
 \begin{center}
 	\begin{figure}[!htb]
 		\begin{center}

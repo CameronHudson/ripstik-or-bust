@@ -27,13 +27,19 @@ Friction between the bodies of the RipStik was omitted as it is difficult to acc
 The initial focus for developing a mathematical model of the RipStik was determining the number of degrees of freedom in the system. 
 A coordinate system was defined, assumptions were made, and Euler angles were applied to said coordinate system so that all degrees of freedom could be explicitly defined.
 \par
-A body-fixed coordinate system for the RipStik was developed such that the origin was placed at the center of the torsion bar. The X-Y plane will be parallel with the RipStik Deck at rest with no torsion applied.
-The +X direction points through the torsion bar towards the front plate, and the Y axis is defined perpendicular to the X axis. The Z axis is normal to the X-Y plane, with +Z pointing upwards. The +Y direction is defined based on the right hand rule.
-With the coordinate system defined, Euler angles were implemented into the system to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$).
-The coordinate system with X,Y,Z, $\alpha$, $\psi$, and $\theta$ was created and can be seen in Figure \ref{fig:RipStikCoord}.
+A body-fixed coordinate system for the RipStik was developed with the origin was placed at the center of the torsion bar. 
+The $x$-$y$ plane is located parallel to the RipStik plates at rest with no torsion applied.
+The $+x$ direction points through the torsion bar towards the front plate. The $x$ axis is normal to the $x$-$y$ plane, with $+z$ pointing upwards. The $+y$ direction is defined based on the right hand rule.
+With the coordinate system defined, Euler angles are implemented to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$) of the system. These are rotations about the $x$, $y$, and $z$ axes respectively.
+The coordinate system with $x$,$y$,$z$, $\alpha$, $\psi$, and $\theta$ is defined as shown in Figure \ref{fig:RipStikCoord}.
+\begin{figure}[!htb]
+	\centering
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{DOFpart1.jpg}
+	\caption{Degrees of freedom $x$,$y$,$z$, $\alpha$, $\psi$, and $\theta$ for the RipStik}\label{fig:RipStikCoord}
+	\endminipage
+\end{figure}
 
-With the coordinate system defined, Euler angles were implemented to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$) of the system.
-\par
 The roll angles ($\alpha$) describe the rotation of the deck platforms about the $X$-axis. There are two roll angles on the RipStik, one for the front platform ($\alpha_{fp}$) and the second for the rear platform ($\alpha_{bp}$).
 \begin{figure}[!htb]
 	\centering
@@ -42,8 +48,8 @@ The roll angles ($\alpha$) describe the rotation of the deck platforms about the
 	\caption{Degrees of freedom for the roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) on the RipStik}\label{fig:RipStikroll}
 	\endminipage
 \end{figure}
-\par
-The pitch angle ($\psi$) of the system is a rotation about the $Y$-axis. This represents a rotation about the Y axis. The wheels are completely unbounded in their ability to rotate, and can pivot through [0, 2$\pi$].
+
+The yaw angle ($\theta$) is the angle of the system about the $z$-axis (right hand rule applied). There are two yaw angles on the RipStik, one for the front caster ($\theta_{fc}$), and the second for the back caster ($\theta_{bc}$). The wheels are completely unbounded in their ability to rotate, and can pivot through [0, 2$\pi$].
 \begin{figure}[!htb]
 	\centering
 	\minipage{0.5\textwidth}
@@ -51,15 +57,12 @@ The pitch angle ($\psi$) of the system is a rotation about the $Y$-axis. This re
 	\caption{Degrees of freedom for the yaw of the front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) on the RipStik }\label{fig:RipStikyaw}
 	\endminipage
 \end{figure}
-\par
-The yaw angle ($\theta$) is the angle of the system about the $Z$-axis (right hand rule applied). There are two yaw angles on the RipStik, one for the front caster ($\theta_{fc}$), and the second for the back caster ($\theta_{bc}$).
-
-The RipStik has ten degrees of freedom represented by [$X$, $Y$, $Z$, $\alpha$, $\psi$, $\theta$, $\alpha_{fp}$, $\alpha_{bp}$, $\theta_{fc}$, $\theta_{bc}$].
-
+The RipStik has ten degrees of freedom represented by [$x$, $y$, $z$, $\alpha$, $\psi$, $\theta$, $\alpha_{fp}$, $\alpha_{bp}$, $\theta_{fc}$, $\theta_{bc}$].
+Position vectors are then constructed to define the position of each body in the RipStik relative to the others, connecting them back to the global position $(x,y,z)$.
 \subsubsection{Test Case - Caster Rotation}
 
-In order to validate the selected coordinate system, a test case was conducted for the RipStik. This was done by analyzing the behaviour of the caster as it completed a full revolution (2$\pi$ radians).
-The output for the $X$ ,$Y$, and $Z$ positions were plotted as a function of the casters rotation, as seen in Figure \ref{fig:CasterWheel2DTest}.
+In order to validate the selected coordinate system, a test case was conducted for the RipStik. This was done by analyzing the behavior of the caster as it completed a full revolution (2$\pi$ radians).
+The output for the $x$ ,$y$, and $z$ positions of the contact point at the bottom of the caster were plotted as a function of the casters rotation, as seen in Figure \ref{fig:CasterWheel2DTest}.
 
 \begin{figure}[!htb]
 	\centering
@@ -69,7 +72,7 @@ The output for the $X$ ,$Y$, and $Z$ positions were plotted as a function of the
 	\endminipage
 \end{figure} 
 
-In addition to the two-dimensional plot, a three-dimensional plot was generated to verify that the casters' behaviour aligned with expectations based on experimentation with a physical RipStik. The three-dimensional plot is shown in Figure \ref{fig:CasterWheel3DTest}.
+In addition to the two-dimensional plot, a three-dimensional plot was generated to verify that the casters' behavior aligned with expectations based on experimentation with a physical RipStik. The three-dimensional plot is shown in Figure \ref{fig:CasterWheel3DTest}.
 
 \begin{figure}[!htb]
 	\centering
@@ -81,15 +84,11 @@ In addition to the two-dimensional plot, a three-dimensional plot was generated 
 
 \subsubsection{Model Implementation}
 
-With the test case completed and verified, the coordinate system for the RipStik model was verified for each degree of freedom in the system. 
+With the test case completed and verified, the coordinate system for the RipStik model was verified for each degree of freedom in the system in the same manner as the caster unit test. 
 This was completed by applying the output from Mathematica into the ThreeJS based visualization tool.
-
-\textbf{INCLUDE SCREENSHOT FROM ANIMATION?}
 \subsubsection{Validation}
-
 Each degree of freedom in the system behaved as expected. 
-Therefore, the selected coordinate system is valid, meaning the equations of motion can be developed.
-
+This demonstrates that the position vectors and rotation matrices were properly defined, meaning the equations of motion can be developed.
 \subsection{Equations of Motion}
 
 In order to develop the equations of motion for the RipStik, the Lagrangian needs to be explicitly developed. Given Equation \ref{eq:Lagrange}, it is necessary to break down the components of kinetic and potential energies in the system.
