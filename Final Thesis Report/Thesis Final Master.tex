@@ -1,5 +1,5 @@
 \documentclass[11pt,letterpaper]{article}
-\usepackage{cite}
+%%%%%\usepackage{cite}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{array}
@@ -22,6 +22,8 @@ textfont={it}]{caption}
 \usepackage{float}
 \usepackage{multirow}
 
+\usepackage[backend=biber, style=ieee]{biblatex}
+\addbibresource{Bibliography.bib}
 
 %%%%%%%%%%%NEW PACKAGES I'VE ADDED FOR THE PURPOSE OF THESIS
 \usepackage{amsthm}
@@ -91,8 +93,7 @@ textfont={it}]{caption}
 \include{Conclusions}
 
 \newpage
-\bibliography{Bibliography}{}
-\bibliographystyle{unsrt}
+\printbibliography
 
 
 \end{document}          
