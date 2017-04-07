@@ -37,10 +37,10 @@ The process used to generate these animations in the application is shown in Fig
 The core of the application is ThreeJS, a javascript WebGL library that allows the 3D model to be loaded from a .mdl file (the set of 3D dimensional points that forms the shape) and .mat file (the colors/materials to be overlaid on the shape) then animated using rotations and translations in a standard Cartesian coordinate system.
 \subsection{Modular Program Design}
 The core principle of modular program design is to decompose the larger system design problem into small, independent modules\cite{Modular}.
-An effective decomposition is done in such that the modules are have well defined inputs and outputs and can be tested independently, improving the flexibility of the application\cite{Modular}.
+An effective decomposition is done such that the modules have well defined inputs and outputs and can be tested independently, improving the flexibility of the application \cite{Modular}.
 In designing the RipStik model, these modules are user created Mathematica functions, separated to each contain a complete, testable portion of the larger model.
 
-Two alternate approaches were also considered but deemed unsuitable. Object Oriented design involves grouping related functionality and data, like parameters or variables, into larger "objects"\cite{ObjectOriented}.
+Two alternate approaches were also considered but deemed unsuitable. Object Oriented design involves grouping related functionality and data, like parameters or variables, into larger ``objects"\cite{ObjectOriented}.
 This would provide similar compartmentalization \cite{ObjectOriented} but does not conform to the broader functional design of Mathematica \cite{MathematicaFunctional} and is less intuitive and legible for new users attempting to adopt code from the system. 
 
 Alternately, a purely procedural approach would simply focus on laying out the set of commands sequentially in a single structure. 
