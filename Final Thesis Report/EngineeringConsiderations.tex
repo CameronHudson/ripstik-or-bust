@@ -30,11 +30,21 @@ ruling that Teleflex's invention was not patentable as the combination of the tw
 \\
 In developing novel methods of personal electric transport, it is imperative that the designers consider existing patent laws and cases in order to ensure that their products can be protected.
 
-\subsubsection{Professional Practice Considerations}
-\subsection{Design Considerations}
-%%Safety vs Power, cost vs power, battery life vs environmental considerations & power & cost, stability vs mobility, cost vs sustainability
-\subsection{Ethics}
-%Manufacturing, disposal, safety???, Marketing???
+\subsection{Professional Practice Considerations and Ethics}
+
+Professional Engineers are bound to a Code of Ethics dictating how they must behave. Section 77 of the Professional Engineers Ontario Code of Ethics states that \cite{PEO}: \emph{"it is the duty of a practitioner to the public, to the practitioner's employer, to the practitioner's clients, to other licensed engineers of the practitioner's profession, and to the practitioner to act at all times with,
+\renewcommand{\labelenumi}{\roman{enumi}}
+\begin{enumerate}
+	\item fairness and loyalty to the practitioner's associates, employers, clients, subordinates and employees;
+	\item fidelity to public needs;
+	\item devotion to high ideals of personal honour and professional integrity;
+	\item knowledge of developments in the area of professional engineering relevant to any services that are undertaken; and
+	\item competence in the performance of any professional engineering services that are undertaken."
+\end{enumerate}}
+It is an engineer's obligation to the public to ensure that a personal electric transport device be safe for public use. 
+It is imperative that the control system be designed to ensure safety in the device's operation, but also minimize the impact of negligent use of the device. 
+All engineers involved in the design and implementation of the control system must take all proper precautions to ensure that the system satisfy these constraints. 
+The engineer must act in good faith and uphold the highest degree of professional integrity. 
 \subsection{Economic Analysis}
 \subsubsection{Cost Breakdown}
 In order to determine the economic feasibility of an electric transport device, it was compared to traditional gas and human powered transportation devices.
@@ -153,8 +163,52 @@ These developments must be considered for a commercial personal electric transpo
 
 \subsection{Environmental Considerations}
 While electric transport greatly reduces the greenhouse gases produced during operation, there is a significant environmental impact associated with the end of life cycle disassembly. The battery technologies implemented in electronic transport are analyzed below.
-\subsection{Battery Technologies}
-Modern electronic devices generally rely on rechargeable lithium-ion or lithium-polymer batteries due to their energy storage density and long product lives \cite{BatteryRecharge}. A life cycle analysis of these types of batteries revealed a high cost to the environment and to human health; high lead content (averaging 6.29 mg/L \cite{BatteryRecharge}) and cobalt content (averaging 163544 mg/kg \cite{BatteryRecharge}) both cause them to be classified as hazardous according to U.S. federal regulations \cite{BatteryRecharge}. There are risks of  resource depletion, detrimental effects to human health, and ecotoxicity associated with these battery technologies \cite{BatteryRecharge} which will have to be carefully considered when developing a solution. The potential and feasibility of next generation energy storage technologies like graphene batteries \cite{Graphene} will also be analyzed.
+\subsubsection{Battery Technologies}
+Modern electronic devices generally rely on rechargeable lithium-ion or lithium-polymer batteries due to their energy storage density and long product lives \cite{BatteryRecharge}. A life cycle analysis of these types of batteries revealed a high cost to the environment and to human health; high lead content (averaging 6.29 mg/L \cite{BatteryRecharge}) and cobalt content (averaging 163544 mg/kg \cite{BatteryRecharge}) both cause them to be classified as hazardous according to U.S. federal regulations \cite{BatteryRecharge}. There are risks of  resource depletion, detrimental effects to human health, and ecotoxicity associated with these battery technologies \cite{BatteryRecharge} which will have to be carefully considered when developing a solution. The potential and feasibility of next generation energy storage technologies like graphene batteries \cite{Graphene} should also be analyzed.
 
 Batteries in personal electric transportation devices became a topic of conversation when the US government recalled over 500,000 two wheeled, self balancing scooters in 2016 due to a risk of batteries sparking, catching fire and exploding, causing at least 18 injuries \cite{CBCArticle}. This brings a clear social impact as well since there is a safety risk associated with low cost batteries manufactured in China\cite{CBCArticle}.
 
+\section{Concessions in Design Implementation}
+There are many performance parameters of an electric personal transport vehicle that can be addressed through the design and implementation of a mechanical control system. 
+These parameters include speed, handling and stability. 
+However, not all parameters can be optimized through the tuning of the system; trade off in system performance is required. 
+There are both trade-offs in the control algorithm and the mechanical control system.
+
+\subsection{Control Algorithm} 
+In designing a control algorithm, the primary parameters of focus are: rise time, settling time, percent overshoot and steady-state error. 
+Rise time refers to the amount of time it takes for the system output to reach the desired output. 
+In the context of the vehicle, a slow rise time may mean that the system is not able to stabilize a soon-to-fall rider before it is too late. 
+Clearly, the rise time of the control algorithm is a priority in order for the personal electric transport device to be a viable, safe vehicle.
+The settling time is also of significance to the performance of the vehicle. 
+The settling time must be adequately small to ensure that the vehicle can stabilize in a practical setting. 
+A lengthy settling time may result in the vehicle oscillating around a stable configuration, making it difficult to operate. 
+System overshoot refers to the ability of the vehicle to return to a stable configuration in a direct manner. 
+If the system overshoots the desired, stable configuration, it could result in the ejection of the operator from the vehicle. 
+Clearly, system overshoot should be minimized if the control system will be used in a viable personal electric transport vehicle. 
+Finally, steady-state error refers to the ability of the control system to accurately return to its stable configuration following a disturbance. 
+A large steady-state error would mean that, in returning to the stable configuration following a disturbance, the system would not fully return to the original stable configuration. 
+Instead, it would experience a permanent deviation from said configuration. 
+The primary objective of the controller is to improve the safety and operation of the personal electric transport vehicle. 
+If the vehicle is not able to accurately return to its stable configuration, it could compromise the ability of the control system to accomplish its objective.
+\\
+\\
+Clearly, all four tuning parameters are of significant consequence in the design of a control algorithm to govern the operation of a personal electric transport vehicle. 
+However, it is not possible to maximize each parameter individually in the design of a control alogrithm. 
+Therefore, it is imperative that the final control algorithm be optimized to maximize performance parameters of the vehicle, while ensuring that it is robust enough to handle a variety of conditions in a variety of environments. 
+Primary areas of focus in the design and tuning of the control system will vary depending on the nature of the complex mechanical system in which they are designed to govern.
+
+\subsection{Mechanical Control System}
+The control algorithm will be implemented by a mechanical control system located on the vehicle. 
+This control system will require a battery power source.
+As aforementioned, there are significant environmental consequences associated the manufacture and disposal of batteries. 
+Minimizing the energy requirements of the mechanical control system will reduce the size and strength of battery required, thereby reducing the environmental impact of the personal electric transport vehicle.  
+However, minimizing the energy requirements of the system would require minimizing the gain of the control system. 
+Minimizing the gain would negatively impact the performance of the system, specifically as it pertains to the ability of the device to quickly recover from unstable configurations. 
+It is imperative that the system be able to sufficiently respond to such disturbances as this is a pivotal requirement of a personal electric transport vehicle. 
+Subsequently, engineers designing the control algorithm must ensure that the system is robust enough to respond to environmental changes in accordance with their duty to protect the public as specified in the Professional Engineers Ontraio Code of Ethics. 
+An engineer cannot, in good faith, approve an mechanical control system design which could endanger the rider. 
+Furthermore, a larger energy source will result in greater range and top speed of the vehicle. 
+If the proposed personal electric vehicle is to be a viable option for urban transportation, its range and speed must be sufficiently large enough to ensure that it can reach urban destinations in a reasonable amount of time.
+These are two of the outlines of an effective modern transportation system specified in the introduction. 
+A trade-off between environmental considerations and project performance, constraints and ethics requires careful consideration. 
+A solution in which the battery unit is sufficiently powerful enough to adequately address the performance benchmarks of the vehicle should be sought. 
