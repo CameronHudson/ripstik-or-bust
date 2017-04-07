@@ -1,9 +1,13 @@
 \section{Model Development}
+Model Development is detail in accordance with the previous detailed design process. 
+The central assumptions used to develop the model are first summarized.
+This is followed by an explanation of the implementation of the mathematical tools that make up the various modules within the model.
+Emphasis is primarily placed on challenges in the modeling process.
 \subsection{Core Assumptions}
 
-With the mathematical concepts and software tools clearly defined, a number of assumptions need to be made for the RipStik model.
-\par
-The RipStik can be treated as 5 separate bodies; the torsion rod (1), front plate (2), back plate (3), front caster (4), and back caster (5).
+With the mathematical concepts and software tools clearly defined, a number of assumptions need to be made to facilitate modeling of the RipStik system without compromising the integrity of the model.
+
+The RipStik is treated as 5 separate bodies; the torsion rod (1), front plate (2), back plate (3), front caster (4), and back caster (5).
 
 \begin{figure}[!htb]
 	\centering
@@ -13,23 +17,24 @@ The RipStik can be treated as 5 separate bodies; the torsion rod (1), front plat
 	\endminipage
 \end{figure}  
 
-Difficulties associated with accurately modelling the complex geometry of the RipStik lead to simplifying assumptions for the shapes of the 5 separate bodies.
-The front and back plates are treated as rectangular prisms while defining inertia tensors for the bodies and the inertia tensors for the wheels are combined with the casters. 
-Additionally, the casters are modelled as skates to emulate the non-slip behaviour of the wheels without consideration for the rolling dynamics. 
-The rolling dynamics of the wheels are determined to be inconsequential to the modelling process for the purpose of developing a control system.
+Difficulties associated with accurately modeling the complex geometry of the RipStik lead to simplifying assumptions for the shapes of the 5 separate bodies.
+All bodies other than the torsion rod are treated as rectangular prisms of appropriate size when defining inertia tensors for the bodies.
+The inertia tensors for the wheels are combined with the casters since the caster assemblies are each treated as a single body. 
+Additionally, the casters are modeled as skates to emulate the non-slip behavior of the wheels without consideration for the rolling dynamics. 
+The rolling dynamics of the wheels are determined to be inconsequential to the modeling process for the purpose of developing a control system and contribute significant complexity with little benefit if included.
 \par
-The spring in the torsion rod is omitted in modelling considerations as it serves only to aid in rider comfort, and as such is not a critical component of the RipStik's dynamics. 
-Including the rod will add unnecessary complexity to the system in the form of kinetic energy.
-Friction between the bodies of the RipStik is omitted as it is difficult to accurately model and has negligible impact on the general dynamics of the system.
+The spring in the torsion rod is omitted in modeling considerations as it serves primarily to aid in rider comfort and as such is not a critical component of the RipStik's dynamics. 
+Including this spring will add unnecessary complexity to the system in the form of additional potential energy terms.
+Finally, friction between the bodies of the RipStik is omitted as it is difficult to accurately model and has negligible impact on the general dynamics of the system.
 
 \subsection{Coordinate Systems}
 
 The initial focus for developing a mathematical model of the RipStik is determining the number of degrees of freedom in the system. 
-A coordinate system is defined, assumptions are made, and Euler angles are applied to said coordinate system so that all degrees of freedom can be explicitly defined.
+A body fixed coordinate system is defined and the appropriate rotation matrices and position vectors (defining the distances between the centers of mass of each body) are used with the body fixed coordinate system to construct the complete model.
 \par
-A body-fixed coordinate system for the RipStik is developed with the origin was placed at the centre of the torsion bar. 
+A body-fixed coordinate system for the RipStik is developed with the origin was placed at the center of the torsion bar. 
 The $x$-$y$ plane is located parallel to the RipStik plates at rest with no torsion applied.
-The $+x$ direction points through the torsion bar towards the front plate. The $z$ axis is normal to the $x$-$y$ plane, with $+z$ pointing upwards. The $+y$ direction is defined based on the right hand rule.
+The $+x$ direction points through the torsion bar towards the front plate. The $z$ axis is defined normal to the $x$-$y$ plane, with $+z$ pointing upwards. The $+y$ direction is defined based on the right hand rule.
 With the coordinate system defined, Euler angles are implemented to represent the roll ($\alpha$), pitch ($\psi$), and yaw ($\theta$) of the system. These are rotations about the $x$, $y$, and $z$ axes respectively.
 The coordinate system with $x$,$y$,$z$, $\alpha$, $\psi$, and $\theta$ is defined as shown in Figure \ref{fig:RipStikCoord}.
 \begin{figure}[!htb]
@@ -61,24 +66,24 @@ The RipStik has ten degrees of freedom represented by [$x$, $y$, $z$, $\alpha$, 
 Position vectors are then constructed to define the position of each body in the RipStik relative to the others, connecting them back to the global position $(x,y,z)$.
 \subsubsection{Test Case - Caster Rotation}
 
-In order to validate the selected coordinate system, a test case is conducted for the RipStik. This is done by analyzing the behaviour of the caster as it completes a full revolution (2$\pi$ radians).
+In order to validate the selected coordinate system, a test case is conducted for the RipStik. This is done by analyzing the behavior of the caster as it completes a full revolution (2$\pi$ radians).
 The output for the $x$ ,$y$, and $z$ positions of the contact point at the bottom of the caster is plotted as a function of the casters rotation, as shown in Figure \ref{fig:CasterWheel2DTest}.
 
 \begin{figure}[!htb]
 	\centering
 	\minipage{0.7\textwidth}
 	\includegraphics[width=\linewidth]{CasterWheel2DTest.png}
-	\caption{The $x$ ,$y$, and $z$ positions of the caster were plotted as a function of the caster angle (in radians)}\label{fig:CasterWheel2DTest}
+	\caption{The $x$, $y$, and $z$ positions of the caster plotted as a function of the caster angle (in radians)}\label{fig:CasterWheel2DTest}
 	\endminipage
 \end{figure} 
 
-In addition to the two-dimensional plot, a three-dimensional plot is generated to verify that the casters' behaviour aligned with expectations based on experimentation with a physical RipStik. The three-dimensional plot is shown in Figure \ref{fig:CasterWheel3DTest}.
+In addition to the two-dimensional plot, a three-dimensional plot is generated to verify that the casters' behavior aligned with expectations based on experimentation with a physical RipStik. The three-dimensional plot is shown in Figure \ref{fig:CasterWheel3DTest}.
 
 \begin{figure}[!htb]
 	\centering
 	\minipage{0.7\textwidth}
 	\includegraphics[width=\linewidth]{CasterWheel3DTest.png}
-	\caption{The X ,Y, and Z positions of the caster were plotted as a function of the caster angle (in radians) on a three-dimensional plot}\label{fig:CasterWheel3DTest}
+	\caption{The $x$, $y$, and $z$ positions of the caster plotted as a function of the caster angle (in radians) in 3D}\label{fig:CasterWheel3DTest}
 	\endminipage
 \end{figure} 
 
@@ -94,32 +99,33 @@ This demonstrates that the position vectors and rotation matrices are properly d
 In order to develop the equations of motion for the RipStik, the Lagrangian needs to be explicitly developed. Given Equation \ref{eq:Lagrange}, it is necessary to break down the components of kinetic and potential energies in the system.
 
 The kinetic energy in the system is composed of translational and rotational components.
-The Translational Kinetic Energy (TKE) is modeled in the following fashion:
+The translational kinetic energy (TKE) is of each body is given by
 
 \begin{equation}
 \label{eq:TKE}
 \text{TKE} = \frac{1}{2}{\text{m}}{\lvert \lvert {\dot{\text{r}}^2} \rvert \rvert}
 \end{equation}
 
-In Equation \ref{eq:TKE}, $m$ represents the mass of the body and $\dot{r}$ represents the translational velocity of the body.
+where $m$ represents the mass of the body and $\dot{r}$ represents the translational velocity of the body.
 \par
-The Rotational kinetic energy (RKE) is modelled in the following fashion:
+The rotational kinetic energy (RKE) of each body is given by
 
 \begin{equation}
 \label{eq:RKE}
 \text{RKE} = \frac{1}{2}({\text{I}}{\omega(t)})^T\omega(t)
 \end{equation}
 
-In Equation \ref{eq:RKE}, $I$ represents the inertia tensor of the body, and $\omega(t)$ represents the angular velocity of the body.
+where $I$ represents the inertia tensor of the body and $\omega(t)$ represents the angular velocity of the body.
 
-Solving for the angular velocity of the body requires the following process. First, $\hat{\omega(t)}$ is solved for using Equation \ref{eq:omegahat}.
+Angular velocities are computed using the rotation matrices for each body.
+First, $\hat{\omega(t)}$ is computed as
 
 \begin{equation}
 \label{eq:omegahat}
 \hat{\omega}(t)=R^T(t)\dot{R(t)}
 \end{equation}
 
-Equation \ref{eq:omegahat} generates a $3x3$ skew-symmetric matrix. The angular velocity is then a column vector composed of 3 elements from $\hat{\omega}(t)$, as seen in Equation \ref{eq:omega}.
+which yields a $3x3$ skew-symmetric matrix. The angular velocity is then a column vector composed of 3 elements from $\hat{\omega}(t)$, as seen in Equation \ref{eq:omega}.
 
 \begin{equation}
 \label{eq:omega}
@@ -130,7 +136,7 @@ Equation \ref{eq:omegahat} generates a $3x3$ skew-symmetric matrix. The angular 
 \end{bmatrix}
 \end{equation}
 
-The potential energy in the system is composed of only Gravitational Potential Energy (GPE). This is modelled by Equation \ref{eq:GPE}.
+Only gravitational potential energy (GPE) is considered for the system. For each body, this is given by Equation \ref{eq:GPE}.
 
 \begin{equation}
 \label{eq:GPE}
@@ -145,12 +151,14 @@ With the kinetic and potential energies explicitly defined, the Lagrangian can b
 L= \frac{1}{2}{\text{m}}{\lvert \lvert {\dot{\text{r}}^2} \rvert \rvert} + \frac{1}{2}({\text{I}}{\omega(t)})^T\omega(t) - {\text{m}}{\text{g}}{\text{h}}
 \end{equation}
 
-The explicit Lagrangian can then be applied to the Euler-Lagrange equations to develop the ten unconstrained equations of motion for each degree of freedom using Equation \ref{eq:UEOM}.
+This Lagrangian is then used in conjunction with Equation \ref{eq:UEOM} to develop the ten unconstrained equations of motion for each degree of freedom.
 
 \subsubsection{Test Case - Uncontrolled Inverted Pendulum}\label{sec:testcaseip}
 
-The equations of motion were validated using an unconstrained system. A pendulum attached to a moving cart, with an initial position pointing upwards, was modelled using Lagrangian mechanics. 
-The mass of the cart is defined as $m_{1}$ and the mass of the pendulum is defined as $m_{2}$. 
+The equations of motion were validated using a simple unconstrained system. 
+A pendulum attached to a moving cart, with an initial position pointing upwards, was modeled using Lagrangian mechanics. 
+The mass of the cart is defined as $m_{c}$ and the mass of the pendulum is defined as $m_{p}$ with length $L$.
+The pendulum is modeled as a thin uniform rod.
 The coordinate system can be seen in figure \ref{fig:pendulumcart}.
 
 \begin{figure}[!htb]
@@ -161,29 +169,41 @@ The coordinate system can be seen in figure \ref{fig:pendulumcart}.
 	\endminipage
 \end{figure} 
 
+The inertia tensor for the pendulum is defined as 
+\begin{equation}
+I_p =
+	\begin{pmatrix}
+		\frac{1}{3}L^{2}m_p & 0 & 0 \\
+		0 & \frac{1}{3}L^{2}m_p & 0 \\
+		0 & 0 & 0
+	\end{pmatrix}.
+\end{equation}
+
 The Lagrangian for the system is seen in Equation \ref{eq:CartLagrange}.
 
 \begin{equation}
 \label{eq:CartLagrange}
-L = \frac{1}{2}m_{1}X'(t)^2+\frac{1}{2}m_{2}(2gL\sin\theta(t)+2L^2\theta'(t)^2-2L\sin\theta(t)\theta'(t)X'(t)+X'(t)^2) 
+L = \underbrace{\frac{1}{2} m_{p} \left(2 g L \sin (\theta (t))+L^2 \theta '(t)^2-2 L \theta '(t) \sin (\theta (t)) x'(t)+x'(t)^2\right)}_{\text{pendulum}}+\underbrace{\frac{1}{2} m_{c} x'(t)^2}_{\text{cart}}
 \end{equation}
 
-With the Lagrangian developed, the equations of motion were solved for the two degrees of freedom (X(t), $\theta(t)$):
+With the Lagrangian developed, the equations of motion are found for the two degrees of freedom ($x(t)$, $\theta(t)$):
 
 \begin{equation}
-Lm_{2}\cos\theta(t)\theta'(t)^2+Lm_{2}\sin\theta(t)\theta''(t)-(m_{1}+m_{2})X''(t) = 0
+L m_{p} \theta ''(t) \sin (\theta (t))+L m_{p} \theta '(t)^2 \cos (\theta (t))-(m_{c}+m_{p}) x''(t)=0
 \end{equation}
 
 \begin{equation}
-Lm_{2}(g\cos\theta(t)-2L\theta''(t)+\sin\theta(t)X''(t)) = 0
+L m_{p} \left(g
+   \cos (\theta (t))-L \theta ''(t)+\sin (\theta (t))
+   x''(t)\right)=0
 \end{equation}
 
-With these equations of motion, it was confirmed that the pendulum reacts as expected to the motion of the cart.
+With these equations of motion, it is confirmed that the pendulum falls as expected and causes the cart to move.
 
 \subsubsection{Model Implementation}
 
-With the test case complete, the equations of motion can be tested on the RipStik model. The $z$ coordinate in the centre of the torsion rod of the RipStik is fixed.
-An initial roll angle of $\frac{\pi}{4}$ is applied to the front plate ($\alpha_{fp}$), and an initial roll angle of $-\frac{\pi}{4}$ is applied to the back plate ($\alpha_{bp}$). 
+With the test case complete, the equations of motion can be tested on the RipStik model. To create a test, the $z$ coordinate of the centre of the torsion rod of the RipStik is fixed.
+An initial roll angle of $\frac{\pi}{4}$ is applied to the front plate ($\alpha_{fp}$), and an initial roll angle of $-\frac{\pi}{4}$ is applied to the back plate ($\alpha_{bp}$) and the oscillations of the various bodies are observed. 
 
 \subsubsection{Validation}
 
@@ -249,21 +269,16 @@ They are then substituted into the derivatives of the nonholonomic constraint eq
 \end{equation}
 
 This is an intuitive approach from a linear algebra perspective; however, it is computationally demanding for large scale systems. 
-When trying to solve for the acceleration terms, the computer's RAM can fill and cause Mathematica to abandon the calculation.
+When trying to invert the matrix to isolate the acceleration terms, the large determinants involved in the inversion require continuous allocation of RAM until the computer's resources are completely utilized and Mathematica abandons the calculation.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%
-%%%%%% MORE SPECIFIC ABOUT WHY RAM FILLS IE DETERMINANTS. Double check equation, the coeffs look a little fucky?
-%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{System of Linear Equations $(Ax=B)$}\mbox{}\\
 The next method requires taking the matrix inversion and representing it as a system of linear equations of the form $Ax=b$.
 In this equation, $A$ is a square matrix and $b$ is a column vector.
 This allows Mathematics more flexibility to internally choose from three different approaches for isolating the desired results: using Laplace cofactor expansion, Bareiss method of division-free row reduction, and standard row reduction for computing determinants \cite{linearsolve}.
-The Bareiss method of division-free row reduction allows for the computation of determinants without introducing fractions \cite{bareiss}.
-\par
+%The Bareiss method of division-free row reduction allows for the computation of determinants without introducing fractions \cite{bareiss}.
+
 At this point, all symbolic constants in the RipStik model were replaced with measured values to further simplify computations.
-Using this method, the accelerations were solved in the equations of motion, but trying to find the Lagrange multipliers in the second system exceeded computation times.
+Using this method, the accelerations were isolated in the equations of motion; however, trying to compute the Lagrange multipliers exceeded available computational resources.
 
 \paragraph{Numeric Integration}\mbox{}\\
 The final method involves solving the system numerically.
@@ -273,9 +288,18 @@ A drawback associated with this method is that it can be a difficult process req
 
 \subsubsection{Test Case - Rolling Wheel}\label{sec:testcaserw}
 
-Prior to implementing the three methods in the RipStik system, a simple model of a rolling wheel was used to validate the different approaches. For nonholonomic constraints, a code was developed and tested on the simple example of a wheel that rolls without slipping.
-No slip constraints are considered to be nonholonomic, and the output can be easily compared to published results.
+Prior to implementing the three methods in the RipStik system, a simple model of a rolling wheel is used to validate the different approaches. For nonholonomic constraints, each method is developed and tested on the simple example of a wheel that rolls without slipping.
+No slip constraints are considered to be nonholonomic and the output can be easily compared to published results.
 The configuration space for the rolling wheel consists of [$x(t)$, $y(t)$, $\theta(t)$, $\phi(t)$]. 
+The mass of the wheel is represented by $m$ and the moment of inertia of the wheel is defined to be
+\begin{equation}
+I_w =
+	\begin{pmatrix}
+		J_{spin} & 0 & 0 \\
+		0 & J_{spin} & 0 \\
+		0 & 0 & J_{roll}
+	\end{pmatrix}.
+\end{equation}
 The system and dimensions can be seen in Figure \ref{fig:rollwheel}.
 
 \begin{figure}[!htb]
@@ -290,7 +314,7 @@ The Lagrangian for the system is seen in Equation \ref{eq:rollingdicks}.
 
 \begin{equation}
 \label{eq:rollingdicks}
-L=\frac{1}{2}(mx'(t)^2+my'(t)^2+Jroll\theta'(t)^2+Jspin\phi'(t)^2)
+L=\frac{1}{2}(mx'(t)^2+my'(t)^2+J_{roll}\theta'(t)^2+J_{spin}\phi'(t)^2)
 \end{equation}
 
 With the Lagrangian developed, the Euler-Lagrange equations can then be used to determine the equations of motion, as seen in Equations \ref{eq:Xroll}, \ref{eq:Yroll}, \ref{eq:thetaroll}, and \ref{eq:phiroll}.
@@ -307,16 +331,16 @@ With the Lagrangian developed, the Euler-Lagrange equations can then be used to 
 
 \begin{equation}
 \label{eq:thetaroll}
--Jroll\theta''(t)=0
+-J_{roll}\theta''(t)=0
 \end{equation}
 
 \begin{equation}
 \label{eq:phiroll}
--Jspin\phi''(t)=0
+-J_{spin}\phi''(t)=0
 \end{equation}
 
-Plots were then created to confirm that the rolling wheel's equations of motion with nonholonomic constraints behaved as expected.
-The $x$ and $y$ positions of the rolling wheel were modelled on a parametric plot, while $\theta$ and $\phi$ were modelled on a standard plot.
+Plots are then created to confirm that the rolling wheel's equations of motion with nonholonomic constraints behaved as expected.
+The $x$ and $y$ positions of the rolling wheel are modeled on a parametric plot, while $\theta$ and $\phi$ were modeled on a standard plot.
 
 \begin{figure}[!htb]
 	\centering
@@ -339,17 +363,17 @@ Based on the output in Figures \ref{fig:RollingWheelXY} and \ref{fig:RollingWhee
 
 \subsubsection{Model Implementation}
 
-While all three approaches worked perfectly on the rolling wheel, they did not scale as desired to the much larger RipStik system.
-The complexity of the system led to computations that exceeded the computer's abilities for the symbolic matrix inversion and system of linear equations.
-Ultimately, numeric integration was selected to produce output.
+While all three approaches work perfectly on the rolling wheel, they do not scale as desired to the much larger RipStik system.
+The complexity of the system leads to computations that exceed the available resources for the symbolic matrix inversion and system of linear equations.
+Ultimately, numeric integration is required to produce output.
 
 \subsubsection{Numeric Integration}
 
 Numeric Integration allows for the approximate computation of an integral using numerical methods \cite{WolframNumeric}.
 When applying numeric integration to a differential system, stiffness is often a by-product.
 The concept of stiffness is not well understood, but can generally be attributed to quick changing dynamics in a system \cite{StiffSystem}.
-\par
-Figure \ref{fig:stiffsystem} can be used to aid in developing an understanding of the behaviour of stiff systems. 
+
+Figure \ref{fig:stiffsystem} can be used to aid in developing an understanding of the behavior of stiff systems. 
 \begin{figure}[!htb]
 	\centering
 	\minipage{0.7\textwidth}
@@ -362,8 +386,6 @@ When numeric integration is attempted using Euler's method and a step size of 1/
 When a step size of 1/8 is selected, represented by the green line, oscillations are still present, but they are in a reasonable range around the exact solution. 
 When Adams-Moulton method is used with a step size of 1/8, the oscillations are essentially negligible and the approximation is nearly identical to the exact solution.
 
-
-\par
 When a system has quickly changing dynamics, numeric integration requires increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
 This adds computational complexity that often exceeds modern technological capabilities. 
 To try and reduce this computational complexity, four different numerical methods are selected to evaluate stiff differential algebraic equation (DAE) systems.
@@ -389,7 +411,7 @@ When Mathematica attempts to numerically approximate this, it selects increasing
 However, these increasingly small step sizes slow down the computation until Mathematica eventually abandons the attempt at numerically integrating over the chosen time interval.
 
 \paragraph{Evaluation}\mbox{}\\
-As previously discussed, four methods for numerically integrating stiff DAE systems are analysed. 
+As previously discussed, four methods for numerically integrating stiff DAE systems are analyzed. 
 QR decomposition, Collocation, IDA, and BLT methods are evaluated based on three criteria:
 \begin{itemize}
 \item The computation time is evaluated based on how long it takes for output to be generated (in seconds)
@@ -415,16 +437,16 @@ A comparison of the results is shown in Table \ref{table:evaluation}.
 	\end{tabular}
 	\label{table:evaluation}
 \end{table}
-From the results in table \ref{table:evaluation}, it is clear that there is a definitive trade-off between computation time and length of output.
+From the results in Table \ref{table:evaluation}, it is clear that there is a definitive trade-off between computation time and length of output.
 The Collocation method is able to produce an output 9.7 times longer than all other methods, at a cost of 22 times longer computation.  
 The gain in length of output is weighted far greater than the length of computation time, since the lengthened computation time was still feasible.
 
 \subsubsection{Validation}
 
 Using the Collocation integration method, 5.8 seconds of output for the falling RipStik is generated for each degree of freedom in the system. 
-As the RipStik falls however, it eventually exceeds the range of validity for the Euler angles. 
+As the RipStik falls, however, it eventually exceeds the range of validity for the Euler angles. 
 This leads to the RipStik's motion behaving erratically. 
-As a result, only the first 1.4 seconds of the falling RipStik are plotted.
+As a result, only the first 1.4 seconds of the falling RipStik are presented.
 
 \begin{figure}[!htb]
 	\centering
@@ -456,16 +478,16 @@ As a result, only the first 1.4 seconds of the falling RipStik are plotted.
 	\caption{Roll of front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) as the RipStik falls}\label{fig:fallcaster}	
 \end{figure}
 
-The $z$-position plot in Figure \ref{fig:fallglobal} shows the Ripstik falling through the ground plane and reorienting itself in the upright position. 
+The $z$-position plot in Figure \ref{fig:fallglobal} shows the Ripstik falling through the ground plane and swinging up towards the upright position. 
 This is clearly illustrated by the oscillations shown in the first plot.
 
 
-The roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) plots in Figure \ref{fig:fallplates} show the plates rotating nearly one full revolution, then rotating fully back to their orgin. 
-This clearly describes the behaviour as the RipStik flips through the ground plane.
+The roll of the front plate ($\alpha_{fp}$) and back plate ($\alpha_{bp}$) plots in Figure \ref{fig:fallplates} show the plates rotating nearly one full revolution, then rotating fully back to their origin. 
+This clearly describes the behavior as the RipStik flips through the ground plane.
 The yaw of the front caster ($\theta_{fc}$) and back caster ($\theta_{bc}$) plots in figure \ref{fig:fallcaster} describe the motion of the casters as the RipStik falls.
-The casters pivot to follow the falling motion of the RipStik and satisfy the nonholonomic constraints.
-\par
-An accurate visualization can be produced to model the motion of the RipStik. The initial upright and final fallen over position of the RipStik are shown in Figure \ref{fig:fallcaster}
+The casters pivot to follow the falling motion of the RipStik and maintain the nonholonomic constraints.
+
+An accurate visualization can be produced to model the motion of the RipStik using the ThreeJS visualization tool. The initial upright and a partially fallen configuration of the RipStik are shown in Figure \ref{fig:fallcaster}.
 
 \begin{figure}[!htb]
 	\centering
@@ -475,7 +497,7 @@ An accurate visualization can be produced to model the motion of the RipStik. Th
 	\minipage{0.37\textwidth}
 	\includegraphics[width=\linewidth]{fall}
 	\endminipage
-	\caption{Initial upright and final fallen over positions of the RipStik}\label{fig:fallcaster}	
+	\caption{Initial upright and partially fallen configuration of the RipStik}\label{fig:fallcaster}	
 \end{figure}
 
 \subsection{Linear Quadratic Regulator Control}
@@ -490,7 +512,7 @@ In attempting to solve for the Lagrange multipliers in the linearized equations 
 \end{itemize}
 In his Master's thesis \textit{Linearization and Stability of Nonholonomic Mechanical Systems} \cite{LinNonHolo}, S.D Yang demonstrated a sufficient condition for the commutation of linearizing the equations of motion and solving for Lagrange multipliers. 
 In particular, these operations commute at critical points of the potential function \cite{LinNonHolo}.
-The test case developed for LQR control consisted of a rolling wheel (as shown in section \ref{sec:testcaserw}) with an inverted pendulum attached (similar to what was shown in \ref{sec:testcaseip}). 
+The test case developed for LQR control consisted of a rolling wheel (as shown in Section \ref{sec:testcaserw}) with an inverted pendulum attached (similar to what was shown in \ref{sec:testcaseip}). 
 Since both components of the mechanical system have been previously developed and validated, minimal additional work is needed to develop the combined system. 
 
 \subsubsection{Test Case - Rolling Wheel with Inverted Pendulum}
@@ -507,8 +529,8 @@ The system and associated dimensions are shown in Figure \ref{fig:invert}.
 
 The two dimensional system has 3 degrees of freedom: the horizontal position $x$, the roll angle $\phi$, and the pendulum angle $\psi$. 
 Additionally, the following constants were defined: $m$, the mass of the wheel, $m_p$, the mass of the pendulum, $g$, the acceleration due to gravity, $\rho$, the radius of the wheel, and $L$, the length of the pendulum. 
-Note that the pendulum was again modelled as a thin uniform rod.
-The moment of inertia of the wheel was defined to be:
+Note that the pendulum is again modeled as a thin uniform rod.
+The moment of inertia of the wheel is defined to be:
 \begin{equation}
 I_w =
 	\begin{pmatrix}
@@ -517,7 +539,7 @@ I_w =
 		0 & 0 & J_{roll}
 	\end{pmatrix},
 \end{equation}
-Which is consistent with the inertias in Section \ref{sec:testcaserw}. The rod then has a moment of inertia of \textbf{DO WE NEED A SOURCE ON THIS??}
+which is consistent with the inertias in Section \ref{sec:testcaserw}. The rod then has a moment of inertia of
 \begin{equation}
 I_p =
 	\begin{pmatrix}
@@ -526,7 +548,7 @@ I_p =
 		0 & 0 & 0
 	\end{pmatrix}.
 \end{equation}
-The unconstrained Lagrangian of the system was computed to be: 
+The unconstrained Lagrangian of the system is computed to be: 
 \begin{equation}
 \underbrace{m_P \left( g L \sin (\psi (t))- 
 	g \rho + 
@@ -536,7 +558,7 @@ The unconstrained Lagrangian of the system was computed to be:
 	\underbrace{\frac{1}{2} \left(J_{spin} \phi '(t)^2 + 
 	m x'(t)^2\right)}_{\text{wheel}} = 0.
 \end{equation}
-Applying the Euler-Lagrange equation, the unconstrained equations of motion for the system were computed to be: 
+Applying the Euler-Lagrange equation, the unconstrained equations of motion for the system are computed to be: 
 \begin{equation}
 L m_{P} \psi ''(t) \sin (\psi (t))+L m_{P} \psi
    '(t)^2 \cos (\psi (t))-(m+m_{P}) X''(t)=0
@@ -551,10 +573,10 @@ Additionally, the system has one nonholonomic constraint, expressed as:
 \begin{equation}
 x'(t) = \rho\theta'(t).
 \end{equation}
-A control input $u(t)$ was then added to the second equation of motion, thereby applying a torque to the roll angle of the wheel.
+A control input $u(t)$ is then added to the second equation of motion, thereby applying a torque to the roll angle of the wheel.
 
-In order to experimentally validate the presented result on commutation of linearization and solving for nonholonomic constraints, both procedures were applied to the system. 
-They both produced the constrained linear system:
+In order to experimentally validate the presented result on commutation of linearization and solving for nonholonomic constraints, both procedures are applied to the system. 
+At the unstable equilibrium $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$, they both produce the constrained linear system:
 \begin{equation}
 	\frac{\left(4 J_{spin}+\rho ^2 (4 m+m_{P})\right)
    \left(L m_{P} \psi ''(t)+(m+m_{P}) X''(t)\right)-\rho 
@@ -568,7 +590,7 @@ They both produced the constrained linear system:
 \end{equation}
 \begin{equation}
 	L m_{P} \left(4 L
-   \psi ''(t)+3 X''(t)\right)=0,
+   \psi ''(t)+3 X''(t)\right)=0
 \end{equation}
 This demonstrates that the result applies as expected for this small system. 
 The linearized control system about the unstable equilibrium $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$ is given by the equation:
@@ -621,13 +643,13 @@ The linearized control system about the unstable equilibrium $\{x=0,\psi=-\frac{
 \end{array}
 \right]u(t).
 \end{equation}
-With the system linearized, a stabilizing controller was developed to keep the pendulum at the upright unstable equilibrium position $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$. 
-To do this, values were chosen for each of the parameters in the system and a state weighting matrix $Q$ was selected based on the project considerations. 
-In particular, the aim was to prioritize stability of the pendulum angle $\psi$ and angular velocity of the roll angle $\phi$ since this keeps the operator upright and avoids using large angular accelerations to maintain this stability. 
+With the system linearized, a stabilizing controller is developed to keep the pendulum at the upright unstable equilibrium position $\{x=0,\psi=-\frac{\pi}{2},\phi=0\}$. 
+To do this, values are chosen for each of the parameters in the system and a state weighting matrix $Q$ is selected based on the project considerations. 
+In particular, the aim is to prioritize stability of the pendulum angle $\psi$ and angular velocity of the roll angle $\phi$ since this keeps the operator upright and avoids using large angular accelerations to maintain this stability. 
 Meanwhile, it allows the position of the wheel to return more slowly to the equilibrium since the horizontal position of the wheel is not a priority in the stabilization problem for personal electric transport vehicles.
 
-The perturbation function $22 e^{-10 (t-8)^2}-22 e^{-10 (t-12)^2}$ was applied to the roll angle, simulating uneven ground conditions when riding the PET device. 
-This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. The second perturbation was specifically timed such that the system had not fully recovered from the first, demonstrating stability and robustness of the controlled system.
+The perturbation function $22 e^{-10 (t-8)^2}-22 e^{-10 (t-12)^2}$ is applied to the roll angle, simulating uneven ground conditions when riding the personal electric transport device. 
+This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. The second perturbation is specifically timed such that the system had not fully recovered from the first, further demonstrating stability of the controlled system.
 \par
 
 \begin{figure}[!htb]
@@ -635,7 +657,7 @@ This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. 
 	\minipage{0.4\textwidth}
 	\includegraphics[width=\linewidth]{perturbation.png}
 	\endminipage\hspace{1em}%
-	\caption{The perturbation function that was applied to the rolling wheel with inverted pendulum plotted as a function of time}\label{fig:perturb}
+	\caption{The perturbation function applied to the rolling wheel with inverted pendulum plotted as a function of time}\label{fig:perturb}
 \end{figure}
 
 \begin{figure}[!htb]
@@ -643,7 +665,7 @@ This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. 
 	\minipage{0.4\textwidth}
 	\includegraphics[width=\linewidth]{wheelperturbdistance.jpg}
 	\endminipage\hspace{1em}%
-	\caption{The X-position of the wheel plotted as a function of time}\label{fig:wheelperturbdistance}
+	\caption{The $x$-position of the wheel plotted as a function of time}\label{fig:wheelperturbdistance}
 \end{figure}
 
 \begin{figure}[!htb]
@@ -653,7 +675,7 @@ This applies perturbations of $+22$ and $-22$ at 8 and 12 seconds respectively. 
 	\endminipage\hspace{1em}%
 	\caption{The roll angle ($\phi$) and the pendulum angle ($\psi$) plotted as a function of time}\label{fig:wheelperturbphipsi}
 \end{figure}
-
+\newpage
 \par
 \subsubsection{Model Implementation Challenges} \label{sec:challenge}
 Three main challenges must be investigated in extrapolating these LQR results to the larger RipStik system. These are:
