@@ -1,6 +1,7 @@
 \section{Engineering Considerations}
+In order to apply these modeling and control concepts to a real world personal transportation device, a number of social, environmental and economic factors must be considered. These are analyzed through a combination of discussion and quantitative economic modeling.
 \subsection{Legal Considerations}
-The legal considerations involved in the development of personal electric transport devices 
+The legal considerations involved in the development of personal electric transport devices are separated into regulatory considerations, including street legality and intellectual property law, and professional practice considerations. All of these must be carefully considered for a real world implementation of type of electric transport systems proposed. 
 \subsubsection{Regulatory Considerations}
 
 \paragraph{Street Legality}\mbox{}\\
@@ -18,16 +19,14 @@ As the final product will involve the incorporation of mechanical control system
 A combinatory invention involves combining two or more pre-existing technologies in order to develop a new technology. 
 Combinatory inventions are among the most common patents; between the years 1790 and 2010, 77\% of all patents granted involved the combination of at least two pre-existing technologies \cite{comblaw}.
 A patent shall not be issued, under United States patent law, if \emph{``The subject matter as a whole would have been obvious at the time the invention was made to a person having ordinary skill in the art to which said subject matter pertains. 
-Patentability shall not be negatived by the manner in which the invention was made \cite{NonObv}.}"  
-\\
-\\
-A 2007 United States Supreme Court ruling in ``KSR International Co. v. Teleflex Inc." established legal precedent for “non-obviousness" in combinatory inventions. 
-Teleflex Inc. sued KSR International Co. for patent infringement pertaining to a KSR product which Teleflex claimed infringed on its patent for an ``Adjustable Pedal Assembly with Electronic Throttle Control."
+Patentability shall not be negatived by the manner in which the invention was made \cite{NonObv}.}''
+
+A 2007 United States Supreme Court ruling in ``KSR International Co. v. Teleflex Inc.'' established legal precedent for “non-obviousness" in combinatory inventions. 
+Teleflex Inc. sued KSR International Co. for patent infringement pertaining to a KSR product which Teleflex claimed infringed on its patent for an ``Adjustable Pedal Assembly with Electronic Throttle Control.''
 KSR argued that Teleflex's claim was invalid as the action was obvious. 
 The United States Supreme Court ruled in favour of KSR International Co.,  
 ruling that Teleflex's invention was not patentable as the combination of the two adjustable pedal assembly and the electronic throttle control was indeed obvious. 
-\\
-\\
+
 In developing novel methods of personal electric transport, it is often required to build a control system on an existing mechanical system or device. While undergoing this combinatory process, it is imperative that the designers and engineers do not infringe on any existing patent laws and cases to ensure that their products can be protected.
 
 
@@ -170,13 +169,13 @@ Modern electronic devices generally rely on rechargeable lithium-ion or lithium-
 
 Batteries in personal electric transportation devices became a topic of conversation when the US government recalled over 500,000 two wheeled, self balancing scooters in 2016 due to a risk of batteries sparking, catching fire and exploding, causing at least 18 injuries \cite{CBCArticle}. This brings a clear social impact as well since there is a safety risk associated with low cost batteries manufactured in China \cite{CBCArticle}.
 
-\section{Concessions in Design Implementation} \label{sec:Tradeoff}
+\subsection{Concessions in Design Implementation} \label{sec:Tradeoff}
 There are many performance parameters of an electric personal transport vehicle that can be addressed through the design and implementation of a mechanical control system. 
 These parameters include speed, handling and stability. 
 However, not all parameters can be optimized through the tuning of the system; trade offs in system performance are required. 
 There are both trade-offs in the control algorithm and the mechanical control system.
 
-\subsection{Control Algorithm}                                                                                                                         
+\subsubsection{Control Algorithm}                                                                                                                         
 In designing a control algorithm, the primary parameters of focus are: rise time, settling time, percent overshoot and steady-state error \cite{Bees}. 
 Rise time refers to the amount of time it takes for the system output to reach the desired output. 
 In the context of the vehicle, a slow rise time may mean that the system is not able to stabilize a soon-to-fall rider before it is too late. 
@@ -199,7 +198,7 @@ However, it is not possible to maximize each parameter individually in the desig
 Therefore, it is imperative that the final control algorithm be optimized to maximize performance parameters of the vehicle, while ensuring that it is robust enough to handle a variety of conditions in a variety of environments. 
 Primary areas of focus in the design and tuning of the control system will vary depending on the nature of the complex mechanical system in which they are designed to govern.
 
-\subsection{Mechanical Control System}
+\subsubsection{Mechanical Control System}
 The control algorithm will be implemented by a mechanical control system located on the vehicle. 
 This control system will require a battery power source.
 As mentioned in \ref{sec:usage}, there are significant environmental consequences associated with the manufacture and disposal of batteries. 
