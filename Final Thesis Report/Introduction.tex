@@ -166,7 +166,7 @@ The associated quadratic cost function for time interval $[t_{0},t_{1}]$ is then
 \begin{equation}
 \eta(u) = \int_{t_{0}}^{t_{1}}x^{T}(t)Qx(t)+u^{T}(t)u(t)dt
 \end{equation}
-where $Q \in \R^{m \times m}$ is the state weighting matrix associated with the degrees of freedom and their derivatives $(q, \dot{q})$ in the system. Note that no weightings are associated with the control inputs at this stage, though they may be necessary when considering the broader design impacts (see section \ref{sec:Tradeoff}. Tuning the cost function weighting matrix $Q$ allows emphasis to be placed on stabilization of certain degrees of freedom to better meet design goals for the particular application.
+where $Q \in \R^{m \times m}$ is the state weighting matrix associated with the degrees of freedom and their derivatives $(q, \dot{q})$ in the system. Note that no weightings are associated with the control inputs at this stage, though they may be necessary when considering the broader design impacts (see section \ref{sec:Tradeoff}). Tuning the cost function weighting matrix $Q$ allows emphasis to be placed on stabilization of certain degrees of freedom to better meet design goals for the particular application.
 
 The optimal control gains $K$ are then computed from
 \begin{equation}

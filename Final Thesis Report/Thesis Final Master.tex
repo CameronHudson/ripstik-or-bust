@@ -11,7 +11,7 @@
 \usepackage{mathtools}
 \usepackage{enumitem}
 \usepackage{mathrsfs}
-\usepackage[margin=0.9 in]{geometry}
+\usepackage[margin=0.9 in,headsep=0.3 in]{geometry}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{gensymb}
@@ -62,9 +62,16 @@ textfont={it}]{caption}
 \newcommand{\CDFT}{\mathscr{F}_{CD}} %Fourier transform
 \newcommand{\ip}[2]{\langle #1, #2\rangle}
 
-
 \setlength{\parskip}{0.5em}
 
+\usepackage{fancyhdr}
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+%%\fancyhead[RE]{\thepage}
+%%\fancyhead[ER]{\rightmark}
+\fancyhead[LE,RO]{\slshape \rightmark}
+\fancyhead[LO,RE]{\slshape \leftmark}
+\fancyfoot[C]{\thepage}
 
 \makeatletter
 \newsavebox\myboxA
@@ -76,19 +83,42 @@ textfont={it}]{caption}
 \author{\\Andrew Cantanna (10092489) \\Cameron Hudson (10092287)\\
 	Benjamin Rudson (10083664)\\}
 \begin{document}
+
 	\begin{titlepage}
 		\maketitle
 		\thispagestyle{empty}		
 	\end{titlepage}
-	
+	\newpage
+	\pagenumbering{Roman} 
+	%%\pagestyle{myheadings}
+\begin{abstract}
+	This is the abstract.
+\end{abstract}	
+\clearpage
+\newpage
+\begin{center}
+\textbf{Acknowledgements}
+\end{center}
+
+\newpage	
 	\renewcommand{\baselinestretch}{0.75}\normalsize
 	\tableofcontents
 	\renewcommand{\baselinestretch}{1.0}\normalsize
 
+\newpage
+\listoffigures
+\newpage
+\listoftables
+
+
+\clearpage
+\pagenumbering{arabic}
 	
 	\newpage
 
 
+
+	\pagestyle{fancy}
 \include{Introduction}
 \include{DesignProcess}
 \include{Development}
@@ -98,6 +128,5 @@ textfont={it}]{caption}
 
 \newpage
 \printbibliography
-
 
 \end{document}          
