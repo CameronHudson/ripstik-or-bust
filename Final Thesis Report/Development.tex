@@ -240,14 +240,15 @@ This represented a total of four constraint forces which were implemented using 
 Three different methods were explored when trying to solve for the nonholonomic constraints: symbolically inverting the matrices, representing the constraints as a system of linear equations $(Ax=B)$, and numeric integration.
 
 \paragraph{Symbolic Matrix Inversion}\mbox{}\\
-The initial method explored involved symbolically inverting matrices in Mathematica. First, the acceleration terms in the equations of motion were isolated for, which could then be substituted into the derivatives of the nonholonomic constraint equations, seen in Equation \ref{eq:SMI}.
+The initial method explored involved symbolically inverting matrices in Mathematica. First, the acceleration terms in the equations of motion were isolated. 
+They were then substituted into the derivatives of the nonholonomic constraint equations, shown in Equation \ref{eq:SMI}.
 
 \begin{equation}
 \label{eq:SMI}
 \Omega \ddot{q} = -\Omega G_{jk}^{-1}\Gamma_{jkl} \dot{q}^k\dot{q}^l + \Omega G_{jk}^{-1} \Omega ^T \lambda
 \end{equation}
 
-This is an intuitive approach from a linear algebra perspective; however, it is computationally impossible on large scale systems. 
+This is an intuitive approach from a linear algebra perspective; however, it is computationally demanding for large scale systems. 
 When trying to solve for the acceleration terms, the computer's RAM completely fills and Mathematica is forced to abandon the calculation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -257,12 +258,12 @@ When trying to solve for the acceleration terms, the computer's RAM completely f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{System of Linear Equations $(Ax=B)$}\mbox{}\\
 The next method attempted required taking the matrix inversion and representing it as a system of linear equations of the form Ax=b. 
-In this equation, A is a square matrix and b is a column vector.
-This allows Mathematics more flexibility to internally choose from three different approaches for isolating the desired results, using Laplace cofactor expansion, Bareiss method of division-free row reduction, and standard row reduction for computing determinants \cite{linearsolve}.
-Bareiss method of division-free row reduction allows for the computation of determinants without introducting fractions \cite{bareiss}.
+In this equation, $A$ is a square matrix and $b$ is a column vector.
+This allows Mathematics more flexibility to internally choose from three different approaches for isolating the desired results: using Laplace cofactor expansion, Bareiss method of division-free row reduction, and standard row reduction for computing determinants \cite{linearsolve}.
+The Bareiss method of division-free row reduction allows for the computation of determinants without introducing fractions \cite{bareiss}.
 \par
-At this point, all symbolic constants were replaced with with measured values to further simplify computations.
-Using this method, the accelerations were solved in the equations of motion, but trying to find the lagrange multipliers in the second system exceeded computation times.
+At this point, all symbolic constants were replaced with measured values to further simplify computations.
+Using this method, the accelerations were solved in the equations of motion, but trying to find the Lagrange multipliers in the second system exceeded computation times.
 
 \paragraph{Numeric Integration}\mbox{}\\
 The final method analyzed involved solving the system numerically.
@@ -274,7 +275,7 @@ A drawback associated with this method is that it can be a difficult process req
 
 Prior to implementing the three methods in the RipStik system, a simple model of a rolling wheel was used to validate the different approaches. For nonholonomic constraints, a code was developed and tested on the simple example of a wheel that rolls without slipping.
 No slip constraints are considered to be nonholonomic, and the output can be easily compared to published results.
-The configuration space for the rolling wheel consists of [X(t), Y(t), $\theta(t)$, $\phi(t)$]. 
+The configuration space for the rolling wheel consists of [$X(t)$, $Y(t)$, $\theta(t)$, $\phi(t)$]. 
 The system and dimensions can be seen in Figure \ref{fig:rollwheel}.
 
 \begin{figure}[!htb]
@@ -285,14 +286,14 @@ The system and dimensions can be seen in Figure \ref{fig:rollwheel}.
 	\endminipage
 \end{figure}
 
-The Lagragian for the system is seen in Equation \ref{eq:rollingdicks}.
+The Lagrangian for the system is seen in Equation \ref{eq:rollingdicks}.
 
 \begin{equation}
 \label{eq:rollingdicks}
 L=\frac{1}{2}(mX'(t)^2+mY'(t)^2+Jroll\theta'(t)^2+Jspin\phi'(t)^2)
 \end{equation}
 
-With the Lagrangian developed, it was then applied to the Euler-Lagrange equations to provide the equations of motion, seen in equations \ref{eq:Xroll}, \ref{eq:Yroll}, \ref{eq:thetaroll}, and \ref{eq:phiroll}.
+With the Lagrangian developed, the Euler-Lagrange equations can then be used to determine the equations of motion, as seen in Equations \ref{eq:Xroll}, \ref{eq:Yroll}, \ref{eq:thetaroll}, and \ref{eq:phiroll}.
 
 \begin{equation}
 \label{eq:Xroll}
@@ -315,7 +316,7 @@ With the Lagrangian developed, it was then applied to the Euler-Lagrange equatio
 \end{equation}
 
 Plots were then created to confirm that the rolling wheel's equations of motion with nonholonomic constraints behaved as expected.
-The X and Y positions of the rolling wheel were modeled on a parametric plot, while $\theta$ and $\phi$ were modeled on a standard plot.
+The $X$ and $Y$ positions of the rolling wheel were modelled on a parametric plot, while $\theta$ and $\phi$ were modelled on a standard plot.
 
 \begin{figure}[!htb]
 	\centering
@@ -348,8 +349,7 @@ Numeric Integration allows for the approximate computation of an integral using 
 When applying numeric integration to a differential system, stiffness is often a by-product.
 The concept of stiffness is not well understood, but can generally be attributed to quick changing dynamics in a system \cite{StiffSystem}.
 \par
-To help develop some intuition on how stiff systems work, an example can be seen in Figure \ref{fig:stiffsystem}.
-
+Figure \ref{fig:stiffsystem} can be used to aid in building understanding of the behaviour of stiff systems. 
 \begin{figure}[!htb]
 	\centering
 	\minipage{0.7\textwidth}
@@ -358,15 +358,15 @@ To help develop some intuition on how stiff systems work, an example can be seen
 	\endminipage
 \end{figure}
 Figure \ref{fig:stiffsystem} shows the exact output from a simple differential equation in light blue. 
-When numeric integration is attempted using Euler's method and a step size of 1/4, the approximation oscillates and completely overshoots the exact method as seen in red. 
-When a step size of 1/8 is selected, there are still oscillations, but they are in a reasonable range around the exact solution as seen in green. 
-When adams-Moulton method is used with a step size of 1/8, the oscillations are essesntially negligible and the approximation is almost equal to the exact solution.
+When numeric integration is attempted using Euler's method and a step size of 1/4, represented by the red line, the approximation oscillates and overshoots the exact method.
+When a step size of 1/8 is selected, represented by the green line, oscillations are still present, but they are in a reasonable range around the exact solution. 
+When Adams-Moulton method is used with a step size of 1/8, the oscillations are essentially negligible and the approximation is nearly identical to the exact solution.
 
 
 \par
-When a system has quickly changing dynamics, numeric integration will require increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
-This adds computational complexity that ofteen exceeds modern technological capabilities. 
-To try and reduce this computational complexity, four different numerical methods were selected to evaluate stiff DAE systems.
+When a system has quickly changing dynamics, numeric integration requires increasingly small step sizes to approximate a solution without instability \cite{StiffSystem}. 
+This adds computational complexity that often exceeds modern technological capabilities. 
+To try and reduce this computational complexity, four different numerical methods were selected to evaluate stiff differential algebraic equation (DAE) systems.
 
 The QR Decomposition method decomposes the Jacobian of the derivative, breaking down the core system into two smaller systems at each iteration point \cite{Methods}.
 This is represented by the following equation:
@@ -376,20 +376,20 @@ This is represented by the following equation:
 A = QR
 \end{equation}
 
-In Equation \ref{eq:QR}, A is any real square matrix, Q is an orthogonal matrix, and R is an upper triangular matrix \cite{Methods}.
+In Equation \ref{eq:QR}, $A$ is any real square matrix, $Q$ is an orthogonal matrix, and $R$ is an upper triangular matrix \cite{Methods}.
 
-The Collocation method linearizes the implicit DAE to m points in time, generating a system of linear equations which can be solved iteratively using Newton's Method \cite{Methods}.
-The Implicit Differential-Algebraic Method uses Backward Differential Formulas (BDF) to implicity solve the DAE for derivatives to use an ODE solver \cite{Methods}. 
+The Collocation method linearizes the implicit DAE to $m$ points in time, generating a system of linear equations which can be solved iteratively using Newton's Method \cite{Methods}.
+The Implicit Differential-Algebraic Method uses Backward Differential Formulas (BDF) to implicitly solve the DAE for derivatives to use an ODE solver \cite{Methods}. 
 The BDF approximates the derivative of the function using information from previous time steps \cite{Methods}.
 The BLT Method puts the system into block lower triangular form and solves subsets of the system iteratively \cite{Methods}.
 
-While numeric integration produced results for the RipStik model, it brought its own set of challenges in the form of system stiffness.
+While numeric integration produces results for the RipStik model, it brings its own set of challenges in the form of system stiffness.
 For the RipStik, the frictionless linkages cause quick changes in the exact solution that is being approximated. 
 When Mathematica attempts to numerically approximate this, it selects increasingly small step sizes to replicate these quick motions without oscillation. 
 However, these increasingly small step sizes slow down the computation until Mathematica eventually abandons the attempt at numerically integrating over the chosen time interval.
 
 \paragraph{Evaluation}\mbox{}\\
-As previously discussed, four methods for numerically integrating stiff DAE systems were analyzed. 
+As previously discussed, four methods for numerically integrating stiff DAE systems were analysed. 
 QR decomposition, Collocation, IDA, and BLT methods were evaluated based on three criteria:
 \begin{itemize}
 \item The computation time was evaluated based on how long it would take for output to be generated (in seconds)
@@ -415,8 +415,8 @@ A comparison of the results can be seen in Table \ref{table:evaluation}.
 	\end{tabular}
 	\label{table:evaluation}
 \end{table}
-From the results in table \ref{table:evaluation}, it is clear that there is a definitive tradeoff between computation time and length of output.
-The Collocation method was able to produce output 9.7 times longer than all other methods, at a cost of 22 times longer computation.  
+From the results in table \ref{table:evaluation}, it is clear that there is a definitive trade-off between computation time and length of output.
+The Collocation method was able to produce an output 9.7 times longer than all other methods, at a cost of 22 times longer computation.  
 The gain in length of output was weighted far greater than the length of computation time, since the lengthened computation time was still feasible.
 
 \subsubsection{Validation}
